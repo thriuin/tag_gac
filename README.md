@@ -20,3 +20,10 @@ python .\manage.py migrate
 ```bash
 python manage.py createsuperuser
 ```
+
+### Load Data ###
+
+```bash
+python .\load-data-from-csv.py --goods-csv .\data\ogd_goods.csv --
+```
+

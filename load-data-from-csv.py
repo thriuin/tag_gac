@@ -9,7 +9,7 @@ import sys
 environ.setdefault('DJANGO_SETTINGS_MODULE', 'tag_gac.settings')
 import django
 django.setup()
-from guide.models import GoodsCodes, ConstructionCodes
+from guide.models import GoodsCodes, ConstructionCodes, ServicesCodes
 
 
 def load_goods(csv_file: str):
@@ -38,7 +38,8 @@ def load_goods(csv_file: str):
                 duplicates += 1
             prev_key = current_key
 
-        print("{0} loaded, {1} duplicates".format(total, duplicates))
+        print("{0} loaded, {1} duplicates".format(Fore.CYAN + str(total) + Fore.RESET, Fore.LIGHTYELLOW_EX +
+                                                  str(duplicates) + Fore.RESET))
 
 
 def load_construction(csv_file: str):
@@ -62,18 +63,57 @@ def load_construction(csv_file: str):
                                                            cufta=True if cc['CUFTA'] == 'YES' else False,
                                                            wto_agp=True if cc['WTO_AGP'] == 'YES' else False,
                                                            ceta=True if cc['CETA'] == 'YES' else False,
-                                                           cptpp=True if cc['CPTPP'] == 'YES' else False)
+                                                           cptpp=True if cc['CPTPP'] == 'YES' else False
+                                                           )
                 total += 1
             else:
                 duplicates += 1
+            prev_key = current_key
 
-                print("{0} loaded, {1} duplicates".format(total, duplicates))
+        print("{0} loaded, {1} duplicates".format(Fore.CYAN + str(total) + Fore.RESET, Fore.LIGHTYELLOW_EX +
+                                                          str(duplicates) + Fore.RESET))
+
+
+def load_services(csv_file: str):
+    with open(csv_file, 'r', encoding='utf8', errors="ignore") as txt_file:
+        sc_reader = csv.DictReader(txt_file, dialect='excel')
+        total = 0
+        duplicates = 0
+        prev_key = ""
+        for sc in sc_reader:
+            current_key = sc['ccs_level_1'] + sc['ccs_level_2'] + sc['ccs_level_4']
+            if not current_key == prev_key:
+                ServicesCodes.objects.update_or_create(
+                    nafta_code=sc['ccs_level_1'],
+                    ccs_level_2=sc['ccs_level_2'],
+                    gsin_class=sc['ccs_level_4'],
+                    desc_en="{0} - {1} - {2}".format(sc['ccs_level_1'], sc['ccs_level_2'], sc['ccs_level_4']),
+                    nafta_annex=True if sc['NAFTA'] == 'YES' else False,
+                    ccfta=True if sc['CCFTA'] == 'YES' else False,
+                    ccofta=True if sc['CCoFTA'] == 'YES' else False,
+                    chfta=True if sc['CHFTA'] == 'YES' else False,
+                    cpafta=True if sc['CPaFTA'] == 'YES' else False,
+                    cpfta=True if sc['CPFTA'] == 'YES' else False,
+                    ckfta=True if sc['CKFTA'] == 'YES' else False,
+                    cufta=True if sc['CUFTA'] == 'YES' else False,
+                    wto_agp=True if sc['WTO_AGP'] == 'YES' else False,
+                    ceta=True if sc['CETA'] == 'YES' else False,
+                    cptpp=True if sc['CPTPP'] == 'YES' else False
+                )
+                total += 1
+            else:
+                duplicates += 1
+            prev_key = current_key
+
+        print("{0} loaded, {1} duplicates".format(Fore.CYAN + str(total) + Fore.RESET, Fore.LIGHTYELLOW_EX +
+                                                          str(duplicates) + Fore.RESET))
 
 
 colorama_init()
 parser = argparse.ArgumentParser(description="Load data for the Trade Agreement Guide from CSV file")
 parser.add_argument('--goods-csv', action='store', default='', help='Goods CSV file name', type=str)
 parser.add_argument('--construction-csv', action='store', default='', help='Construction Codes CSV file name', type=str)
+parser.add_argument('--services-csv', action='store', default='', help='Services codes CSV file name', type=str)
 
 args = parser.parse_args()
 if not args.goods_csv == '':
@@ -82,9 +122,14 @@ if not args.goods_csv == '':
     else:
         print("Cannot find file {0}{1}{2}".format(Fore.RED + Style.BRIGHT, args.goods_csv, Style.RESET_ALL))
 
-args = parser.parse_args()
 if not args.construction_csv == '':
     if path.exists(args.construction_csv):
         load_construction(args.construction_csv)
     else:
-        print("Cannot find file {0}{1}{2}".format(Fore.RED + Style.BRIGHT, args.goods_csv, Style.RESET_ALL))
+        print("Cannot find file {0}{1}{2}".format(Fore.RED + Style.BRIGHT, args.construction_csv, Style.RESET_ALL))
+
+if not args.services_csv == '':
+    if path.exists(args.services_csv):
+        load_services(args.services_csv)
+    else:
+        print("Cannot find file {0}{1}{2}".format(Fore.RED + Style.BRIGHT, args.services_csv, Style.RESET_ALL))

@@ -25,7 +25,7 @@ class ServicesViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Services Procurement Codes  to be viewed or edited.
     """
-    queryset = ServicesCodes.objects.all().order_by('desc_en')
+    queryset = ServicesCodes.objects.all().order_by('ccs_level_2')
     serializer_class = ServicesSerializer
 
 

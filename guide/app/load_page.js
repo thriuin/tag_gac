@@ -56,7 +56,7 @@ var surveyJSON = {
                     isRequired: true,
                     visibleIf: "{commodity_type} = 'Services'",
                     choicesByUrl: {
-                        url: "http://127.0.0.1:8000/services",
+                        url: "http://127.0.0.1:8000/services/?format=json",
                         valueName: "desc_en"
                     }
                 },

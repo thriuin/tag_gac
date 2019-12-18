@@ -36,7 +36,7 @@ class GenericCodesModel(GenericTradeAgreements):
         return "{0} - {1}: {2}".format(self.gsin_class, self.gsin_code, self.gsin_desc_en)
 
 
-class GoodsCodes(GenericCodesModel):
+class GoodsCodes(GenericTradeAgreements):
 
     fs_code = models.CharField(max_length=10, default='', verbose_name="Federal Supply Code")
     fs_code_desc = models.CharField(max_length=128, default="", verbose_name="Federal Supply Code Description")
@@ -48,7 +48,8 @@ class GoodsCodes(GenericCodesModel):
     def __str__(self):
         return "{0} - {1}".format(self.fs_code, self.fs_code_desc)
 
-class ConstructionCodes(GenericCodesModel):
+
+class ConstructionCodes(GenericTradeAgreements):
 
     fs_code = models.CharField(max_length=10, default='', verbose_name="Federal Supply Code")
     fs_code_desc = models.CharField(max_length=128, default="", verbose_name="Federal Supply Code Description")
@@ -57,13 +58,21 @@ class ConstructionCodes(GenericCodesModel):
         return "{0} - {1}".format(self.fs_code, self.fs_code_desc)
 
 
-class ServicesCodes(GenericCodesModel):
+class ServicesCodes(GenericTradeAgreements):
 
-    nafta_code = models.CharField(max_length=12, default="", verbose_name="NAFTA Common Classification System Codes")
+    nafta_code = models.CharField(max_length=12, default="",
+                                  verbose_name="NAFTA Common Classification System Codes - Groups")
+    ccs_level_2 = models.CharField(max_length=12, default="",
+                                   verbose_name="NAFTA Common Classification System Codes - Sub-group")
+    gsin_class = models.CharField(max_length=12, default="", verbose_name="GSIN Class (4)")
+    desc_en = models.CharField(max_length=128, default="", verbose_name="Code Description")
 
     class Meta:
-        ordering = ['nafta_code']
+        ordering = ['nafta_code', 'ccs_level_2', 'gsin_class']
+        unique_together = (('nafta_code', 'ccs_level_2', 'gsin_class'),)
 
+    def __str__(self):
+        return "{0} - {1}".format(self.ccs_level_2, self.gsin_class)
 
 class TenderingReasons(GenericTradeAgreements):
 
