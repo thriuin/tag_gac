@@ -29,8 +29,9 @@
     <div class="row">
 
             <div id="surveyContainer"><survey :survey="survey"></survey></div>
-
+            <div id="surveyResult"></div>
     </div>
+    {%  comment 'Suppressed' %}
     <div class="row">
         <h2>Trade Agreement Exceptions</h2>
         <table class="table">
@@ -66,7 +67,7 @@
                 </tr>
             </tbody>
         </table>
-    </div>
+    </div> {%  endcomment %}
 </section>
 
 {% endblock main-content %}

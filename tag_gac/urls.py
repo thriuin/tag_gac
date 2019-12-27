@@ -16,7 +16,9 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.urls import path
-from guide.views import GuideView, GoodsViewSet, ConstructionViewSet, ServicesViewSet, TenderingReasonsViewSet
+from guide.views import GuideView, GoodsViewSet, ConstructionViewSet, ServicesViewSet, \
+    TenderingReasonsViewSet, EvaluateResults, GuideFormView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,4 +28,6 @@ urlpatterns = [
     path('construction/', ConstructionViewSet.as_view({'get': 'list'})),
     path('services/', ServicesViewSet.as_view({'get': 'list'})),
     path('tendering_reasons/', ServicesViewSet.as_view({'get': 'list'})),
+    path('evaluate_results/', EvaluateResults.as_view(), name='EvaluateResults'),
+    path('evaluate/', GuideFormView.as_view(), name='EvaluateForm')
 ]

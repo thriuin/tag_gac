@@ -74,6 +74,7 @@ class ServicesCodes(GenericTradeAgreements):
     def __str__(self):
         return "{0} - {1}".format(self.ccs_level_2, self.gsin_class)
 
+
 class TenderingReasons(GenericTradeAgreements):
 
     desc_en = models.TextField(default="-", unique=True, verbose_name="Description (English)")
