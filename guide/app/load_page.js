@@ -1,6 +1,7 @@
 
 var surveyJSON = {
-    title: "Trade Agreements, Single Implementation Guideline", pages: [
+    title: "Trade Agreements, Single Implementation Guideline",
+    pages: [
         {
             name: "page1", questions: [
                 {type: "text", inputType: "number", name: "contractValue", title: "Estimated Value", isRequired: true},
@@ -124,11 +125,28 @@ var surveyJSON = {
                 }
             ]
         }
-    ]
+    ],
+    showProgressBar: "top",
 };
 
 Survey.StylesManager.applyTheme("bootstrap");
 
-var survey = new Survey.Model(surveyJSON);
+window.survey = new Survey.Model(surveyJSON);
+survey
+    .onComplete
+    .add(function (result) {
+        console.info(result.data)
+    });
+/*
+survey.onComplete.add(function (sender, options) {
+      console.info(sender.data);
+});
+survey.onComplete.add(function (sender, options) {
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "http://127.0.0.1:8000/evaluate_results");
+      xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+      xhr.send(JSON.stringify(sender.data));
+});
+ */
 new Vue({el: '#surveyContainer', data: {survey: survey}});
 

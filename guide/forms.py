@@ -1,6 +1,8 @@
 from django import forms
+from django.forms.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from guide.models import GoodsCodes, ConstructionCodes, ServicesCodes
+
 
 class GuideForm(forms.Form):
 
@@ -26,11 +28,15 @@ class GuideForm(forms.Form):
 
     construction_codes = forms.ModelChoiceField(ConstructionCodes.objects.all(),
                                                 to_field_name="id",
+                                                initial=ConstructionCodes.objects.first(),
+                                                required=False,
                                                 label=_("Construction Codes"))
     construction_codes.widget.attrs['class'] = 'form-control'
 
     services_codes = forms.ModelChoiceField(ServicesCodes.objects.all(),
                                             to_field_name="id",
+                                            initial=0,
+                                            required=False,
                                             label=_("Service Codes"))
     services_codes.widget.attrs['class'] = 'form-control'
 
@@ -113,3 +119,19 @@ class GuideForm(forms.Form):
         required=False
     )
     cfta_exceptions.widget.attrs['class'] = 'form-control'
+
+    def clean_commodity_type(self):
+        if self.cleaned_data['commodity_type'] == 'goods':
+            if 'goods_codes' not in self.data or self.data['goods_codes'] is None:
+                raise ValidationError(
+                    _('Select a good'),
+                    code='invalid',
+                )
+            try:
+                code = int(self.data['goods_codes'])
+            except:
+                raise ValidationError(
+                    _('Select a good'),
+                    code='invalid',
+                )
+    # @todo - add validation for all 3 types
