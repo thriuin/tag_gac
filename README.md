@@ -23,7 +23,9 @@ python manage.py createsuperuser
 
 ### Load Data ###
 
+From the project root directory, and after activating the virtual environment, run the
+load data script
 ```bash
-python .\load-data-from-csv.py --goods-csv .\data\ogd_goods.csv --
+python .\load-data-from-csv.py --goods-csv .\data\ogd_goods.csv --construction-csv .\data\construction.csv --services-csv .\data\ogd_services.csv  --exceptions-csv .\data\exceptions.csv --threshold-csv .\data\thresholds.csv
 ```
 

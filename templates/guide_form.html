@@ -32,20 +32,41 @@
           </thead>
           <tbody>
           <tr>
-            <td>{% if nafta_annex %}{% trans 'Applies' %}{% else %}{% trans 'Exempt' %}{% endif %}</td>
-            <td>{% if ccfta %}{% trans 'Applies' %}{% else %}{% trans 'Exempt' %}{% endif %}</td>
-            <td>{% if ccofta %}{% trans 'Applies' %}{% else %}{% trans 'Exempt' %}{% endif %}</td>
-            <td>{% if chfta %}{% trans 'Applies' %}{% else %}{% trans 'Exempt' %}{% endif %}</td>
-            <td>{% if cpafta %}{% trans 'Applies' %}{% else %}{% trans 'Exempt' %}{% endif %}</td>
-            <td>{% if cpfta %}{% trans 'Applies' %}{% else %}{% trans 'Exempt' %}{% endif %}</td>
-            <td>{% if ckfta %}{% trans 'Applies' %}{% else %}{% trans 'Exempt' %}{% endif %}</td>
-            <td>{% if cufta %}{% trans 'Applies' %}{% else %}{% trans 'Exempt' %}{% endif %}</td>
-            <td>{% if wto_agp %}{% trans 'Applies' %}{% else %}{% trans 'Exempt' %}{% endif %}</td>
-            <td>{% if ceta %}{% trans 'Applies' %}{% else %}{% trans 'Exempt' %}{% endif %}</td>
-            <td>{% if cptpp %}{% trans 'Applies' %}{% else %}{% trans 'Exempt' %}{% endif %}</td>
+            <td>{% if nafta_annex_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
+            <td>{% if ccfta_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
+            <td>{% if ccofta_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
+            <td>{% if chfta_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
+            <td>{% if cpafta_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
+            <td>{% if cpfta_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
+            <td>{% if ckfta_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
+            <td>{% if cufta_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
+            <td>{% if wto_agp_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
+            <td>{% if ceta_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
+            <td>{% if cptpp_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
            </tr>
           </tbody>
         </table>
+    </div>
+    <div class="row mrgn-tp-md mrgn-bttm-lg">
+        <h3>{% trans 'Explanation' %}</h3>
+        <p>NAFTA Annex</p>
+        <ul>
+            {% for x in nafta_annex %}
+            <li>{{ x }}</li>
+            {% endfor %}
+        </ul>
+        <p>CCFTA</p>
+        <ul>
+            {% for x in ccfta %}
+            <li>{{ x }}</li>
+            {% endfor %}
+        </ul>
+        <p>CCoFTA</p>
+        <ul>
+            {% for x in ccofta %}
+            <li>{{ x }}</li>
+            {% endfor %}
+        </ul>
     </div>
     {% endif %}
     <div class="row mrgn-tp-md mrgn-bttm-md">

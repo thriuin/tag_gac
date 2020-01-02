@@ -1,27 +1,27 @@
-from guide.models import GoodsCodes, ConstructionCodes, ServicesCodes, TenderingReasons
+from guide.models import GoodsCode, ConstructionCode, ServicesCode, TenderingReason
 from rest_framework import serializers
 
 
 class GoodsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = GoodsCodes
+        model = GoodsCode
         fields = ['fs_code', 'fs_code_desc', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
                   'wto_agp', 'ceta', 'cptpp']
 
 class ConstructionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = ConstructionCodes
+        model = ConstructionCode
         fields = ['fs_code', 'fs_code_desc', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
                   'wto_agp', 'ceta', 'cptpp']
 
 class ServicesSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = ServicesCodes
+        model = ServicesCode
         fields = ['nafta_code', 'ccs_level_2', 'gsin_class', 'desc_en', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta',
                   'ckfta', 'cufta', 'wto_agp', 'ceta', 'cptpp']
 
 
 class TenderingSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = TenderingReasons
+        model = TenderingReason
         fields = ['desc_en', 'desc_fr']

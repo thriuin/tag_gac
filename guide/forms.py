@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from guide.models import GoodsCodes, ConstructionCodes, ServicesCodes
+from guide.models import GoodsCode, ConstructionCode, ServicesCode
 
 
 class GuideForm(forms.Form):
@@ -18,24 +18,24 @@ class GuideForm(forms.Form):
     commodity_type = forms.ChoiceField(label=_('Commodity Type'),
                                        choices=(('goods', _('Goods')),
                                                 ('services', _('Services')),
-                                                ('construction', _('Construction'))))
+                                                ('construction', _('Construction'))),
+                                       required=True,
+                                       initial='goods')
     commodity_type.widget.attrs['class'] = 'form-control'
 
-    goods_codes = forms.ModelChoiceField(GoodsCodes.objects.all(), to_field_name="id",
+    goods_codes = forms.ModelChoiceField(GoodsCode.objects.all(), to_field_name="id",
                                          label=_('Goods Codes'),
                                          required=False)
     goods_codes.widget.attrs['class'] = 'form-control'
 
-    construction_codes = forms.ModelChoiceField(ConstructionCodes.objects.all(),
-                                                to_field_name="id",
-                                                initial=ConstructionCodes.objects.first(),
-                                                required=False,
-                                                label=_("Construction Codes"))
-    construction_codes.widget.attrs['class'] = 'form-control'
+    construction_code = forms.ModelChoiceField(ConstructionCode.objects.all(),
+                                               to_field_name="id",
+                                               required=False,
+                                               label=_("Construction Codes"))
+    construction_code.widget.attrs['class'] = 'form-control'
 
-    services_codes = forms.ModelChoiceField(ServicesCodes.objects.all(),
+    services_codes = forms.ModelChoiceField(ServicesCode.objects.all(),
                                             to_field_name="id",
-                                            initial=0,
                                             required=False,
                                             label=_("Service Codes"))
     services_codes.widget.attrs['class'] = 'form-control'
@@ -124,14 +124,39 @@ class GuideForm(forms.Form):
         if self.cleaned_data['commodity_type'] == 'goods':
             if 'goods_codes' not in self.data or self.data['goods_codes'] is None:
                 raise ValidationError(
-                    _('Select a good'),
+                    _('Select a good from the list below'),
                     code='invalid',
                 )
             try:
                 code = int(self.data['goods_codes'])
             except:
                 raise ValidationError(
-                    _('Select a good'),
+                    _('Select a good from the list below'),
                     code='invalid',
                 )
-    # @todo - add validation for all 3 types
+        elif self.cleaned_data['commodity_type'] == 'construction':
+            if 'construction_code' not in self.data or self.data['construction_code'] is None:
+                raise ValidationError(
+                    _('Select a construction from the list below'),
+                    code='invalid',
+                )
+            try:
+                code = int(self.data['construction_code'])
+            except:
+                raise ValidationError(
+                    _('Select a construction from the list below'),
+                    code='invalid',
+                )
+        elif self.cleaned_data['commodity_type'] == 'services':
+            if 'services_codes' not in self.data or self.data['services_codes'] is None:
+                raise ValidationError(
+                    _('Select a service from the list below'),
+                    code='invalid',
+                )
+            try:
+                code = int(self.data['services_codes'])
+            except:
+                raise ValidationError(
+                    _('Select a service from the list below'),
+                    code='invalid',
+                )
