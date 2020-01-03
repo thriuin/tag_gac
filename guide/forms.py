@@ -28,17 +28,17 @@ class GuideForm(forms.Form):
                                          required=False)
     goods_codes.widget.attrs['class'] = 'form-control'
 
-    construction_code = forms.ModelChoiceField(ConstructionCode.objects.all(),
-                                               to_field_name="id",
-                                               required=False,
-                                               label=_("Construction Codes"))
-    construction_code.widget.attrs['class'] = 'form-control'
-
     services_codes = forms.ModelChoiceField(ServicesCode.objects.all(),
                                             to_field_name="id",
                                             required=False,
                                             label=_("Service Codes"))
     services_codes.widget.attrs['class'] = 'form-control'
+
+    construction_code = forms.ModelChoiceField(ConstructionCode.objects.all(),
+                                               to_field_name="id",
+                                               required=False,
+                                               label=_("Construction Codes"))
+    construction_code.widget.attrs['class'] = 'form-control'
 
     solicitation = forms.ChoiceField(label=_('Solicitation Procedure'),
                                      choices=(('tc', _('Traditional Competitive')),
@@ -121,6 +121,11 @@ class GuideForm(forms.Form):
     cfta_exceptions.widget.attrs['class'] = 'form-control'
 
     def clean_commodity_type(self):
+        '''
+        Provide a custom validation for the commodity type select field. Whatever commodity type is selected the
+        corresponding goods, services, or construction select field must have a selected item.
+        :return: A ValidationError if the corresponding commodity is not selected.
+        '''
         if self.cleaned_data['commodity_type'] == 'goods':
             if 'goods_codes' not in self.data or self.data['goods_codes'] is None:
                 raise ValidationError(
@@ -132,19 +137,6 @@ class GuideForm(forms.Form):
             except:
                 raise ValidationError(
                     _('Select a good from the list below'),
-                    code='invalid',
-                )
-        elif self.cleaned_data['commodity_type'] == 'construction':
-            if 'construction_code' not in self.data or self.data['construction_code'] is None:
-                raise ValidationError(
-                    _('Select a construction from the list below'),
-                    code='invalid',
-                )
-            try:
-                code = int(self.data['construction_code'])
-            except:
-                raise ValidationError(
-                    _('Select a construction from the list below'),
                     code='invalid',
                 )
         elif self.cleaned_data['commodity_type'] == 'services':
@@ -160,3 +152,17 @@ class GuideForm(forms.Form):
                     _('Select a service from the list below'),
                     code='invalid',
                 )
+        elif self.cleaned_data['commodity_type'] == 'construction':
+            if 'construction_code' not in self.data or self.data['construction_code'] is None:
+                raise ValidationError(
+                    _('Select a construction from the list below'),
+                    code='invalid',
+                )
+            try:
+                code = int(self.data['construction_code'])
+            except:
+                raise ValidationError(
+                    _('Select a construction from the list below'),
+                    code='invalid',
+                )
+

@@ -50,7 +50,22 @@ class GuideView(View):
         return render(request, "guide.html", context)
 
 
-def find_exemptions(form):
+def set_agreement_values(trade_agreements, record):
+    trade_agreements['nafta_annex']['setting'] = record.nafta_annex
+    trade_agreements['ccfta']['setting'] = record.ccfta
+    trade_agreements['ccofta']['setting'] = record.ccofta
+    trade_agreements['chfta']['setting'] = record.chfta
+    trade_agreements['cpafta']['setting'] = record.cpafta
+    trade_agreements['cpfta']['setting'] = record.cpfta
+    trade_agreements['ckfta']['setting'] = record.ckfta
+    trade_agreements['cufta']['setting'] = record.cufta
+    trade_agreements['wto_agp']['setting'] = record.wto_agp
+    trade_agreements['ceta']['setting'] = record.ceta
+    trade_agreements['cptpp']['setting'] = record.cptpp
+    return trade_agreements
+
+
+def find_exemptions(form, commodity_type: str):
     agreements = {
         'nafta_annex_yn': False,
         'ccfta_yn': False,
@@ -77,47 +92,53 @@ def find_exemptions(form):
         'ceta': [],
         'cptpp': [],
     }
+    trade_agreements = {
+        'nafta_annex': {'setting': None, 'label': 'NAFTA', 'agreement': 'nafta_annex_yn'},
+        'ccfta': {'setting': None, 'label': 'Chile (CCFTA) ', 'agreement': 'ccfta_yn'},
+        'ccofta': {'setting': None, 'label': 'Colombia (CCoFTA)', 'agreement': 'ccofta_yn'},
+        'chfta': {'setting': None, 'label': 'Honduras (CHFTA)', 'agreement': 'chfta_yn'},
+        'cpafta': {'setting': None, 'label': 'Panama (CPaFTA)', 'agreement': 'cpafta_yn'},
+        'cpfta': {'setting': None, 'label': 'Peru (CPFTA)', 'agreement': 'cpfta_yn'},
+        'ckfta': {'setting': None, 'label': 'Korea (CKFTA)', 'agreement': 'ckfta_yn'},
+        'cufta': {'setting': None, 'label': 'Ukraine (CUFTA)', 'agreement': 'cufta_yn'},
+        'wto_agp': {'setting': None, 'label': 'WTO-AGP Canada', 'agreement': 'wto_agp_yn'},
+        'ceta': {'setting': None, 'label': 'CETA Annex 19-5', 'agreement': 'ceta_yn'},
+        'cptpp': {'setting': None, 'label': 'CPTPP Chapter 15', 'agreement': 'cptpp_yn'},
+    }
+    desc_en = ""
     dollars = form.cleaned_data['estimated_value']
-    if 'goods_codes' in form.cleaned_data and form.cleaned_data['goods_codes'] is not None:
-        goods = GoodsCode.objects.get(id=form.cleaned_data['goods_codes'].id)
-    else:
-        goods = None
-    if 'services_code' in form.cleaned_data and form.cleaned_data['services_codes'] is not None:
-        services = ServicesCode.objects.get(id=form.cleaned_data['services_codes'].id)
-    else:
-        services = None
-    if 'construction_code' in form.cleaned_data and form.cleaned_data['construction_code'] is not None:
-        construction = ConstructionCode.objects.get(id=form.cleaned_data['construction_code'].id)
-    else:
-        construction = None
-    commodity_type = ''
-    if 'commodity_type' in form.cleaned_data and form.cleaned_data['commodity_type'] is not None:
-        commodity_type = form.cleaned_data['commodity_type']
-    elif 'commodity_type' in form.data and form.data['commodity_type'] in ('goods', 'services', 'construction'):
-        commodity_type = form.data['commodity_type']
-    if commodity_type != '':
-        vt = ValueThreshold.objects.get(desc_en=commodity_type)
+    if commodity_type == 'goods':
+        if 'goods_codes' in form.cleaned_data and form.cleaned_data['goods_codes'] is not None:
+            goods = GoodsCode.objects.get(id=form.cleaned_data['goods_codes'].id)
+            set_agreement_values(trade_agreements, goods)
+            desc_en = goods.fs_code_desc
 
-        if dollars < vt.nafta_annex:
-            agreements['nafta_annex_yn'] = True
-            reasons['nafta_annex'].append('Commodities under {0} are exempt under NAFTA Annex'.format(vt.nafta_annex))
-        if dollars < vt.ccfta:
-            agreements['ccfta_yn'] = True
-            reasons['ccfta'].append('Commodities under {0} are exempt under CCFTA'.format(vt.ccfta))
-        if dollars < vt.ccofta:
-            agreements['ccofta_yn'] = True
-            reasons['ccofta'].append('Commodities under {0} are exempt under CCoFTA'.format(vt.ccofta))
-            # @todo pick it up here
+    elif commodity_type == 'services':
+        if 'services_code' in form.cleaned_data and form.cleaned_data['services_codes'] is not None:
+            services = ServicesCode.objects.get(id=form.cleaned_data['services_codes'].id)
+            set_agreement_values(trade_agreements, services)
+            desc_en = services.ccs_level_2
 
-        if commodity_type == 'goods' and goods is not None:
-            if goods.nafta_annex:
-                agreements['nafta_annex_yn'] = True
-                reasons['nafta_annex'].append(
-                    '{0} are exempt under NAFTA Annex'.format(goods.fs_code_desc))
-            if goods.ccfta:
-                agreements['ccfta_yn'] = True
-                reasons['ccfta'].append(
-                    '"{0}" are exempt under CCFTA'.format(goods.fs_code_desc))
+    elif commodity_type == 'construction':
+        if 'construction_code' in form.cleaned_data and form.cleaned_data['construction_code'] is not None:
+            construction = ConstructionCode.objects.get(id=form.cleaned_data['construction_code'].id)
+            set_agreement_values(trade_agreements, construction)
+            desc_en = construction.fs_code_desc
+
+    # Find the exemptions based on commodity type
+    for ta in trade_agreements:
+        if trade_agreements[ta]['setting']:
+            agreements[trade_agreements[ta]['agreement']] = True
+            reasons[ta].append('{0} are exempt under {1}'.format(desc_en, trade_agreements[ta]['label']))
+
+    # Find the exemptions based on dollar value
+    vt = ValueThreshold.objects.get(desc_en=commodity_type)
+    set_agreement_values(trade_agreements, vt)
+    for ta in trade_agreements:
+        if trade_agreements[ta]['setting'] is not None and dollars < trade_agreements[ta]['setting']:
+            agreements[trade_agreements[ta]['agreement']] = True
+            reasons[ta].append('{0} under {1} are exempt under {2}'.format(commodity_type, trade_agreements[ta]['setting'],
+                                                                           trade_agreements[ta]['label']))
 
     return agreements, reasons
 
@@ -128,6 +149,7 @@ class GuideFormView(View):
 
     def get(self, request, *args, **kwargs):
         form = GuideForm()
+        # do not display the evaluation section of the form
         return render(request, 'guide_form.html', {'form': form, 'show_eval': False})
 
     def post(self, request, *args, **kwargs):
@@ -136,21 +158,17 @@ class GuideFormView(View):
         context = {'show_eval': False}
         # check whether it's valid:
         if form.is_valid():
-            ta = find_exemptions(form)
-            context = {**ta[0], **ta[1]}
-            context['show_eval'] = True
-            print('Valid')
+            commodity_type = ''
+            if 'commodity_type' in form.cleaned_data and form.cleaned_data['commodity_type'] is not None:
+                commodity_type = form.cleaned_data['commodity_type']
+            elif 'commodity_type' in form.data and form.data['commodity_type'] in ('goods', 'services', 'construction'):
+                commodity_type = form.data['commodity_type']
+            if commodity_type != '':
+                ta = find_exemptions(form, commodity_type)
+                # forward a merged dictionary of exemptions and  reasons to the form for display
+                context = {**ta[0], **ta[1]}
+                # show the evaluation section on the page
+                context['show_eval'] = True
         context['form'] = form
         return render(request, 'guide_form.html', context)
-
-
-class EvaluateResults(View):
-
-    def __init__(self):
-        super().__init__()
-
-    def get(self, request: HttpRequest):
-        if request.method == 'POST':
-            post_data = request.POST
-            print(post_data)
 

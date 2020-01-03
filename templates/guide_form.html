@@ -17,17 +17,17 @@
         <caption class="wb-inv">{% trans 'Trade Agreement Applicability' %}</caption>
           <thead>
            <tr>
-                <th scope="col">{% trans 'NAFTA Annex 1001.1b-2' %}
-                <th scope="col">{% trans 'Chile (CCFTA) Annex K bis-01.1-4' %}
-                <th scope="col">{% trans 'Colombia (CCoFTA) Annex 1401-4' %}
-                <th scope="col">{% trans 'Honduras (CHFTA) Annex 17.4' %}
-                <th scope="col">{% trans 'Panama (CPaFTA) Annex 5' %}
-                <th scope="col">{% trans 'Peru (CPFTA) Annex 1401.1-4' %}
-                <th scope="col">{% trans 'Korea (CKFTA) Annex 14-C' %}
-                <th scope="col">{% trans 'Ukraine (CUFTA) Annex 10-4' %}
-                <th scope="col">{% trans 'WTO-AGP Canada Annex 4' %}
-                <th scope="col">{% trans 'CETA Annex 19-5' %}
-                <th scope="col">{% trans 'CPTPP Chapter 15, Annex 15-A Section E' %}
+               <th scope="col">{% trans 'NAFTA Annex 1001.1b-2' %}</th>
+               <th scope="col">{% trans 'Chile (CCFTA) Annex K bis-01.1-4' %}</th>
+               <th scope="col">{% trans 'Colombia (CCoFTA) Annex 1401-4' %}</th>
+               <th scope="col">{% trans 'Honduras (CHFTA) Annex 17.4' %}</th>
+               <th scope="col">{% trans 'Panama (CPaFTA) Annex 5' %}</th>
+               <th scope="col">{% trans 'Peru (CPFTA) Annex 1401.1-4' %}</th>
+               <th scope="col">{% trans 'Korea (CKFTA) Annex 14-C' %}</th>
+               <th scope="col">{% trans 'Ukraine (CUFTA) Annex 10-4' %}</th>
+               <th scope="col">{% trans 'WTO-AGP Canada Annex 4' %}</th>
+               <th scope="col">{% trans 'CETA Annex 19-5' %}</th>
+               <th scope="col">{% trans 'CPTPP Chapter 15, Annex 15-A Section E' %}</th>
            </tr>
           </thead>
           <tbody>
@@ -48,25 +48,79 @@
         </table>
     </div>
     <div class="row mrgn-tp-md mrgn-bttm-lg">
-        <h3>{% trans 'Explanation' %}</h3>
-        <p>NAFTA Annex</p>
-        <ul>
-            {% for x in nafta_annex %}
-            <li>{{ x }}</li>
-            {% endfor %}
-        </ul>
-        <p>CCFTA</p>
-        <ul>
-            {% for x in ccfta %}
-            <li>{{ x }}</li>
-            {% endfor %}
-        </ul>
-        <p>CCoFTA</p>
-        <ul>
-            {% for x in ccofta %}
-            <li>{{ x }}</li>
-            {% endfor %}
-        </ul>
+    <section class="panel panel-info">
+        <header class="panel-heading">
+        <h5 class="panel-title">{% trans 'Explanation' %}</h5>
+        </header>
+        <div class="panel-body">
+            {% if nafta_annex %}<h6>NAFTA Annex</h6>
+            <ul>
+                {% for x in nafta_annex %}
+                <li>{{ x }}</li>
+                {% endfor %}
+            </ul>{% endif %}
+            {% if ccfta %}<h6>{% trans 'Chile (CCFTA) Annex K bis-01.1-4' %}</h6>
+            <ul>
+                {% for x in ccfta %}
+                <li>{{ x }}</li>
+                {% endfor %}
+            </ul>{% endif %}
+            {% if ccofta %}<h6>{% trans 'Colombia (CCoFTA) Annex 1401-4' %}</h6>
+            <ul>
+                {% for x in ccofta %}
+                <li>{{ x }}</li>
+                {% endfor %}
+            </ul>{% endif %}
+            {% if chfta %}<h6>{% trans 'Honduras (CHFTA) Annex 17.4' %}</h6>
+            <ul>
+                {% for x in chfta %}
+                <li>{{ x }}</li>
+                {% endfor %}
+            </ul>{% endif %}
+            {% if cpafta %}<h6>{% trans 'Panama (CPaFTA) Annex 5' %}</h6>
+            <ul>
+                {% for x in cpafta %}
+                <li>{{ x }}</li>
+                {% endfor %}
+            </ul>{% endif %}
+            {% if cpfta %}<h6>{% trans 'Peru (CPFTA) Annex 1401.1-4' %}</h6>
+            <ul>
+                {% for x in cpfta %}
+                <li>{{ x }}</li>
+                {% endfor %}
+            </ul>{% endif %}
+            {% if ckfta %}<h6>{% trans 'Korea (CKFTA) Annex 14-C' %}</h6>
+            <ul>
+                {% for x in ckfta %}
+                <li>{{ x }}</li>
+                {% endfor %}
+            </ul>{% endif %}
+            {% if cufta %}<h6>{% trans 'Ukraine (CUFTA) Annex 10-4' %}</h6>
+            <ul>
+                {% for x in cufta %}
+                <li>{{ x }}</li>
+                {% endfor %}
+            </ul>{% endif %}
+            {% if wto_agp %}<h6>{% trans 'WTO-AGP Canada Annex 4' %}</h6>
+            <ul>
+                {% for x in wto_agp %}
+                <li>{{ x }}</li>
+                {% endfor %}
+            </ul>{% endif %}
+            {% if ceta %}<h6>{% trans 'CETA Annex 19-5' %}</h6>
+            <ul>
+                {% for x in ceta %}
+                <li>{{ x }}</li>
+                {% endfor %}
+            </ul>{% endif %}
+            {% if cptpp %}<h6>{% trans 'CPTPP Chapter 15, Annex 15-A Section E' %}</h6>
+            <ul>
+                {% for x in cptpp %}
+                <li>{{ x }}</li>
+                {% endfor %}
+            </ul>{% endif %}
+        </div>
+    </section>
     </div>
     {% endif %}
     <div class="row mrgn-tp-md mrgn-bttm-md">

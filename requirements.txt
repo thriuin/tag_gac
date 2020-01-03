@@ -4,6 +4,7 @@ colorama
 Django==2.2.8
 djangorestframework
 django-markdown-filter==0.0.1
+django-import-export==2.0
 markdown2==2.3.8
 python-dateutil
 pytz>=2019.3

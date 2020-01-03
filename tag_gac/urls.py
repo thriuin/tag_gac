@@ -17,17 +17,16 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.urls import path
 from guide.views import GuideView, GoodsViewSet, ConstructionViewSet, ServicesViewSet, \
-    TenderingReasonsViewSet, EvaluateResults, GuideFormView
+    TenderingReasonsViewSet, GuideFormView
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', GuideView.as_view(), name='Guide'),
-    path('guide/', GuideView.as_view(), name='Guide'),
+    path('', GuideFormView.as_view(), name='Guide'),
+    path('guide/', GuideView.as_view(), name='Guide'),  # Temporary demo of SurveyJS
     path('goods/', GoodsViewSet.as_view({'get': 'list'})),
     path('construction/', ConstructionViewSet.as_view({'get': 'list'})),
     path('services/', ServicesViewSet.as_view({'get': 'list'})),
-    path('tendering_reasons/', ServicesViewSet.as_view({'get': 'list'})),
-    path('evaluate_results/', EvaluateResults.as_view(), name='EvaluateResults'),
+    path('tendering_reasons/', TenderingReasonsViewSet.as_view({'get': 'list'})),
     path('evaluate/', GuideFormView.as_view(), name='EvaluateForm')
 ]
