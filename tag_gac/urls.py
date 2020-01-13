@@ -21,12 +21,12 @@ from guide.views import GuideView, GoodsViewSet, ConstructionViewSet, ServicesVi
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', GuideFormView.as_view(), name='Guide'),
-    path('guide/', GuideView.as_view(), name='Guide'),  # Temporary demo of SurveyJS
-    path('goods/', GoodsViewSet.as_view({'get': 'list'})),
-    path('construction/', ConstructionViewSet.as_view({'get': 'list'})),
-    path('services/', ServicesViewSet.as_view({'get': 'list'})),
-    path('tendering_reasons/', TenderingReasonsViewSet.as_view({'get': 'list'})),
-    path('evaluate/', GuideFormView.as_view(), name='EvaluateForm')
+    path('tag/admin/', admin.site.urls),
+    path('tag/', GuideFormView.as_view(), name='Guide'),
+    path('tag/guide/', GuideView.as_view(), name='Guide'),  # Temporary demo of SurveyJS
+    path('tag/goods/', GoodsViewSet.as_view({'get': 'list'})),
+    path('tag/construction/', ConstructionViewSet.as_view({'get': 'list'})),
+    path('tag/services/', ServicesViewSet.as_view({'get': 'list'})),
+    path('tag/tendering_reasons/', TenderingReasonsViewSet.as_view({'get': 'list'})),
+    path('tag/evaluate/', GuideFormView.as_view(), name='EvaluateForm')
 ]
