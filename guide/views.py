@@ -3,16 +3,24 @@ from django.shortcuts import render
 from django.views.generic import View
 from rest_framework import viewsets
 from guide.forms import GuideForm
-from guide.models import GoodsCode, ConstructionCode, ServicesCode, TenderingReason, ValueThreshold
-from guide.serializers import GoodsSerializer, ConstructionSerializer, ServicesSerializer, TenderingSerializer
+from guide.models import GoodsOGDCode, GoodsMilitaryCode, ConstructionCode, ServicesCode, TenderingReason, ValueThreshold, FederalEntities
+from guide.serializers import GoodsOGDSerializer, GoodsMilitarySerializer, ConstructionSerializer, ServicesSerializer, TenderingSerializer, FederalEntitiesSerializer
 
 
-class GoodsViewSet(viewsets.ModelViewSet):
+class GoodsOGDViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Goods Procurement Codes to be viewed or edited.
     """
-    queryset = GoodsCode.objects.all().order_by('fs_code_desc')
-    serializer_class = GoodsSerializer
+    queryset = GoodsOGDCode.objects.all().order_by('fs_code_desc')
+    serializer_class = GoodsOGDSerializer
+
+
+class GoodsMilitaryViewSet(viewsets.ModelViewSet):
+    '''
+    API endpoint that allows the military goods procurement codes to be viewed or edited.
+    '''
+    queryset = GoodsMilitaryCode.objects.all().order_by('fs_code_desc')
+    serializer_class = GoodsMilitarySerializer
 
 
 class ConstructionViewSet(viewsets.ModelViewSet):
@@ -39,6 +47,14 @@ class TenderingReasonsViewSet(viewsets.ModelViewSet):
     serializer_class = TenderingSerializer
 
 
+class FederalEntitiesViewSet(viewsets.ModelViewSet):
+    '''
+    API endpoint that allows Federal Entities to be viewed and edited
+    '''
+    queryset = FederalEntities.objects.all().order_by('name_en')
+    serializer_class = FederalEntitiesSerializer
+
+
 class GuideView(View):
 
     def __init__(self):
@@ -62,6 +78,7 @@ def set_agreement_values(trade_agreements, record):
     trade_agreements['wto_agp']['setting'] = record.wto_agp
     trade_agreements['ceta']['setting'] = record.ceta
     trade_agreements['cptpp']['setting'] = record.cptpp
+    trade_agreements['cfta']['setting'] = record.cfta
     return trade_agreements
 
 
@@ -78,6 +95,7 @@ def find_exemptions(form, commodity_type: str):
         'wto_agp_yn': False,
         'ceta_yn': False,
         'cptpp_yn': False,
+        'cfta_yn': False,
     }
     reasons = {
         'nafta_annex': [],
@@ -91,6 +109,7 @@ def find_exemptions(form, commodity_type: str):
         'wto_agp': [],
         'ceta': [],
         'cptpp': [],
+        'cfta': [],
     }
     trade_agreements = {
         'nafta_annex': {'setting': None, 'label': 'NAFTA', 'agreement': 'nafta_annex_yn'},
@@ -104,12 +123,13 @@ def find_exemptions(form, commodity_type: str):
         'wto_agp': {'setting': None, 'label': 'WTO-AGP Canada', 'agreement': 'wto_agp_yn'},
         'ceta': {'setting': None, 'label': 'CETA Annex 19-5', 'agreement': 'ceta_yn'},
         'cptpp': {'setting': None, 'label': 'CPTPP Chapter 15', 'agreement': 'cptpp_yn'},
+        'cfta': {'setting': None, 'label': 'CFTA Chapter 5', 'agreement': 'cfta_yn'}
     }
     desc_en = ""
     dollars = form.cleaned_data['estimated_value']
     if commodity_type == 'goods':
         if 'goods_codes' in form.cleaned_data and form.cleaned_data['goods_codes'] is not None:
-            goods = GoodsCode.objects.get(id=form.cleaned_data['goods_codes'].id)
+            goods = GoodsOGDCode.objects.get(id=form.cleaned_data['goods_codes'].id)
             set_agreement_values(trade_agreements, goods)
             desc_en = goods.fs_code_desc
 

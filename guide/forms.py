@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from guide.models import GoodsCode, ConstructionCode, ServicesCode
+from guide.models import GoodsOGDCode, GoodsMilitaryCode, ConstructionCode, ServicesCode
 
 
 class GuideForm(forms.Form):
@@ -23,7 +23,7 @@ class GuideForm(forms.Form):
                                        initial='goods')
     commodity_type.widget.attrs['class'] = 'form-control'
 
-    goods_codes = forms.ModelChoiceField(GoodsCode.objects.all(), to_field_name="id",
+    goods_codes = forms.ModelChoiceField(GoodsOGDCode.objects.all(), to_field_name="id",
                                          label=_('Goods Codes'),
                                          required=False)
     goods_codes.widget.attrs['class'] = 'form-control'

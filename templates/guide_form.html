@@ -28,6 +28,7 @@
                <th scope="col">{% trans 'WTO-AGP Canada Annex 4' %}</th>
                <th scope="col">{% trans 'CETA Annex 19-5' %}</th>
                <th scope="col">{% trans 'CPTPP Chapter 15, Annex 15-A Section E' %}</th>
+               <th scope="col">{% trans 'CFTA Chapter 5' %}</th>
            </tr>
           </thead>
           <tbody>
@@ -43,6 +44,7 @@
             <td>{% if wto_agp_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
             <td>{% if ceta_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
             <td>{% if cptpp_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
+            <td>{% if cfta_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
            </tr>
           </tbody>
         </table>
@@ -116,6 +118,12 @@
             {% if cptpp %}<h6>{% trans 'CPTPP Chapter 15, Annex 15-A Section E' %}</h6>
             <ul>
                 {% for x in cptpp %}
+                <li>{{ x }}</li>
+                {% endfor %}
+            </ul>{% endif %}
+            {% if cfta %}<h6>{% trans 'CFTA Chapter 5' %}</h6>
+            <ul>
+                {% for x in cfta %}
                 <li>{{ x }}</li>
                 {% endfor %}
             </ul>{% endif %}

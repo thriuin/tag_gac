@@ -9,7 +9,7 @@ import sys
 environ.setdefault('DJANGO_SETTINGS_MODULE', 'tag_gac.settings')
 import django
 django.setup()
-from guide.models import GoodsCode, ConstructionCode, ServicesCode, TAException, ValueThreshold
+from guide.models import GoodsOGDCode, ConstructionCode, ServicesCode, TAException, ValueThreshold
 
 
 def load_goods(csv_file: str):
@@ -21,18 +21,18 @@ def load_goods(csv_file: str):
         for gc in gc_reader:
             current_key = gc['fsc_level_1'] + gc['fsc_level_4']
             if not current_key == prev_key:
-                GoodsCode.objects.update_or_create(fs_code=gc['fsc_level_1'],
-                                                   fs_code_desc=gc['fsc_level_4'],
-                                                   ccfta=True if gc['CFTA'] == 'YES' else False,
-                                                   ccofta=True if gc['CCoFTA'] == 'YES' else False,
-                                                   chfta=True if gc['CHFTA'] == 'YES' else False,
-                                                   cpafta=True if gc['CPaFTA'] == 'YES' else False,
-                                                   cpfta=True if gc['CPFTA'] == 'YES' else False,
-                                                   ckfta=True if gc['CKFTA'] == 'YES' else False,
-                                                   cufta=True if gc['CUFTA'] == 'YES' else False,
-                                                   wto_agp=True if gc['WTO_AGP'] == 'YES' else False,
-                                                   ceta=True if gc['CETA'] == 'YES' else False,
-                                                   cptpp=True if gc['CPTPP'] == 'YES' else False)
+                GoodsOGDCode.objects.update_or_create(fs_code=gc['fsc_level_1'],
+                                                      fs_code_desc=gc['fsc_level_4'],
+                                                      ccfta=True if gc['CFTA'] == 'YES' else False,
+                                                      ccofta=True if gc['CCoFTA'] == 'YES' else False,
+                                                      chfta=True if gc['CHFTA'] == 'YES' else False,
+                                                      cpafta=True if gc['CPaFTA'] == 'YES' else False,
+                                                      cpfta=True if gc['CPFTA'] == 'YES' else False,
+                                                      ckfta=True if gc['CKFTA'] == 'YES' else False,
+                                                      cufta=True if gc['CUFTA'] == 'YES' else False,
+                                                      wto_agp=True if gc['WTO_AGP'] == 'YES' else False,
+                                                      ceta=True if gc['CETA'] == 'YES' else False,
+                                                      cptpp=True if gc['CPTPP'] == 'YES' else False)
                 total += 1
             else:
                 duplicates += 1

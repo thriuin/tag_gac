@@ -15,6 +15,7 @@ class BooleanTradeAgreement(models.Model):
     wto_agp = models.BooleanField(default=False, verbose_name="WTO-AGP Canada Annex 1", blank=False)
     ceta = models.BooleanField(default=False, verbose_name="CETA Annex 19-4", blank=False)
     cptpp = models.BooleanField(default=False, verbose_name="CPTPP Chapter 15-A Section D", blank=False)
+    cfta = models.BooleanField(default=False, verbose_name="CFTA Chapter 5", blank=False)
 
 
 class NumericTradeAgreements(models.Model):
@@ -31,6 +32,7 @@ class NumericTradeAgreements(models.Model):
     wto_agp = models.IntegerField(default=0, verbose_name="WTO-AGP Canada Annex 1", blank=False)
     ceta = models.IntegerField(default=0, verbose_name="CETA Annex 19-4", blank=False)
     cptpp = models.IntegerField(default=0, verbose_name="CPTPP Chapter 15-A Section D", blank=False)
+    cfta = models.IntegerField(default=0, verbose_name="CFTA Chapter 5", blank=False)
 
 
 class GenericCodesModel(BooleanTradeAgreement):
@@ -52,7 +54,20 @@ class GenericCodesModel(BooleanTradeAgreement):
         return "{0} - {1}: {2}".format(self.gsin_class, self.gsin_code, self.gsin_desc_en)
 
 
-class GoodsCode(BooleanTradeAgreement):
+class GoodsOGDCode(BooleanTradeAgreement):
+
+    fs_code = models.CharField(max_length=10, default='', verbose_name="Federal Supply Code")
+    fs_code_desc = models.CharField(max_length=128, default="", verbose_name="Federal Supply Code Description")
+
+    class Meta:
+        ordering = ['fs_code', 'fs_code_desc']
+        unique_together = (('fs_code', 'fs_code_desc'),)
+
+    def __str__(self):
+        return "{0} - {1}".format(self.fs_code, self.fs_code_desc)
+
+
+class GoodsMilitaryCode(BooleanTradeAgreement):
 
     fs_code = models.CharField(max_length=10, default='', verbose_name="Federal Supply Code")
     fs_code_desc = models.CharField(max_length=128, default="", verbose_name="Federal Supply Code Description")
@@ -122,3 +137,15 @@ class ValueThreshold(NumericTradeAgreements):
 
     class Meta:
         unique_together = (('desc_en', 'desc_fr'),)
+
+
+class FederalEntities(BooleanTradeAgreement):
+
+    name_en = models.TextField(default="-", unique=True, verbose_name="Name of Federal Entity (English)")
+    name_fr = models.TextField(default="_", unique=True, verbose_name="Name of Federal Entity (Français)")
+
+    def __str__(self):
+        return "{0} / {1}".format(self.name_en, self.name_fr)
+
+    class Meta:
+        unique_together = (('name_en', 'name_fr'))
