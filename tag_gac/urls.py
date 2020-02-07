@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.urls import path
-from guide.views import GuideView, GoodsOGDViewSet, ConstructionViewSet, ServicesViewSet, \
+from guide.views import GuideView, GoodsViewSet, ConstructionViewSet, ServicesViewSet, \
     TenderingReasonsViewSet, GuideFormView
 
 
@@ -24,7 +24,7 @@ urlpatterns = [
     path('tag/admin/', admin.site.urls),
     path('tag/', GuideFormView.as_view(), name='Guide'),
     path('tag/guide/', GuideView.as_view(), name='Guide'),  # Temporary demo of SurveyJS
-    path('tag/goods/', GoodsOGDViewSet.as_view({'get': 'list'})),
+    path('tag/goods/', GoodsViewSet.as_view({'get': 'list'})),
     path('tag/construction/', ConstructionViewSet.as_view({'get': 'list'})),
     path('tag/services/', ServicesViewSet.as_view({'get': 'list'})),
     path('tag/tendering_reasons/', TenderingReasonsViewSet.as_view({'get': 'list'})),

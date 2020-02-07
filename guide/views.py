@@ -3,24 +3,16 @@ from django.shortcuts import render
 from django.views.generic import View
 from rest_framework import viewsets
 from guide.forms import GuideForm
-from guide.models import GoodsOGDCode, GoodsMilitaryCode, ConstructionCode, ServicesCode, TenderingReason, ValueThreshold, FederalEntities
-from guide.serializers import GoodsOGDSerializer, GoodsMilitarySerializer, ConstructionSerializer, ServicesSerializer, TenderingSerializer, FederalEntitiesSerializer
+from guide.models import GoodsCode, ConstructionCode, ServicesCode, TenderingReason, ValueThreshold, FederalEntities
+from guide.serializers import GoodsSerializer, ConstructionSerializer, ServicesSerializer, TenderingSerializer, FederalEntitiesSerializer
 
 
-class GoodsOGDViewSet(viewsets.ModelViewSet):
+class GoodsViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Goods Procurement Codes to be viewed or edited.
     """
-    queryset = GoodsOGDCode.objects.all().order_by('fs_code_desc')
-    serializer_class = GoodsOGDSerializer
-
-
-class GoodsMilitaryViewSet(viewsets.ModelViewSet):
-    '''
-    API endpoint that allows the military goods procurement codes to be viewed or edited.
-    '''
-    queryset = GoodsMilitaryCode.objects.all().order_by('fs_code_desc')
-    serializer_class = GoodsMilitarySerializer
+    queryset = GoodsCode.objects.all().order_by('fs_code_desc')
+    serializer_class = GoodsSerializer
 
 
 class ConstructionViewSet(viewsets.ModelViewSet):
@@ -129,7 +121,7 @@ def find_exemptions(form, commodity_type: str):
     dollars = form.cleaned_data['estimated_value']
     if commodity_type == 'goods':
         if 'goods_codes' in form.cleaned_data and form.cleaned_data['goods_codes'] is not None:
-            goods = GoodsOGDCode.objects.get(id=form.cleaned_data['goods_codes'].id)
+            goods = GoodsCode.objects.get(id=form.cleaned_data['goods_codes'].id)
             set_agreement_values(trade_agreements, goods)
             desc_en = goods.fs_code_desc
 

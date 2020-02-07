@@ -54,20 +54,7 @@ class GenericCodesModel(BooleanTradeAgreement):
         return "{0} - {1}: {2}".format(self.gsin_class, self.gsin_code, self.gsin_desc_en)
 
 
-class GoodsOGDCode(BooleanTradeAgreement):
-
-    fs_code = models.CharField(max_length=10, default='', verbose_name="Federal Supply Code")
-    fs_code_desc = models.CharField(max_length=128, default="", verbose_name="Federal Supply Code Description")
-
-    class Meta:
-        ordering = ['fs_code', 'fs_code_desc']
-        unique_together = (('fs_code', 'fs_code_desc'),)
-
-    def __str__(self):
-        return "{0} - {1}".format(self.fs_code, self.fs_code_desc)
-
-
-class GoodsMilitaryCode(BooleanTradeAgreement):
+class GoodsCode(BooleanTradeAgreement):
 
     fs_code = models.CharField(max_length=10, default='', verbose_name="Federal Supply Code")
     fs_code_desc = models.CharField(max_length=128, default="", verbose_name="Federal Supply Code Description")

@@ -1,17 +1,10 @@
-from guide.models import GoodsOGDCode, GoodsMilitaryCode, ConstructionCode, ServicesCode, TenderingReason, FederalEntities
+from guide.models import GoodsCode, ConstructionCode, ServicesCode, TenderingReason, FederalEntities
 from rest_framework import serializers
 
 
-class GoodsOGDSerializer(serializers.HyperlinkedModelSerializer):
+class GoodsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = GoodsOGDCode
-        fields = ['fs_code', 'fs_code_desc', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
-                  'wto_agp', 'ceta', 'cptpp', 'cfta']
-
-
-class GoodsMilitarySerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = GoodsMilitaryCode
+        model = GoodsCode
         fields = ['fs_code', 'fs_code_desc', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
                   'wto_agp', 'ceta', 'cptpp', 'cfta']
 
