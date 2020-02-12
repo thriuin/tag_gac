@@ -9,7 +9,7 @@ import sys
 environ.setdefault('DJANGO_SETTINGS_MODULE', 'tag_gac.settings')
 import django
 django.setup()
-from guide.models import GoodsCode, ConstructionCode, ServicesCode, TAException, ValueThreshold
+from guide.models import GoodsFscCode, ConstructionCcsCode, ServicesCcsCode, TAException, ValueThreshold
 
 
 def load_goods(csv_file: str):
@@ -21,18 +21,18 @@ def load_goods(csv_file: str):
         for gc in gc_reader:
             current_key = gc['fsc_level_1'] + gc['fsc_level_4']
             if not current_key == prev_key:
-                GoodsCode.objects.update_or_create(fs_code=gc['fsc_level_1'],
-                                                   fs_code_desc=gc['fsc_level_4'],
-                                                   ccfta=True if gc['CFTA'] == 'YES' else False,
-                                                   ccofta=True if gc['CCoFTA'] == 'YES' else False,
-                                                   chfta=True if gc['CHFTA'] == 'YES' else False,
-                                                   cpafta=True if gc['CPaFTA'] == 'YES' else False,
-                                                   cpfta=True if gc['CPFTA'] == 'YES' else False,
-                                                   ckfta=True if gc['CKFTA'] == 'YES' else False,
-                                                   cufta=True if gc['CUFTA'] == 'YES' else False,
-                                                   wto_agp=True if gc['WTO_AGP'] == 'YES' else False,
-                                                   ceta=True if gc['CETA'] == 'YES' else False,
-                                                   cptpp=True if gc['CPTPP'] == 'YES' else False)
+                GoodsFscCode.objects.update_or_create(fs_code=gc['fsc_level_1'],
+                                                      fs_code_desc=gc['fsc_level_4'],
+                                                      ccfta=True if gc['CFTA'] == 'YES' else False,
+                                                      ccofta=True if gc['CCoFTA'] == 'YES' else False,
+                                                      chfta=True if gc['CHFTA'] == 'YES' else False,
+                                                      cpafta=True if gc['CPaFTA'] == 'YES' else False,
+                                                      cpfta=True if gc['CPFTA'] == 'YES' else False,
+                                                      ckfta=True if gc['CKFTA'] == 'YES' else False,
+                                                      cufta=True if gc['CUFTA'] == 'YES' else False,
+                                                      wto_agp=True if gc['WTO_AGP'] == 'YES' else False,
+                                                      ceta=True if gc['CETA'] == 'YES' else False,
+                                                      cptpp=True if gc['CPTPP'] == 'YES' else False)
                 total += 1
             else:
                 duplicates += 1
@@ -51,20 +51,20 @@ def load_construction(csv_file: str):
         for cc in cc_reader:
             current_key = cc['fsc_level_3'] + cc['fsc_level_4']
             if not current_key == prev_key:
-                ConstructionCode.objects.update_or_create(fs_code=cc['fsc_level_3'],
-                                                          fs_code_desc=cc['fsc_level_4'],
-                                                          nafta_annex=True if cc['NAFTA'] == 'YES' else False,
-                                                          ccfta=True if cc['CCFTA'] == 'YES' else False,
-                                                          ccofta=True if cc['CCoFTA'] == 'YES' else False,
-                                                          chfta=True if cc['CHFTA'] == 'YES' else False,
-                                                          cpafta=True if cc['CPaFTA'] == 'YES' else False,
-                                                          cpfta=True if cc['CPFTA'] == 'YES' else False,
-                                                          ckfta=True if cc['CKFTA'] == 'YES' else False,
-                                                          cufta=True if cc['CUFTA'] == 'YES' else False,
-                                                          wto_agp=True if cc['WTO_AGP'] == 'YES' else False,
-                                                          ceta=True if cc['CETA'] == 'YES' else False,
-                                                          cptpp=True if cc['CPTPP'] == 'YES' else False
-                                                          )
+                ConstructionCcsCode.objects.update_or_create(fs_code=cc['fsc_level_3'],
+                                                             fs_code_desc=cc['fsc_level_4'],
+                                                             nafta_annex=True if cc['NAFTA'] == 'YES' else False,
+                                                             ccfta=True if cc['CCFTA'] == 'YES' else False,
+                                                             ccofta=True if cc['CCoFTA'] == 'YES' else False,
+                                                             chfta=True if cc['CHFTA'] == 'YES' else False,
+                                                             cpafta=True if cc['CPaFTA'] == 'YES' else False,
+                                                             cpfta=True if cc['CPFTA'] == 'YES' else False,
+                                                             ckfta=True if cc['CKFTA'] == 'YES' else False,
+                                                             cufta=True if cc['CUFTA'] == 'YES' else False,
+                                                             wto_agp=True if cc['WTO_AGP'] == 'YES' else False,
+                                                             ceta=True if cc['CETA'] == 'YES' else False,
+                                                             cptpp=True if cc['CPTPP'] == 'YES' else False
+                                                             )
                 total += 1
             else:
                 duplicates += 1
@@ -84,7 +84,7 @@ def load_services(csv_file: str):
             current_key = sc['ccs_level_1'] + sc['ccs_level_2'] + sc['ccs_level_4']
             if not current_key == prev_key:
                 # YES means the good is exempt under the trade agreement
-                ServicesCode.objects.update_or_create(
+                ServicesCcsCode.objects.update_or_create(
                     nafta_code=sc['ccs_level_1'],
                     ccs_level_2=sc['ccs_level_2'],
                     gsin_class=sc['ccs_level_4'],

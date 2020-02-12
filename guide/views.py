@@ -1,36 +1,110 @@
 from django.http import HttpRequest
+from django.urls import reverse_lazy
 from django.shortcuts import render
 from django.views.generic import View
+from django.views.generic.edit import ListView, CreateView, UpdateView
 from rest_framework import viewsets
-from guide.forms import GuideForm
-from guide.models import GoodsCode, ConstructionCode, ServicesCode, TenderingReason, ValueThreshold, FederalEntities
-from guide.serializers import GoodsSerializer, ConstructionSerializer, ServicesSerializer, TenderingSerializer, FederalEntitiesSerializer
+from guide.forms_no import GuideForm
+from guide.models import ModelGuide, CommodityType, \
+    GoodsFscCode, GoodsUnspscCode, \
+    ConstructionCcsCode, ConstructionCpcCode, ConstructionUnspscCode, \
+    ServicesCcsCode, ServicesCpcCode, ServicesUnspscCode, \
+    CftaException, TenderingReason, TAException, ValueThreshold, FederalEntities
+
+from guide.serializers import CommodityTypeSerializer, \
+    GoodsFscSerializer, GoodsUnspscSerializer, \
+    ServicesCcsSerializer, ServicesCpcSerializer, ServicesUnspscSerializer, \
+    ConstructionCcsSerializer, ConstructionCpcSerializer, ConstructionUnspscSerializer, \
+    CftaExceptionSerializer, TenderingSerializer, TAExceptionSerializer, FederalEntitiesSerializer
 
 
-class GoodsViewSet(viewsets.ModelViewSet):
+'''
+Commodity Type
+'''
+class CommodityTypeViewSet(viewsets.ModelViewSet):
+    '''
+    API endpoint that allows commodity types to be viewed or edited
+    '''
+    queryset = CommodityType.objects.all().order_by('commodity_type')
+    serializer_class = CommodityTypeSerializer
+
+
+'''
+Two Goods Codes: FSC, UNSPSC
+'''
+class GoodsFscViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Goods Procurement Codes to be viewed or edited.
     """
-    queryset = GoodsCode.objects.all().order_by('fs_code_desc')
-    serializer_class = GoodsSerializer
+    queryset = GoodsFscCode.objects.all().order_by('fsc_code_desc')
+    serializer_class = GoodsFscSerializer
 
 
-class ConstructionViewSet(viewsets.ModelViewSet):
+class GoodsUnspscViewSet(viewsets.ModelViewSet):
+    '''
+    API endpoint that allows Goods UNSPSC codes to be viewed or edited
+    '''
+    queryset = GoodsUnspscCode.objects.all().order_by('unspsc_code_desc')
+    serializer_class = GoodsUnspscSerializer
+
+
+'''
+Three Construction Codes: CCS, CPC, UNSPSC
+'''
+class ConstructionCcsViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Construction Procurement Codes  to be viewed or edited.
     """
-    queryset = ConstructionCode.objects.all().order_by('fs_code_desc')
-    serializer_class = ConstructionSerializer
+    queryset = ConstructionCcsCode.objects.all().order_by('ccs_code_desc')
+    serializer_class = ConstructionCcsSerializer
 
 
-class ServicesViewSet(viewsets.ModelViewSet):
+class ConstructionCpcViewSet(viewsets.ModelViewSet):
+    '''
+    API endpoint that allows construction codes to be viewed or edited
+    '''
+    queryset = ConstructionCpcCode.objects.all().order_by('cpc_code_desc')
+    serializer_class = ConstructionCpcSerializer
+
+
+class ConstructionUnspscViewset(viewsets.ModelViewSet):
+    '''
+    API endpoint that allows construction codes to be viewed or edited
+    '''
+    queryset = ConstructionUnspscCode.objects.all().order_by('unspsc_code_desc')
+    serializer_class = ConstructionUnspscSerializer
+
+
+'''
+Three Services Codes: CCS, CPC, UNSPSC
+'''
+class ServicesCcsViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Services Procurement Codes  to be viewed or edited.
     """
-    queryset = ServicesCode.objects.all().order_by('ccs_level_2')
-    serializer_class = ServicesSerializer
+    queryset = ServicesCcsCode.objects.all().order_by('ccs_code_desc')
+    serializer_class = ServicesCcsSerializer
 
 
+class ServicesCpcViewSet(viewsets.ModelViewSet):
+    '''
+    API endpoint that allows services codes to be viewed or edited
+    '''
+    queryset = ServicesCpcCode.objects.all().order_by('cpc_code_desc')
+    serializer_class = ServicesCpcSerializer
+
+
+class ServicesUnspscViewSet(viewsets.ModelViewSet):
+    '''
+    API endpoint that allows services to be viewed or edited
+    '''
+    queryset = ServicesUnspscCode.objects.all().order_by('unspsc_code_desc')
+    serializer_class = ServicesUnspscSerializer
+
+
+'''
+Limited Tendering Reasons
+'''
 class TenderingReasonsViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Tendering Reasons to be viewed or edited.
@@ -39,6 +113,31 @@ class TenderingReasonsViewSet(viewsets.ModelViewSet):
     serializer_class = TenderingSerializer
 
 
+'''
+Trade Agreement Exceptions
+'''
+class TAExceptionsViewSet(viewsets.ModelViewSet):
+    '''
+    API endpoint that allows TA Exceptions to be viewed or edited
+    '''
+    queryset = TAException.objects.all().order_by('desc_en')
+    serializer_class = TAExceptionSerializer
+
+
+'''
+CFTA Exceptions
+'''
+class CftaExceptionsViewSet(viewsets.ModelViewSet):
+    '''
+    API endpoint that allows CFTA exceptions to be viewed or edited
+    '''
+    queryset = CftaException.objects.all().order_by('desc_en')
+    serializer_class = CftaExceptionSerializer
+
+
+'''
+Federal Entities
+'''
 class FederalEntitiesViewSet(viewsets.ModelViewSet):
     '''
     API endpoint that allows Federal Entities to be viewed and edited
@@ -46,7 +145,9 @@ class FederalEntitiesViewSet(viewsets.ModelViewSet):
     queryset = FederalEntities.objects.all().order_by('name_en')
     serializer_class = FederalEntitiesSerializer
 
-
+'''
+Not Used
+'''
 class GuideView(View):
 
     def __init__(self):
@@ -54,7 +155,7 @@ class GuideView(View):
 
     def get(self, request):
         context = dict()
-        
+
         return render(request, "guide.html", context)
 
 
@@ -121,19 +222,19 @@ def find_exemptions(form, commodity_type: str):
     dollars = form.cleaned_data['estimated_value']
     if commodity_type == 'goods':
         if 'goods_codes' in form.cleaned_data and form.cleaned_data['goods_codes'] is not None:
-            goods = GoodsCode.objects.get(id=form.cleaned_data['goods_codes'].id)
+            goods = GoodsFscCode.objects.get(id=form.cleaned_data['goods_codes'].id)
             set_agreement_values(trade_agreements, goods)
             desc_en = goods.fs_code_desc
 
     elif commodity_type == 'services':
         if 'services_code' in form.cleaned_data and form.cleaned_data['services_codes'] is not None:
-            services = ServicesCode.objects.get(id=form.cleaned_data['services_codes'].id)
+            services = ServicesCcsCode.objects.get(id=form.cleaned_data['services_codes'].id)
             set_agreement_values(trade_agreements, services)
             desc_en = services.ccs_level_2
 
     elif commodity_type == 'construction':
         if 'construction_code' in form.cleaned_data and form.cleaned_data['construction_code'] is not None:
-            construction = ConstructionCode.objects.get(id=form.cleaned_data['construction_code'].id)
+            construction = ConstructionCcsCode.objects.get(id=form.cleaned_data['construction_code'].id)
             set_agreement_values(trade_agreements, construction)
             desc_en = construction.fs_code_desc
 
@@ -154,33 +255,64 @@ def find_exemptions(form, commodity_type: str):
 
     return agreements, reasons
 
+class GuideListView(ListView):
+    model = ModelGuide
+    context_object_name = 'guide'
 
-class GuideFormView(View):
-    def __init__(self):
-        super().__init__()
 
-    def get(self, request, *args, **kwargs):
-        form = GuideForm()
-        # do not display the evaluation section of the form
-        return render(request, 'guide_form.html', {'form': form, 'show_eval': False})
+class GuideCreateView(CreateView):
+    model = ModelGuide
+    fields = (
+        'estimated_value',
+        'federal_entities',
+        'commodity_type',
+        'commodity_code',
+        'exceptions',
+        'limited_tendering',
+        'cfta_ex'
+    )
+    success_url = reverse_lazy('guide_list')
 
-    def post(self, request, *args, **kwargs):
-        # create a form instance and populate it with data from the request:
-        form = GuideForm(request.POST)
-        context = {'show_eval': False}
-        # check whether it's valid:
-        if form.is_valid():
-            commodity_type = ''
-            if 'commodity_type' in form.cleaned_data and form.cleaned_data['commodity_type'] is not None:
-                commodity_type = form.cleaned_data['commodity_type']
-            elif 'commodity_type' in form.data and form.data['commodity_type'] in ('goods', 'services', 'construction'):
-                commodity_type = form.data['commodity_type']
-            if commodity_type != '':
-                ta = find_exemptions(form, commodity_type)
-                # forward a merged dictionary of exemptions and  reasons to the form for display
-                context = {**ta[0], **ta[1]}
-                # show the evaluation section on the page
-                context['show_eval'] = True
-        context['form'] = form
-        return render(request, 'guide_form.html', context)
+
+class GuideUpdateView(UpdateView):
+    model = ModelGuide
+    fields = (
+        'estimated_value',
+        'federal_entities',
+        'commodity_type',
+        'commodity_code',
+        'exceptions',
+        'limited_tendering',
+        'cfta_ex'
+    )
+    success_url = reverse_lazy('guide_list')
+
+# class GuideListView(View):
+#     def __init__(self):
+#         super().__init__()
+#
+#     def get(self, request, *args, **kwargs):
+#         form = GuideForm()
+#         # do not display the evaluation section of the form
+#         return render(request, 'guide_form.html', {'form': form, 'show_eval': False})
+#
+#     def post(self, request, *args, **kwargs):
+#         # create a form instance and populate it with data from the request:
+#         form = GuideForm(request.POST)
+#         context = {'show_eval': False}
+#         # check whether it's valid:
+#         if form.is_valid():
+#             commodity_type = ''
+#             if 'commodity_type' in form.cleaned_data and form.cleaned_data['commodity_type'] is not None:
+#                 commodity_type = form.cleaned_data['commodity_type']
+#             elif 'commodity_type' in form.data and form.data['commodity_type'] in ('goods', 'services', 'construction'):
+#                 commodity_type = form.data['commodity_type']
+#             if commodity_type != '':
+#                 ta = find_exemptions(form, commodity_type)
+#                 # forward a merged dictionary of exemptions and  reasons to the form for display
+#                 context = {**ta[0], **ta[1]}
+#                 # show the evaluation section on the page
+#                 context['show_eval'] = True
+#         context['form'] = form
+#         return render(request, 'guide_form.html', context)
 

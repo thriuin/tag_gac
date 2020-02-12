@@ -16,17 +16,32 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.urls import path
-from guide.views import GuideView, GoodsViewSet, ConstructionViewSet, ServicesViewSet, \
-    TenderingReasonsViewSet, GuideFormView
+from guide.views import GuideView, CommodityTypeViewSet, \
+    GoodsFscViewSet, GoodsUnspscViewSet, \
+    ServicesCcsViewSet, ServicesCpcViewSet, ServicesUnspscViewSet, \
+    ConstructionCcsViewSet, ConstructionCpcViewSet, ConstructionUnspscViewset, \
+    TenderingReasonsViewSet, TAExceptionsViewSet, CftaExceptionsViewSet, \
+    FederalEntitiesViewSet, GuideListView, GuideCreateView, GuideUpdateView
 
 
 urlpatterns = [
     path('tag/admin/', admin.site.urls),
-    path('tag/', GuideFormView.as_view(), name='Guide'),
+    path('tag/', GuideListView.as_view(), name='guide_list'),
+    path('tag/add/', GuideCreateView.as_view(), name='guide_create'),
+    path('tag/commodity/', GuideUpdateView.as_view(), name='guide_update'),
+    path('tag/commoditytype', CommodityTypeViewSet.as_view({'get': 'list'}), name='commodity_type_create_view'),
     path('tag/guide/', GuideView.as_view(), name='Guide'),  # Temporary demo of SurveyJS
-    path('tag/goods/', GoodsViewSet.as_view({'get': 'list'})),
-    path('tag/construction/', ConstructionViewSet.as_view({'get': 'list'})),
-    path('tag/services/', ServicesViewSet.as_view({'get': 'list'})),
+    path('tag/goodsfsc/', GoodsFscViewSet.as_view({'get': 'list'})),
+    path('tag/goodsunspsc/', GoodsUnspscViewSet.as_view({'get': 'list'})),
+    path('tag/constructionccs/', ConstructionCcsViewSet.as_view({'get': 'list'})),
+    path('tag/constructioncpc/', ConstructionCpcViewSet.as_view({'get': 'list'})),
+    path('tag/constructionunspsc/', ConstructionUnspscViewset.as_view({'get': 'list'})),
+    path('tag/servicesccs/', ServicesCcsViewSet.as_view({'get': 'list'})),
+    path('tag/servicescpc/', ServicesCpcViewSet.as_view({'get': 'list'})),
+    path('tag/servicesunspsc/', ServicesUnspscViewSet.as_view({'get': 'list'})),
     path('tag/tendering_reasons/', TenderingReasonsViewSet.as_view({'get': 'list'})),
-    path('tag/evaluate/', GuideFormView.as_view(), name='EvaluateForm')
+    path('tag/taexceptions/', TAExceptionsViewSet.as_view({'get': 'list'})),
+    path('tag/cftaexceptions/', CftaExceptionsViewSet.as_view({'get': 'list'})),
+    path('tag/federalentities/', FederalEntitiesViewSet.as_view({'get': 'list'})),
+    path('tag/evaluate/', GuideListView.as_view(), name='EvaluateForm')
 ]
