@@ -1,116 +1,81 @@
-from guide.models import CommodityType, \
-    GoodsFscCode, GoodsUnspscCode, \
-    ServicesCcsCode, ServicesCpcCode, ServicesUnspscCode, \
-    ConstructionCcsCode, ConstructionCpcCode, ConstructionUnspscCode, \
-    CftaException, TenderingReason, TAException, FederalEntities
-
 from rest_framework import serializers
+from guide.models import Entities, ValueThreshold, CommodityCodeSystem, \
+    CodeList, TenderingReason, TAException, CftaException
 
 
-'''
-Commodity Type
-'''
-class CommodityTypeSerializer(serializers.HyperlinkedModelSerializer):
+class EntitiesSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Serializer for :model: 'guide.Entities'
+    """
     class Meta:
-        model = CommodityType
-        fields = ['commodity_type']
-
-
-'''
-Two Goods Codes: FSC, UNSPSC
-'''
-class GoodsFscSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = GoodsFscCode
-        fields = ['fsc_code', 'fsc_code_desc', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
+        model = Entities
+        fields = ['name_en', 'name_fr', 'ccfta', 'ccofta',
+                  'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
                   'wto_agp', 'ceta', 'cptpp', 'cfta']
 
 
-class GoodsUnspscSerializer(serializers.HyperlinkedModelSerializer):
+class ValueThresholdSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Serializer for :model: 'guide.ValueThreshold'
+    """
     class Meta:
-        model = GoodsUnspscCode
-        fields = ['unspsc_code', 'unspsc_code_desc', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
-                  'wto_agp', 'ceta', 'cptpp', 'cfta']
-
-'''
-Three Construction Codes: CCS, CPC, UNSPSC
-'''
-class ConstructionCcsSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = ConstructionCcsCode
-        fields = ['ccs_code', 'ccs_code_desc', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
+        model = ValueThreshold
+        fields = ['name_en', 'name_fr', 'ccfta', 'ccofta',
+                  'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
                   'wto_agp', 'ceta', 'cptpp', 'cfta']
 
 
-class ConstructionCpcSerializer(serializers.HyperlinkedModelSerializer):
+class CommodityCodeSystemSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Serializer for :model: 'guide.CommodityCodeSystem'
+    """
     class Meta:
-        model = ConstructionCpcCode
-        fields = ['cpc_code', 'cpc_code_desc', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
+        model = CommodityCodeSystem
+        fields = ['name_en', 'name_fr', 'ccfta', 'ccofta',
+                  'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
                   'wto_agp', 'ceta', 'cptpp', 'cfta']
 
 
-class ConstructionUnspscSerializer(serializers.HyperlinkedModelSerializer):
+class CodeListSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Serializer for :model: 'guide.CodeList'
+    """
     class Meta:
-        model = ConstructionUnspscCode
-        fields = ['unspsc_code', 'unspsc_code_desc', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
-                  'wto_agp', 'ceta', 'cptpp', 'cfta']
+        model = CodeList
+        fields = ['name_en', 'name_fr', 'code_en', 'code_fr',
+                  'ccfta', 'ccofta', 'chfta', 'cpafta',
+                  'cpfta', 'ckfta', 'cufta', 'wto_agp',
+                  'ceta', 'cptpp', 'cfta']
 
 
-'''
-Three Services Codes: CCS, CPC, UNSPSC
-'''
-class ServicesCcsSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = ServicesCcsCode
-        fields = ['ccs_code', 'ccs_code_desc', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
-                  'wto_agp', 'ceta', 'cptpp', 'cfta']
-
-
-class ServicesCpcSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = ServicesCpcCode
-        fields = ['cpc_code', 'cpc_desc', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta',
-                  'ckfta', 'cufta', 'wto_agp', 'ceta', 'cptpp', 'cfta']
-
-
-class ServicesUnspscSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = ServicesUnspscCode
-        fields = ['unspsc_code', 'unspsc_code_desc', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta',
-                  'ckfta', 'cufta', 'wto_agp', 'ceta', 'cptpp', 'cfta']
-
-
-'''
-Limited Tendering Reasons
-'''
-class TenderingSerializer(serializers.HyperlinkedModelSerializer):
+class TenderingReasonSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Serializer for :model: 'guide.TenderingReason'
+    """
     class Meta:
         model = TenderingReason
-        fields = ['desc_en', 'desc_fr']
+        fields = ['name_en', 'name_fr', 'ccfta', 'ccofta',
+                  'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
+                  'wto_agp', 'ceta', 'cptpp', 'cfta']
 
 
-'''
-Trade Agreement Exceptions
-'''
 class TAExceptionSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Serializer for :model: 'guide.TAException'
+    """
     class Meta:
         model = TAException
-        fields = ['desc_en', 'desc_fr']
+        fields = ['name_en', 'name_fr', 'ccfta', 'ccofta',
+                  'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
+                  'wto_agp', 'ceta', 'cptpp', 'cfta']
 
 
-'''
-CFTA Exceptions
-'''
 class CftaExceptionSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Serializer for :model: 'guide.CftaException'
+    """
     class Meta:
         model = CftaException
-        fields = ['desc_en', 'desc_fr']
-
-
-'''
-Federal Entities
-'''
-class FederalEntitiesSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = FederalEntities
-        fields = ['name_en, name_fr']
+        fields = ['name_en', 'name_fr', 'ccfta', 'ccofta',
+                  'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
+                  'wto_agp', 'ceta', 'cptpp', 'cfta']
