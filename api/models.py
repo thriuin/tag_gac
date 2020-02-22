@@ -79,14 +79,12 @@ class CommodityCodeSystem(BooleanTradeAgreement):
     name_en = models.CharField(max_length=128, default='', verbose_name='Commodity Code System')
     name_fr = models.CharField(max_length=128, default='', verbose_name='French Commodity coding system')
 
-
 class CodeList(BooleanTradeAgreement):
     """
     Subclass of :model: 'guide.BooleanTradeAgreement'
     This class is for the codes with the foreign key for the relevant code system
     """
-    commodity_code_system_en = models.ForeignKey(CommodityCodeSystem, on_delete=models.CASCADE)
-    commodity_code_system_fr = models.ForeignKey(CommodityCodeSystem, on_delete=models.CASCADE)
+    fk = models.ForeignKey(CommodityCodeSystem, on_delete=models.CASCADE)
     name_en = models.CharField(max_length=20, default='', verbose_name='Code List')
     name_fr = models.CharField(max_length=20, default='', verbose_name='Code List FR')
 

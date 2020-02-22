@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from guide.models import Entities, ValueThreshold, CommodityCodeSystem, \
+from api.models import Entities, ValueThreshold, CommodityCodeSystem, \
     CodeList, TenderingReason, TAException, CftaException
 
 

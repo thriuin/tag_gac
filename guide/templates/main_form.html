@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% load humanize %}
+{% load markdown_filter %}
+
+{% block main-content %}
+
+{# --- Main title #}
+{% block main-content-title %}
+    <h1 property="name" id="wb-cont">{% trans "Trade Agreement Coverage Tool" %}</h1>
+{% endblock %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% trans "Trade Agreement Coverage Tool" %}</title>
+</head>
+{% block content %}
+<body>
+    <div class="row mrgn-tp-md mrgn-bttm-md">
+        <div class="col-md-12">
+            <section>
+                <form action="tag/main_form/" method="post" role="form">
+                    {% csrf_token %}
+                    {{ form }}
+                    <input type="submit" value="Submit" class="btn btn-primary">
+                </form>
+            </section>
+        </div>
+    </div>
+        <p></p>
+{% endblock %}
+</body>
+<script type="text/javascript" src="{% static '/jquery-3.4.1.js' %}"></script>
+{% block javascript %}
+<script>
+    $("#commodity_code_system").on("change", function() {
+        console.log("Change");
+        $("#code_list").prop('disabled', false)
+    })
+</script>
+{% endblock %}
+{% endblock main-content %}
