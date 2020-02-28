@@ -54,7 +54,7 @@ class GenericCodesModel(BooleanTradeAgreement):
 
 class GoodsCode(BooleanTradeAgreement):
 
-    fs_code = models.CharField(max_length=10, default='', verbose_name="Federal Supply Code")
+    fs_code = models.CharField(max_length=128, default='', verbose_name="Federal Supply Code")
     fs_code_desc = models.CharField(max_length=128, default="", verbose_name="Federal Supply Code Description")
 
     class Meta:
@@ -104,6 +104,8 @@ class TAException(BooleanTradeAgreement):
 
     desc_en = models.TextField(default="-", unique=True, verbose_name="Description (English)")
     desc_fr = models.TextField(default="_", unique=True, verbose_name="Description (Français)")
+    plain_explanation_en = models.TextField(default="-", unique=False, verbose_name="Plain Language Explanation (English)")
+    plain_explanation_fr = models.TextField(default="-", unique=False, verbose_name="Plain Language Explanation (Français)")
 
     def __str__(self):
         return "{0} / {1}".format(self.desc_en, self.desc_fr)

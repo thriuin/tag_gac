@@ -125,9 +125,9 @@
     {% endif %}
     <div class="row mrgn-tp-md mrgn-bttm-md">
         <div class="col-md-12">
-            <section>
+            <section class="wb-inview bar-demo" data-inview="bottom-bar">
                 <div class="wb-frmvld">
-                    <form action="/tag/evaluate/" method="post" role="form">
+                    <form action="/tag/evaluate/" method="post" role="form" id="tag-form">
                         {% csrf_token %}
                         {% if form.non_field_errors %}
                             <div class="alert alert-warning">
@@ -174,9 +174,39 @@
                             </div>
                         {% endfor %}
                         <input type="submit" value="Submit" class="btn btn-primary">
+                        <input type="reset" value="Reset Form"  class="btn btn-info">
                     </form>
                 </div>
             </section>
         </div>
     </div><p></p>
+
+<section id="bottom-bar" class="wb-overlay modal-content overlay-def wb-bar-b">
+<header>
+&nbsp;
+</header>
+<ul class="list-inline">
+<li>
+&nbsp;<button class="btn btn-default" type="button" id="submit-form-button">Submit</button>
+</li>
+<li>
+<button class="btn btn-default" type="button" id="clear-form-button">Reset</button>
+</li>
+</ul>
+</section>
+
 {% endblock main-content %}
+
+{% block custom-jquery %}
+<script lang="js">
+    var form = document.getElementById("tag-form");
+
+    document.getElementById("submit-form-button").addEventListener("click", function () {
+      form.submit();
+    });
+
+    document.getElementById("clear-form-button").addEventListener("click", function () {
+      form.reset();
+    });
+</script>
+{% endblock custom-jquery %}

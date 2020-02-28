@@ -35,12 +35,42 @@ class ServicesCodeAdmin(ImportExportModelAdmin):
     resource_class = ServicesCodeResource
 
 
+class TenderingReasonResource(resources.ModelResource):
+
+    class Meta:
+        model = TenderingReason
+
+
+class TenderingReasonAdmin(ImportExportModelAdmin):
+    resource_class = TenderingReasonResource
+
+
+class TAExceptionResource(resources.ModelResource):
+
+    class Meta:
+        model = TAException
+
+
+class TAExceptionAdmin(ImportExportModelAdmin):
+    resource_class = TAExceptionResource
+
+
+class ValueThresholdResource(resources.ModelResource):
+
+    class Meta:
+        model = ValueThreshold
+
+
+class ValueThresholdAdmin(ImportExportModelAdmin):
+    resource_class = ValueThresholdResource
+
+
 # Register your models here.
 admin.site.register(GoodsCode, GoodsCodeAdmin)
 admin.site.register(ConstructionCode, ConstructionCodeAdmin)
-admin.site.register(ServicesCode)
-admin.site.register(TAException)
-admin.site.register(TenderingReason)
-admin.site.register(ValueThreshold)
+admin.site.register(ServicesCode, ServicesCodeAdmin)
+admin.site.register(TAException, TAExceptionAdmin)
+admin.site.register(TenderingReason, TenderingReasonAdmin)
+admin.site.register(ValueThreshold, ValueThresholdAdmin)
 
 
