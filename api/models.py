@@ -1,21 +1,9 @@
 from django.db import models
 
 # TODO: Add validators
-class BilingualClass(models.Model):
-    """
-    Subclass of models.Model
-    This class is for bilingual labels
-    """
-    class Meta:
-        abstract = True
 
-    def __str__(self):
-        return "{0} / {1}".format(self.name_en, self.name_fr)
-
-
-class BooleanTradeAgreement(BilingualClass):
+class BooleanTradeAgreement(models.Model):
     """
-    Subclass of :model: 'guide.BilingualClass'
     This contains a boolean for each trade agreement
     """
     id = models.AutoField(primary_key=True)
@@ -33,9 +21,8 @@ class BooleanTradeAgreement(BilingualClass):
     cfta = models.BooleanField(default=False, verbose_name="CFTA Chapter 5", blank=False)
 
 
-class NumericTradeAgreements(BilingualClass):
+class NumericTradeAgreements(models.Model):
     """
-    Subclass of :model: 'guide.BilingualClass'
     This gives every trade agreement a number field to use for value thresholds
     """
     id = models.AutoField(primary_key=True)
@@ -61,6 +48,9 @@ class Entities(BooleanTradeAgreement):
     name_en = models.CharField(max_length=128, default='', verbose_name='Federal Entities')
     name_fr = models.CharField(max_length=128, default='', verbose_name='French Entities')
 
+    def __str__(self):
+        return "{0} / {1}".format(self.name_en, self.name_fr)
+
 
 class ValueThreshold(NumericTradeAgreements):
     """
@@ -68,25 +58,35 @@ class ValueThreshold(NumericTradeAgreements):
     This class is for the dollar value thresholds in the trade agreements
     """
     name_en = models.TextField(default="-", unique=True, verbose_name="Description (English)")
-    name_fr = models.TextField(default="_", unique=True, verbose_name="Description (Français)")
+    name_fr = models.TextField(default="_", unique=True, verbose_name="Description (Francais)")
+
+    def __str__(self):
+        return "{0} / {1}".format(self.name_en, self.name_fr)
 
 
-class CommodityCodeSystem(BooleanTradeAgreement):
-    """
-    Subclass of :model: 'guide.BooleanTradeAgreement'
-    This class is for the different commodity coding systems (UNSPSC, FSC, ect...)
-    """
-    name_en = models.CharField(max_length=128, default='', verbose_name='Commodity Code System')
-    name_fr = models.CharField(max_length=128, default='', verbose_name='French Commodity coding system')
+class CommodityCodeSystem(models.Model):
+    id = models.AutoField(primary_key=True)
+    commodity_type_en = models.CharField(max_length=20, default='-', verbose_name='Commodity Types EN')
+    commodity_type_fr = models.CharField(max_length=20, default='-', verbose_name='Commodity Types FR')
+    commodity_code_system_en = models.CharField(max_length=128, default='', verbose_name='Commodity Code System EN', unique=True)
+    commodity_code_system_fr = models.CharField(max_length=128, default='', verbose_name='Commodity Code System FR', unique=True)
+
+    def __str__(self):
+        return "{0} / {1}".format(self.commodity_code_system_en, self.commodity_code_system_fr)
+
 
 class CodeList(BooleanTradeAgreement):
     """
     Subclass of :model: 'guide.BooleanTradeAgreement'
     This class is for the codes with the foreign key for the relevant code system
     """
-    fk = models.ForeignKey(CommodityCodeSystem, on_delete=models.CASCADE)
-    name_en = models.CharField(max_length=20, default='', verbose_name='Code List')
-    name_fr = models.CharField(max_length=20, default='', verbose_name='Code List FR')
+    code_system_en = models.ForeignKey(CommodityCodeSystem, to_field='commodity_code_system_en', related_name='system_en', max_length=128, default='', verbose_name='Code System EN', on_delete=models.CASCADE)
+    code_system_fr = models.ForeignKey(CommodityCodeSystem, to_field='commodity_code_system_fr', related_name='system_fr', max_length=128, default='', verbose_name='Code System FR', on_delete=models.CASCADE)
+    code_list_en = models.CharField(max_length=20, default='', verbose_name='Code List EN', db_column='code_list_en')
+    code_list_fr = models.CharField(max_length=20, default='', verbose_name='Code List FR', db_column='colde_list_fr')
+
+    def __str__(self):
+        return "{0} / {1}".format(self.code_list_en, self.code_list_fr)
 
 
 class TenderingReason(BooleanTradeAgreement):
@@ -95,7 +95,10 @@ class TenderingReason(BooleanTradeAgreement):
     This class has limited tendering reasons
     """
     name_en = models.TextField(default="-", unique=True, verbose_name="Description (English)")
-    name_fr = models.TextField(default="_", unique=True, verbose_name="Description (Français)")
+    name_fr = models.TextField(default="_", unique=True, verbose_name="Description (Francais)")
+
+    def __str__(self):
+        return "{0} / {1}".format(self.name_en, self.name_fr)
 
 
 class TAException(BooleanTradeAgreement):
@@ -104,7 +107,10 @@ class TAException(BooleanTradeAgreement):
     This class has trade agreement exceptions
     """
     name_en = models.TextField(default="-", unique=True, verbose_name="Description (English)")
-    name_fr = models.TextField(default="_", unique=True, verbose_name="Description (Français)")
+    name_fr = models.TextField(default="_", unique=True, verbose_name="Description (Francais)")
+
+    def __str__(self):
+        return "{0} / {1}".format(self.name_en, self.name_fr)
 
 
 class CftaException(BooleanTradeAgreement):
@@ -113,4 +119,7 @@ class CftaException(BooleanTradeAgreement):
     This class has Canada Free Trade Agreement exceptions
     """
     name_en = models.TextField(default="-", unique=True, verbose_name="Description (English)")
-    name_fr = models.TextField(default="_", unique=True, verbose_name="Description (Français)")
+    name_fr = models.TextField(default="_", unique=True, verbose_name="Description (Francais)")
+
+    def __str__(self):
+        return "{0} / {1}".format(self.name_en, self.name_fr)

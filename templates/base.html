@@ -1,4 +1,4 @@
-{% load static %}
+{% load staticfiles %}
 {% load i18n %}
 {% load search_extras %}
 {% get_current_language as LANGUAGE_CODE %}
@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="{% static 'wxt//GCWeb/css/ie8-theme.min.css' %}"/>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="{% static 'wxt/wet-boew/js/ie8-wet-boew.min.js' %}"></script>
+    <script src="{% static 'jquery.min.js' %}" type="text/javascript"></script>
     <![endif]-->
     <!--[if lte IE 9]>
 
@@ -141,7 +142,8 @@
 </header>
 
 <main role="main" property="mainContentOfPage" class="container">
-    {% block main-content %}{% endblock %}
+    {% block main-content %}
+    {% endblock %}
 </main>
 
 
@@ -191,10 +193,11 @@
 <!--<![endif]-->
 <!--[if lt IE 9]>
 <script src="{% static 'wxt/wet-boew/js/ie8-wet-boew2.min.js' %}"></script>
-
 <![endif]-->
 <script src="{% static 'wxt/GCWeb/js/theme.min.js' %}"></script>
-{% block custom-jquery %}{% endblock %}
+{% block custom-jquery %}
+
+{% endblock %}
 </body>
 </html>
 

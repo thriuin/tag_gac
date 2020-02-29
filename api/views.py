@@ -27,7 +27,7 @@ class CommodityCodeSystemView(viewsets.ModelViewSet):
     """
     API endpoint for :model: 'api.CommodityCodeSystem'
     """
-    queryset = CommodityCodeSystem.objects.all().order_by('name_en')
+    queryset = CommodityCodeSystem.objects.all().order_by('commodity_code_system_en')
     serializer_class = CommodityCodeSystemSerializer
 
 
@@ -35,7 +35,7 @@ class CodeListView(viewsets.ModelViewSet):
     """
     API endpoint for :model: 'api.CodeList'
     """
-    queryset = CodeList.objects.all().order_by('name_en')
+    queryset = CodeList.objects.all().order_by('code_system_en')
     serializer_class = CodeListSerializer
 
 
@@ -53,7 +53,6 @@ class TAExceptionView(viewsets.ModelViewSet):
     """
     queryset = TAException.objects.all().order_by('name_en')
     serializer_class = TAExceptionSerializer
-
 
 
 class CftaExceptionView(viewsets.ModelViewSet):

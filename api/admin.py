@@ -26,10 +26,10 @@ class ValueThresholdResource(resources.ModelResource):
 
 class CommodityCodeSystemResource(resources.ModelResource):
     '''
-    Admin resource for :model: 'api.CommodityCodeSystem'
+    Admin resource for :model: 'api.CommodityCodeSystem
     '''
     class Meta:
-        model = CommodityCodeSystem
+        model=CommodityCodeSystem
 
 
 class CodeListResource(resources.ModelResource):
@@ -80,7 +80,7 @@ class ValueThresholdAdmin(ImportExportModelAdmin):
 
 class CommodityCodeSystemAdmin(ImportExportModelAdmin):
     '''
-    Admin import-export for :model: 'api.CommodityCodeSystem'
+    Admin import-export for :model: api.CommodityCodeSystem
     '''
     resource_class = CommodityCodeSystemResource
 
@@ -111,6 +111,7 @@ class CftaExceptionAdmin(ImportExportModelAdmin):
     Admin import-export for :model: 'api.CftrException'
     '''
     resource_class = CftaExceptionResource
+
 
 admin.site.register(Entities, EntitiesAdmin)
 admin.site.register(ValueThreshold, ValueThresholdAdmin)
