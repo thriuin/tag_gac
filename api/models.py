@@ -135,3 +135,15 @@ class CftaException(BooleanTradeAgreement):
 
     def __str__(self):
         return "{0} / {1}".format(self.name_en, self.name_fr)
+
+
+from django.db import models
+
+class Wine(models.Model):
+	country = models.CharField(max_length = 100)
+	province = models.CharField(max_length = 100, null = True)
+	region = models.CharField(max_length = 150, null = True)
+
+
+	def __str__(self):
+		return self.country

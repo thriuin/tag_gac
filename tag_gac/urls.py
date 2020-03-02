@@ -14,26 +14,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from rest_framework import routers
 from django.contrib import admin
-from django.urls import path, include
-from django.conf.urls import url
-from api.views import EntitiesView, ValueThresholdView, \
-    CodeListView, TenderingReasonView, TAExceptionView, CftaExceptionView
-
-
-router = routers.DefaultRouter()
-router.register(r'entities', EntitiesView)
-router.register(r'value_threshold', ValueThresholdView)
-router.register(r'code_list', CodeListView)
-router.register(r'tendering_reason', TenderingReasonView)
-router.register(r'ta_exception', TAExceptionView)
-router.register(r'cfta_exception', CftaExceptionView)
-
-
+from django.urls import path
+from django.conf.urls import url, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include((router.urls, 'app_name'), namespace='instance_name')),
-	url(r"^guide/", include(("guide.urls", "guide"), namespace = "guide"))
+	url(r"^wine/", include(("guide.urls", "wine"), namespace = "wine"))
 ]
+

@@ -3,7 +3,7 @@ from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from api.models import Entities, ValueThreshold, \
     CommodityType, CommodityCodeSystem, CodeList, TenderingReason, \
-    TAException, CftaException
+    TAException, CftaException, Wine
 
 # Django Import-Export Registration (see: https://django-import-export.readthedocs.io)
 
@@ -121,7 +121,7 @@ class CftaExceptionAdmin(ImportExportModelAdmin):
 
 
 
-
+admin.site.register(Wine)
 admin.site.register(Entities, EntitiesAdmin)
 admin.site.register(ValueThreshold, ValueThresholdAdmin)
 admin.site.register(CommodityType, CommodityTypeAdmin)
