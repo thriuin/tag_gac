@@ -34,5 +34,6 @@ router.register(r'cfta_exception', CftaExceptionView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include((router.urls, 'app_name'), namespace='instance_name')),
 	url(r"^guide/", include(("guide.urls", "guide"), namespace = "guide"))
 ]

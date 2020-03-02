@@ -20,6 +20,8 @@ class BooleanTradeAgreement(models.Model):
     cptpp = models.BooleanField(default=False, verbose_name="CPTPP Chapter 15-A Section D", blank=False)
     cfta = models.BooleanField(default=False, verbose_name="CFTA Chapter 5", blank=False)
 
+    class Meta:
+        abstract=True
 
 class NumericTradeAgreements(models.Model):
     """
@@ -39,6 +41,8 @@ class NumericTradeAgreements(models.Model):
     cptpp = models.IntegerField(default=0, verbose_name="CPTPP Chapter 15-A Section D", blank=False)
     cfta = models.IntegerField(default=0, verbose_name="CFTA Chapter 5", blank=False)
 
+    class Meta:
+        abstract=True
 
 class Entities(BooleanTradeAgreement):
     """
@@ -64,12 +68,17 @@ class ValueThreshold(NumericTradeAgreements):
         return "{0} / {1}".format(self.name_en, self.name_fr)
 
 
+class CommodityType(models.Model):
+    commodity_type_en = models.CharField(max_length=128, default='', unique=True, verbose_name='Commodity Type EN')
+    commodity_type_fr = models.CharField(max_length=128, default='', unique=True, verbose_name='Commodity Type FR')
+
+    def __str__(self):
+        return "{0} / {1}".format(self.commodity_type_en, self.commodity_type_fr)
+
+
 class CommodityCodeSystem(models.Model):
-    id = models.AutoField(primary_key=True)
-    commodity_type_en = models.CharField(max_length=20, default='-', verbose_name='Commodity Types EN')
-    commodity_type_fr = models.CharField(max_length=20, default='-', verbose_name='Commodity Types FR')
-    commodity_code_system_en = models.CharField(max_length=128, default='', verbose_name='Commodity Code System EN', unique=True)
-    commodity_code_system_fr = models.CharField(max_length=128, default='', verbose_name='Commodity Code System FR', unique=True)
+    commodity_code_system_en = models.CharField(max_length=128, default='', unique=True, verbose_name='Commodity Code System EN')
+    commodity_code_system_fr = models.CharField(max_length=128, default='', unique=True, verbose_name='Commodity Code System FR')
 
     def __str__(self):
         return "{0} / {1}".format(self.commodity_code_system_en, self.commodity_code_system_fr)
@@ -80,13 +89,16 @@ class CodeList(BooleanTradeAgreement):
     Subclass of :model: 'guide.BooleanTradeAgreement'
     This class is for the codes with the foreign key for the relevant code system
     """
-    code_system_en = models.ForeignKey(CommodityCodeSystem, to_field='commodity_code_system_en', related_name='system_en', max_length=128, default='', verbose_name='Code System EN', on_delete=models.CASCADE)
-    code_system_fr = models.ForeignKey(CommodityCodeSystem, to_field='commodity_code_system_fr', related_name='system_fr', max_length=128, default='', verbose_name='Code System FR', on_delete=models.CASCADE)
+    type_en = models.ForeignKey(CommodityType, to_field='commodity_type_en', related_name='+', max_length=128, default='', verbose_name='Commodity Type EN', on_delete=models.CASCADE, db_column='type_en')
+    type_fr = models.ForeignKey(CommodityType, to_field='commodity_type_fr', related_name='+', max_length=128, default='', verbose_name='Commodity Type FR', on_delete=models.CASCADE, db_column='type_fr')
+    code_system_en = models.ForeignKey(CommodityCodeSystem, to_field='commodity_code_system_en', related_name='+', max_length=128, default='', verbose_name='Commodity Code System EN', on_delete=models.CASCADE)
+    code_system_fr = models.ForeignKey(CommodityCodeSystem, to_field='commodity_code_system_fr', related_name='+', max_length=128, default='', verbose_name='Commodity Code System FR', on_delete=models.CASCADE)
     code_list_en = models.CharField(max_length=20, default='', verbose_name='Code List EN', db_column='code_list_en')
-    code_list_fr = models.CharField(max_length=20, default='', verbose_name='Code List FR', db_column='colde_list_fr')
+    code_list_fr = models.CharField(max_length=20, default='', verbose_name='Code List FR', db_column='code_list_fr')
 
     def __str__(self):
         return "{0} / {1}".format(self.code_list_en, self.code_list_fr)
+
 
 
 class TenderingReason(BooleanTradeAgreement):

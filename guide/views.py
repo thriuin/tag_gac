@@ -12,34 +12,48 @@ def Guide(request):
 
 class GuideListing(ListAPIView):
     # set the erializer class
-	serializer_class = CodeListSerializer
+    serializer_class = CodeListSerializer
 
-	def get_queryset(self):
+    def get_queryset(self):
         # filter the queryset based on the filters applied
-		queryList = CodeList.objects.all()
-		code_system = self.request.query_params.get('code_system_en', None)
-		code_list = self.request.query_params.get('code_list_en', None)
+        queryList = CodeList.objects.all()
+        type = self.request.query_params.get('type_en', None)
+        code_system = self.request.query_params.get('code_system_en', None)
+        code_list = self.request.query_params.get('code_list_en', None)
 
-		if code_system:
-		    queryList = queryList.filter(code_system_en = code_system)
-		if code_list:
-		    queryList = queryList.filter(code_list_en = code_list)
-		return queryList
+        if type:
+            queryList = queryList.filter(type_en = type)
+        if code_system:
+            queryList = queryList.filter(code_system_en = code_system)
+        if code_list:
+            queryList = queryList.filter(code_list_en = code_list)
+        return queryList
 
 
-
-def getCodeSystem(request):
+def getType(request):
     # get all the countreis from the database excluding
     # null and blank values
     if request.method == "GET" and request.is_ajax():
-        code_system = CodeList.objects.exclude(code_system_en__isnull=True).\
-            exclude(code_list_en__exact='').order_by('code_system_en').values_list('code_system_en').distinct()
+        type = CodeList.objects.exclude(type_en__isnull=True).exclude(type_en__exact='').\
+            order_by('type_en').values_list('type_en').distinct()
+        type = [i[0] for i in list(type)]
+        data = {
+            "type_en": type,
+        }
+        return JsonResponse(data, status = 200)
+
+
+def getCodeSystem(request):
+    if request.method == "GET" and request.is_ajax():
+        type = request.GET.get('type_en')
+        code_system = CodeList.objects.filter(type_en = type).\
+            exclude(code_system_en__null=True).exclude(code_system_en__exact='').\
+            order_by('code_system_en').values_list('code_system_en').distinct()
         code_system = [i[0] for i in list(code_system)]
         data = {
-            "code_system_en": code_system,
+            "code_system_en": code_system
         }
-        print(data)
-        return JsonResponse(data, status = 200)
+        return JsonResponse(data, status=200)
 
 
 

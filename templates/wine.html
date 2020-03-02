@@ -14,16 +14,24 @@
             <div class="row">
                 <div class="col-sm-2 col-2">
                     <div class="form-group">
-                        <label for="code_system">Code System</label>
-                        <select class="form-control" id="code_system_en" url = "{%url 'guide:get_code_system' %}">
+                        <label for="country">Country</label>
+                        <select class="form-control" id="countries" url = "{%url 'wine:get_countries' %}">
                         </select>
                     </div>
                 </div>
                 <div class="col-sm-2 col-2">
                     <div class="form-group">
-                        <label for="code_list">Code List</label>
-                        <select class="form-control" id="code_list_en" url = "{%url 'guide:get_code_list' %}">
+                        <label for="Province">Province</label>
+                        <select class="form-control" id="province" url = "{%url 'wine:get_provinces' %}">
                             <option value='all' selected>All Provinces</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-2 col-2">
+                    <div class="form-group">
+                        <label for="Region">Region</label>
+                        <select class="form-control" id="region" url = "{%url 'wine:get_regions' %}">
+                            <option value='all' selected>All Regions</option>
                         </select>
                     </div>
                 </div>

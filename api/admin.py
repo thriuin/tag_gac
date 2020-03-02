@@ -2,7 +2,7 @@ from django.contrib import admin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from api.models import Entities, ValueThreshold, \
-    CommodityCodeSystem, CodeList, TenderingReason, \
+    CommodityType, CommodityCodeSystem, CodeList, TenderingReason, \
     TAException, CftaException
 
 # Django Import-Export Registration (see: https://django-import-export.readthedocs.io)
@@ -23,6 +23,10 @@ class ValueThresholdResource(resources.ModelResource):
     class Meta:
         model=ValueThreshold
 
+
+class CommodityTypeResource(resources.ModelResource):
+    class Meta:
+        model=CommodityType
 
 class CommodityCodeSystemResource(resources.ModelResource):
     '''
@@ -78,6 +82,9 @@ class ValueThresholdAdmin(ImportExportModelAdmin):
     resource_class = ValueThresholdResource
 
 
+class CommodityTypeAdmin(ImportExportModelAdmin):
+    resource_class=CommodityTypeResource
+
 class CommodityCodeSystemAdmin(ImportExportModelAdmin):
     '''
     Admin import-export for :model: api.CommodityCodeSystem
@@ -113,8 +120,11 @@ class CftaExceptionAdmin(ImportExportModelAdmin):
     resource_class = CftaExceptionResource
 
 
+
+
 admin.site.register(Entities, EntitiesAdmin)
 admin.site.register(ValueThreshold, ValueThresholdAdmin)
+admin.site.register(CommodityType, CommodityTypeAdmin)
 admin.site.register(CommodityCodeSystem, CommodityCodeSystemAdmin)
 admin.site.register(CodeList, CodeListAdmin)
 admin.site.register(TenderingReason, TenderingReasonAdmin)

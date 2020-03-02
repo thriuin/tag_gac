@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import Entities, ValueThreshold, CommodityCodeSystem, \
+from api.models import Entities, ValueThreshold, CommodityType, CommodityCodeSystem, \
     CodeList, TenderingReason, TAException, CftaException
 
 
@@ -25,13 +25,18 @@ class ValueThresholdSerializer(serializers.HyperlinkedModelSerializer):
                   'wto_agp', 'ceta', 'cptpp', 'cfta']
 
 
-class CommodityCodeSystemSerializer(serializers.HyperlinkedModelSerializer):
-    """
-    Serializer for :model: 'guide.CommodityCodeSystem'
-    """
-    class Meta:
-        model = CommodityCodeSystem
-        fields = ['commodity_type_en', 'commodity_type_fr', 'commodity_code_system_en', 'commodity_code_system_fr']
+# class CommodityTypeSerializer(serializers.HyperlinkedModelSerializer):
+#     class Meta:
+#         model = CommodityType
+#         fields=['commodity_type_en', 'commodity_type_fr']
+#
+# class CommodityCodeSystemSerializer(serializers.HyperlinkedModelSerializer):
+#     """
+#     Serializer for :model: 'guide.CommodityCodeSystem'
+#     """
+#     class Meta:
+#         model = CommodityCodeSystem
+#         fields = ['commodity_code_system_en', 'commodity_code_system_fr']
 
 
 class CodeListSerializer(serializers.HyperlinkedModelSerializer):
@@ -40,7 +45,8 @@ class CodeListSerializer(serializers.HyperlinkedModelSerializer):
     """
     class Meta:
         model = CodeList
-        fields = ['code_system_en', 'code_system_fr',
+        fields = ['type_en', 'type_fr',
+                  'code_system_en', 'code_system_fr',
                   'code_list_en', 'code_list_fr',
                   'ccfta', 'ccofta', 'chfta', 'cpafta',
                   'cpfta', 'ckfta', 'cufta', 'wto_agp',

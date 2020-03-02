@@ -1,8 +1,8 @@
-from api.models import Entities, ValueThreshold, CommodityCodeSystem, \
+from api.models import Entities, ValueThreshold, \
     CodeList, TenderingReason, TAException, CftaException
 from rest_framework import viewsets
 from api.serializers import EntitiesSerializer, ValueThresholdSerializer, \
-    CommodityCodeSystemSerializer, CodeListSerializer, \
+    CodeListSerializer, \
     TenderingReasonSerializer, TAExceptionSerializer, \
     CftaExceptionSerializer
 
@@ -23,12 +23,17 @@ class ValueThresholdView(viewsets.ModelViewSet):
     serializer_class = ValueThresholdSerializer
 
 
-class CommodityCodeSystemView(viewsets.ModelViewSet):
-    """
-    API endpoint for :model: 'api.CommodityCodeSystem'
-    """
-    queryset = CommodityCodeSystem.objects.all().order_by('commodity_code_system_en')
-    serializer_class = CommodityCodeSystemSerializer
+# class CommodityTypeView(viewsets.ModelViewSet):
+#
+#     queryset = CommodityType.objects.all().order_by('commodity_type_en')
+#     serializer_class = CommodityTypeSerializer
+#
+# class CommodityCodeSystemView(viewsets.ModelViewSet):
+#     """
+#     API endpoint for :model: 'api.CommodityCodeSystem'
+#     """
+#     queryset = CommodityCodeSystem.objects.all().order_by('commodity_code_system_en')
+#     serializer_class = CommodityCodeSystemSerializer
 
 
 class CodeListView(viewsets.ModelViewSet):
