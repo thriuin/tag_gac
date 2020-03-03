@@ -2,8 +2,8 @@ from django.contrib import admin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from api.models import Entities, ValueThreshold, \
-    CommodityType, CommodityCodeSystem, CodeList, TenderingReason, \
-    TAException, CftaException, Wine
+    CommodityType, CommodityCodeSystem, Code,\
+    TenderingReason, TAException, CftaException
 
 # Django Import-Export Registration (see: https://django-import-export.readthedocs.io)
 
@@ -25,8 +25,12 @@ class ValueThresholdResource(resources.ModelResource):
 
 
 class CommodityTypeResource(resources.ModelResource):
+    '''
+    Admin resource for :mode: 'api.CommodityType'
+    '''
     class Meta:
         model=CommodityType
+
 
 class CommodityCodeSystemResource(resources.ModelResource):
     '''
@@ -36,12 +40,12 @@ class CommodityCodeSystemResource(resources.ModelResource):
         model=CommodityCodeSystem
 
 
-class CodeListResource(resources.ModelResource):
+class CodeResource(resources.ModelResource):
     '''
-    Admin resource for :model: 'api.CodeList'
+    Admin resource for :model: 'api.Code'
     '''
     class Meta:
-        model = CodeList
+        model = Code
 
 
 class TenderingReasonResource(resources.ModelResource):
@@ -83,6 +87,9 @@ class ValueThresholdAdmin(ImportExportModelAdmin):
 
 
 class CommodityTypeAdmin(ImportExportModelAdmin):
+    '''
+    Admin import-export for :model: 'api.CommodityType'
+    '''
     resource_class=CommodityTypeResource
 
 class CommodityCodeSystemAdmin(ImportExportModelAdmin):
@@ -92,11 +99,11 @@ class CommodityCodeSystemAdmin(ImportExportModelAdmin):
     resource_class = CommodityCodeSystemResource
 
 
-class CodeListAdmin(ImportExportModelAdmin):
+class CodeAdmin(ImportExportModelAdmin):
     '''
     Admin import-export for :model: 'api.CodeList'
     '''
-    resource_class = CodeListResource
+    resource_class = CodeResource
 
 
 class TenderingReasonAdmin(ImportExportModelAdmin):
@@ -119,14 +126,11 @@ class CftaExceptionAdmin(ImportExportModelAdmin):
     '''
     resource_class = CftaExceptionResource
 
-
-
-admin.site.register(Wine)
 admin.site.register(Entities, EntitiesAdmin)
 admin.site.register(ValueThreshold, ValueThresholdAdmin)
 admin.site.register(CommodityType, CommodityTypeAdmin)
 admin.site.register(CommodityCodeSystem, CommodityCodeSystemAdmin)
-admin.site.register(CodeList, CodeListAdmin)
+admin.site.register(Code, CodeAdmin)
 admin.site.register(TenderingReason, TenderingReasonAdmin)
 admin.site.register(TAException, TAExceptionAdmin)
 admin.site.register(CftaException, CftaExceptionAdmin)
