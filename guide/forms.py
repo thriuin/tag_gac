@@ -4,8 +4,8 @@ from django.utils.translation import ugettext_lazy as _
 from api.models import Entities, Code, TAException, TenderingReason, CftaException
 
 
-class GuideForm(forms.Form):
 
+class GuideFormEN(forms.Form):
     estimated_value = forms.IntegerField(
         label=_('Estimated Value'),
         required=True
@@ -13,44 +13,48 @@ class GuideForm(forms.Form):
     estimated_value.widget.attrs['class'] = 'form-control required'
 
     entities = forms.ModelChoiceField(
-        Entities.objects.all(),
+        Entities.objects.filter(lang='EN').only('name'),
         label=_('Organization'),
         required=True
     )
     entities.widget.attrs['class'] = 'form-control'
 
     commodity_type = forms.ModelChoiceField(
-        Code.objects.only('type_en'),
+        Code.objects.only('type'),
         label=_('Commodity Type'),
         required=True
     )
     commodity_type.widget.attrs['class'] = 'form-control'
 
+
     commodity_system = forms.ModelChoiceField(
-        Code.objects.only('code_system_en'),
+        Code.objects.only('code_system'),
         label=_('Commodity Code System'),
         required=True
     )
     commodity_system.widget.attrs['class'] = 'form-control'
 
+
     commodity_code = forms.ModelChoiceField(
-        Code.objects.only('code_en'),
+        Code.objects.only('code'),
         label=_('Commodity Code'),
         required=True
     )
     commodity_type.widget.attrs['class'] = 'form-control'
 
+
+
     exceptions = forms.ModelMultipleChoiceField(
-        TAException.objects.all(),
+        TAException.objects.only('name'),
         widget=forms.CheckboxSelectMultiple,
         label=_("Exceptions"),
         required=False
     )
     exceptions.widget.attrs['class'] = 'form-control'
 
+
     limited_tendering = forms.ModelMultipleChoiceField(
-        TenderingReason.objects.all(),
-        to_field_name='id',
+        TenderingReason.objects.only('name'),
         widget=forms.CheckboxSelectMultiple,
         label=_("Limited Tendering Reasons"),
         required=False
@@ -58,7 +62,67 @@ class GuideForm(forms.Form):
     limited_tendering.widget.attrs['class'] = 'form-control'
 
     cfta_exceptions = forms.ModelMultipleChoiceField(
-        CftaException.objects.all(),
+        CftaException.objects.only('name'),
+        to_field_name='id',
+        widget=forms.CheckboxSelectMultiple,
+        label=_("CFTA Exceptions"),
+        required=False
+    )
+    cfta_exceptions.widget.attrs['class'] = 'form-control'
+
+class GuideFormFR(forms.Form):
+    estimated_value = forms.IntegerField(
+        label=_('Estimated Value'),
+        required=True
+    )
+    estimated_value.widget.attrs['class'] = 'form-control required'
+
+    entities = forms.ModelChoiceField(
+        Entities.objects.filter(lang='FR').only('name'),
+        label=_('Organization'),
+        required=True
+    )
+    entities.widget.attrs['class'] = 'form-control'
+
+    commodity_type = forms.ModelChoiceField(
+        Code.objects.only('type'),
+        label=_('Commodity Type'),
+        required=True
+    )
+    commodity_type.widget.attrs['class'] = 'form-control'
+
+    commodity_system = forms.ModelChoiceField(
+        Code.objects.only('code_system'),
+        label=_('Commodity Code System'),
+        required=True
+    )
+    commodity_system.widget.attrs['class'] = 'form-control'
+
+    commodity_code = forms.ModelChoiceField(
+        Code.objects.only('code'),
+        label=_('Commodity Code'),
+        required=True
+    )
+    commodity_type.widget.attrs['class'] = 'form-control'
+
+    exceptions = forms.ModelMultipleChoiceField(
+        TAException.objects.only('name'),
+        widget=forms.CheckboxSelectMultiple,
+        label=_("Exceptions"),
+        required=False
+    )
+    exceptions.widget.attrs['class'] = 'form-control'
+
+    limited_tendering = forms.ModelMultipleChoiceField(
+        TenderingReason.objects.only('name'),
+        widget=forms.CheckboxSelectMultiple,
+        label=_("Limited Tendering Reasons"),
+        required=False
+    )
+    limited_tendering.widget.attrs['class'] = 'form-control'
+
+    cfta_exceptions = forms.ModelMultipleChoiceField(
+        CftaException.objects.only('name'),
         to_field_name='id',
         widget=forms.CheckboxSelectMultiple,
         label=_("CFTA Exceptions"),

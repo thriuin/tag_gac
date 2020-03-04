@@ -10,7 +10,7 @@ class EntitiesSerializer(serializers.HyperlinkedModelSerializer):
     """
     class Meta:
         model = Entities
-        fields = ['name_en', 'name_fr', 'ccfta', 'ccofta',
+        fields = ['name', 'lang', 'ccfta', 'ccofta',
                   'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
                   'wto_agp', 'ceta', 'cptpp', 'cfta']
 
@@ -21,7 +21,7 @@ class ValueThresholdSerializer(serializers.HyperlinkedModelSerializer):
     """
     class Meta:
         model = ValueThreshold
-        fields = ['name_en', 'name_fr', 'ccfta', 'ccofta',
+        fields = ['type_value', 'lang', 'ccfta', 'ccofta',
                   'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
                   'wto_agp', 'ceta', 'cptpp', 'cfta']
 
@@ -29,7 +29,7 @@ class ValueThresholdSerializer(serializers.HyperlinkedModelSerializer):
 class CommodityTypeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CommodityType
-        fields=['commodity_type_en', 'commodity_type_fr']
+        fields=['commodity_type', 'lang']
 
 
 class CommodityCodeSystemSerializer(serializers.HyperlinkedModelSerializer):
@@ -38,7 +38,7 @@ class CommodityCodeSystemSerializer(serializers.HyperlinkedModelSerializer):
     """
     class Meta:
         model = CommodityCodeSystem
-        fields = ['commodity_code_system_en', 'commodity_code_system_fr']
+        fields = ['commodity_code_system', 'lang']
 
 
 class CodeSerializer(serializers.HyperlinkedModelSerializer):
@@ -47,9 +47,8 @@ class CodeSerializer(serializers.HyperlinkedModelSerializer):
     """
     class Meta:
         model = Code
-        fields = ['type_en', 'type_fr',
-                  'code_system_en', 'code_system_fr',
-                  'code_en', 'code_fr',
+        fields = ['type', 'code_system',
+                  'code', 'lang',
                   'ccfta', 'ccofta', 'chfta', 'cpafta',
                   'cpfta', 'ckfta', 'cufta', 'wto_agp',
                   'ceta', 'cptpp', 'cfta']
@@ -61,7 +60,7 @@ class TenderingReasonSerializer(serializers.HyperlinkedModelSerializer):
     """
     class Meta:
         model = TenderingReason
-        fields = ['name_en', 'name_fr', 'ccfta', 'ccofta',
+        fields = ['name', 'lang', 'ccfta', 'ccofta',
                   'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
                   'wto_agp', 'ceta', 'cptpp', 'cfta']
 
@@ -72,7 +71,7 @@ class TAExceptionSerializer(serializers.HyperlinkedModelSerializer):
     """
     class Meta:
         model = TAException
-        fields = ['name_en', 'name_fr', 'ccfta', 'ccofta',
+        fields = ['name', 'lang', 'ccfta', 'ccofta',
                   'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
                   'wto_agp', 'ceta', 'cptpp', 'cfta']
 
@@ -83,6 +82,6 @@ class CftaExceptionSerializer(serializers.HyperlinkedModelSerializer):
     """
     class Meta:
         model = CftaException
-        fields = ['name_en', 'name_fr', 'ccfta', 'ccofta',
+        fields = ['name', 'lang', 'ccfta', 'ccofta',
                   'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
                   'wto_agp', 'ceta', 'cptpp', 'cfta']

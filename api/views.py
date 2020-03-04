@@ -11,7 +11,7 @@ class EntitiesView(viewsets.ModelViewSet):
     """
     API endpoint for :model: 'api.Entities'
     """
-    queryset = Entities.objects.all().order_by('name_en')
+    queryset = Entities.objects.all().order_by('name')
     serializer_class = EntitiesSerializer
 
 
@@ -27,14 +27,14 @@ class CommodityTypeView(viewsets.ModelViewSet):
     '''
     API endpoint for :model: 'api.CommodityType'
     '''
-    queryset = CommodityType.objects.all().order_by('commodity_type_en')
+    queryset = CommodityType.objects.all().order_by('commodity_type')
     serializer_class = CommodityTypeSerializer
 
 class CommodityCodeSystemView(viewsets.ModelViewSet):
     """
     API endpoint for :model: 'api.CommodityCodeSystem'
     """
-    queryset = CommodityCodeSystem.objects.all().order_by('commodity_code_system_en')
+    queryset = CommodityCodeSystem.objects.all().order_by('commodity_code_system')
     serializer_class = CommodityCodeSystemSerializer
 
 
@@ -42,7 +42,7 @@ class CodeView(viewsets.ModelViewSet):
     """
     API endpoint for :model: 'api.Code'
     """
-    queryset = Code.objects.all().order_by('code_system_en')
+    queryset = Code.objects.all().order_by('code_system')
     serializer_class = CodeSerializer
 
 
@@ -50,7 +50,7 @@ class TenderingReasonView(viewsets.ModelViewSet):
     """
     API endpoint for :model: 'api.TenderingReason'
     """
-    queryset = TenderingReason.objects.all().order_by('name_en')
+    queryset = TenderingReason.objects.all().order_by('name')
     serializer_class = TenderingReasonSerializer
 
 
@@ -58,7 +58,7 @@ class TAExceptionView(viewsets.ModelViewSet):
     """
     API endpoint for :model: 'api.TAException'
     """
-    queryset = TAException.objects.all().order_by('name_en')
+    queryset = TAException.objects.all().order_by('name')
     serializer_class = TAExceptionSerializer
 
 
@@ -66,5 +66,5 @@ class CftaExceptionView(viewsets.ModelViewSet):
     """
     API endpoint for :model: 'api.CftaException'
     """
-    queryset = CftaException.objects.all().order_by('name_en')
+    queryset = CftaException.objects.all().order_by('name')
     serializer_class = CftaExceptionSerializer

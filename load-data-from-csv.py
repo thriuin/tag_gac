@@ -1,42 +1,65 @@
-
 import argparse
 from colorama import Fore, init as colorama_init, Style
 import csv
 from os import  environ, path
 import sys
+import functools
+from django.db.models.fields import *
+import getattr
+import csv
 
 # Use the database models from Django
 environ.setdefault('DJANGO_SETTINGS_MODULE', 'tag_gac.settings')
 import django
 django.setup()
-from guide.models import GoodsFscCode, ConstructionCcsCode, ServicesCcsCode, TAException, ValueThreshold
+from api.models import Entities, ValueThreshold, \
+    CommodityType, CommodityCodeSystem, Code,\
+    TenderingReason, TAException, CftaException, BooleanTradeAgreement
 
 
-def load_goods(csv_file: str):
-    with open(csv_file, 'r', encoding='utf8', errors="ignore") as txt_file:
-        gc_reader = csv.DictReader(txt_file, dialect='excel')
-        total = 0
-        duplicates = 0
-        prev_key = ""
-        for gc in gc_reader:
-            current_key = gc['fsc_level_1'] + gc['fsc_level_4']
-            if not current_key == prev_key:
-                GoodsFscCode.objects.update_or_create(fs_code=gc['fsc_level_1'],
-                                                      fs_code_desc=gc['fsc_level_4'],
-                                                      ccfta=True if gc['CFTA'] == 'YES' else False,
-                                                      ccofta=True if gc['CCoFTA'] == 'YES' else False,
-                                                      chfta=True if gc['CHFTA'] == 'YES' else False,
-                                                      cpafta=True if gc['CPaFTA'] == 'YES' else False,
-                                                      cpfta=True if gc['CPFTA'] == 'YES' else False,
-                                                      ckfta=True if gc['CKFTA'] == 'YES' else False,
-                                                      cufta=True if gc['CUFTA'] == 'YES' else False,
-                                                      wto_agp=True if gc['WTO_AGP'] == 'YES' else False,
-                                                      ceta=True if gc['CETA'] == 'YES' else False,
-                                                      cptpp=True if gc['CPTPP'] == 'YES' else False)
-                total += 1
-            else:
-                duplicates += 1
-            prev_key = current_key
+def sort_bools(line, key, value):
+    if line[key] == 'YES':
+        value=True
+    elif line[key] == 'NO':
+        value=False
+    else:
+        value=line[key]
+    return line
+
+def get_csv(model, csv_file, dictionary):
+
+    fields_list = [field.name for field in model._meta.get_fields()]
+
+    with open(csv_file, 'r', encoding='utf-8', errors='ignore') as txt_file:
+        lines = csv.DictReader(txt_file, dialect='excel')
+        headers = next(txt_file)
+
+        if not headers == fields_list:
+            print('Model fields and csv fields not the same')
+        else:
+            model_dict = {}
+            for field in fields_list:
+                model_dict[field] = getattr(model, field)
+            total = 0
+            duplicates = 0
+            prev_key = ''
+            for line in lines:
+                current_key = ''
+                charfield = [field.name for field in model._meta.get_fields().__class__ is CharField]
+                for field in charfield:
+                    current_key = current_key + line[field]
+                if not current_key == prev_key:
+                    for key, value in model_dict.items:
+                        model.objects.update_or_create(
+                            sort_bools(line=line, key=key, value=value)
+                        )
+                    total += 1
+                else:
+                    duplicates += 1
+                prev_key = current_key
+
+
+
 
         print("Goods Codes: {0} loaded, {1} duplicates".format(Fore.CYAN + str(total) + Fore.RESET, Fore.LIGHTYELLOW_EX +
                                                   str(duplicates) + Fore.RESET))

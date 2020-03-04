@@ -1,97 +1,206 @@
 {% extends "base.html" %}
-{% load staticfiles %}
 {% load i18n %}
 {% load static %}
 {% load humanize %}
 {% load markdown_filter %}
 
+
 {% block main-content %}
-    <section class="site_filter">
-        <div class="container-fluid">
-            <div class="row">
-                <form action="" method="POST">
-                    {{ form.non_field_errors }}
-                    <div class="col-sm-2 col-2">
-                        <div class="form-group">
+
+    {# --- Main title #}
+    {% block main-content-title %}
+        <h1 property="name" id="wb-cont">{% trans "Trade Agreement Guide" %}</h1>
+    {% endblock %}
+    {% if show_eval %}
+    <div class="row mrgn-tp-md mrgn-bttm-lg">
+        <table class="table">
+        <caption class="wb-inv">{% trans 'Trade Agreement Applicability' %}</caption>
+          <thead>
+           <tr>
+               <th scope="col">{% trans 'NAFTA Annex 1001.1b-2' %}</th>
+               <th scope="col">{% trans 'Chile (CCFTA) Annex K bis-01.1-4' %}</th>
+               <th scope="col">{% trans 'Colombia (CCoFTA) Annex 1401-4' %}</th>
+               <th scope="col">{% trans 'Honduras (CHFTA) Annex 17.4' %}</th>
+               <th scope="col">{% trans 'Panama (CPaFTA) Annex 5' %}</th>
+               <th scope="col">{% trans 'Peru (CPFTA) Annex 1401.1-4' %}</th>
+               <th scope="col">{% trans 'Korea (CKFTA) Annex 14-C' %}</th>
+               <th scope="col">{% trans 'Ukraine (CUFTA) Annex 10-4' %}</th>
+               <th scope="col">{% trans 'WTO-AGP Canada Annex 4' %}</th>
+               <th scope="col">{% trans 'CETA Annex 19-5' %}</th>
+               <th scope="col">{% trans 'CPTPP Chapter 15, Annex 15-A Section E' %}</th>
+               <th scope="col">{% trans 'CFTA Chapter 5' %}</th>
+           </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>{% if nafta_annex_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
+            <td>{% if ccfta_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
+            <td>{% if ccofta_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
+            <td>{% if chfta_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
+            <td>{% if cpafta_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
+            <td>{% if cpfta_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
+            <td>{% if ckfta_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
+            <td>{% if cufta_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
+            <td>{% if wto_agp_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
+            <td>{% if ceta_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
+            <td>{% if cptpp_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
+            <td>{% if cfta_yn %}{% trans 'Exempt' %}{% else %}{% trans 'Applies' %}{% endif %}</td>
+           </tr>
+          </tbody>
+        </table>
+    </div>
+    <div class="row mrgn-tp-md mrgn-bttm-lg">
+    <section class="panel panel-info">
+        <header class="panel-heading">
+        <h5 class="panel-title">{% trans 'Explanation' %}</h5>
+        </header>
+        <div class="panel-body">
+            {% if nafta_annex %}<h6>NAFTA Annex</h6>
+            <ul>
+                {% for x in nafta_annex %}
+                <li>{{ x }}</li>
+                {% endfor %}
+            </ul>{% endif %}
+            {% if ccfta %}<h6>{% trans 'Chile (CCFTA) Annex K bis-01.1-4' %}</h6>
+            <ul>
+                {% for x in ccfta %}
+                <li>{{ x }}</li>
+                {% endfor %}
+            </ul>{% endif %}
+            {% if ccofta %}<h6>{% trans 'Colombia (CCoFTA) Annex 1401-4' %}</h6>
+            <ul>
+                {% for x in ccofta %}
+                <li>{{ x }}</li>
+                {% endfor %}
+            </ul>{% endif %}
+            {% if chfta %}<h6>{% trans 'Honduras (CHFTA) Annex 17.4' %}</h6>
+            <ul>
+                {% for x in chfta %}
+                <li>{{ x }}</li>
+                {% endfor %}
+            </ul>{% endif %}
+            {% if cpafta %}<h6>{% trans 'Panama (CPaFTA) Annex 5' %}</h6>
+            <ul>
+                {% for x in cpafta %}
+                <li>{{ x }}</li>
+                {% endfor %}
+            </ul>{% endif %}
+            {% if cpfta %}<h6>{% trans 'Peru (CPFTA) Annex 1401.1-4' %}</h6>
+            <ul>
+                {% for x in cpfta %}
+                <li>{{ x }}</li>
+                {% endfor %}
+            </ul>{% endif %}
+            {% if ckfta %}<h6>{% trans 'Korea (CKFTA) Annex 14-C' %}</h6>
+            <ul>
+                {% for x in ckfta %}
+                <li>{{ x }}</li>
+                {% endfor %}
+            </ul>{% endif %}
+            {% if cufta %}<h6>{% trans 'Ukraine (CUFTA) Annex 10-4' %}</h6>
+            <ul>
+                {% for x in cufta %}
+                <li>{{ x }}</li>
+                {% endfor %}
+            </ul>{% endif %}
+            {% if wto_agp %}<h6>{% trans 'WTO-AGP Canada Annex 4' %}</h6>
+            <ul>
+                {% for x in wto_agp %}
+                <li>{{ x }}</li>
+                {% endfor %}
+            </ul>{% endif %}
+            {% if ceta %}<h6>{% trans 'CETA Annex 19-5' %}</h6>
+            <ul>
+                {% for x in ceta %}
+                <li>{{ x }}</li>
+                {% endfor %}
+            </ul>{% endif %}
+            {% if cptpp %}<h6>{% trans 'CPTPP Chapter 15, Annex 15-A Section E' %}</h6>
+            <ul>
+                {% for x in cptpp %}
+                <li>{{ x }}</li>
+                {% endfor %}
+            </ul>{% endif %}
+            {% if cfta %}<h6>{% trans 'CFTA Chapter 5' %}</h6>
+            <ul>
+                {% for x in cfta %}
+                <li>{{ x }}</li>
+                {% endfor %}
+            </ul>{% endif %}
+        </div>
+    </section>
+    </div>
+    {% endif %}
+    <div class="row mrgn-tp-md mrgn-bttm-md">
+        <div class="col-md-12">
+            <section>
+                <div class="wb-frmvld">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        {{ form.non_field_errors }}
+                        <div class="form-group" role="form">
+                            <p>
+                                {{ instructions }}
+                            </p>
+
                             {{ form.estimated_value.errors }}
                             {{ form.estimated_value.label_tag }}
                             {{ form.estimated_value }}
-                        </div>
-                    </div>
-                    <br>
-                    <div class="col-sm-2 col-2">
-                        <div class="form-group">
+
                             {{ form.entities.errors }}
                             {{ form.entities.label_tag }}
                             {{ form.entities }}
-                        </div>
-                    </div>
-                    <br>
-                    <div class="col-sm-2 col-2">
-                        <div class="form-group">
+
                             {{ form.commodity_type.errors }}
                             {{ form.commodity_type.label_tag }}
                             <select class="form-control" id="type_en" url = "{%url 'guide:get_type' %}"></select>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="col-sm-2 col-2">
-                        <div class="form-group">
+
                             {{ form.commodity_system.errors }}
                             {{ form.commodity_system.label_tag }}
                             <select class="form-control" id="code_system_en" url = "{%url 'guide:get_code_system' %}">
                                 <option value='all' selected>Select Code System</option>
                             </select>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="col-sm-2 col-2">
-                        <div class="form-group">
+
                             {{ form.commodity_code.errors }}
                             {{ form.commodity_code.label_tag }}
                             <select class="form-control" id="code_en" url = "{%url 'guide:get_code' %}">
-                                <option value='all' selected>Select Commodity Code</option>
+                            <option value='all' selected>Select Commodity Code</option>
                             </select>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="col-sm-2 col-2">
-                        <div class="form-group">
+
+                            <hr>
                             {{ form.limited_tendering.errors }}
                             {{ form.limited_tendering.label_tag }}
-                            <select class="form-control" id="limited_en" value="{{ form.limited_tendering }}">
-                            </select>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="col-sm-2 col-2">
-                        <div class="form-group">
+                            {% for rule in form.limited_tendering %}
+                                <div class="checkbox">
+                                    {{ rule }}
+                                </div>
+                            {% endfor %}
+                            <hr>
+
                             {{ form.exceptions.errors }}
                             {{ form.exceptions.label_tag }}
-                            <select class="form-control" id="exceptions_en" value="{{ form.exceptions }}">
-                            </select>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="col-sm-2 col-2">
-                        <div class="form-group">
+                            {% for exception in form.exceptions %}
+                                <div class="checkbox">
+                                    {{ exception }}
+                                </div>
+                            {% endfor %}
+                            <hr>
                             {{ form.cfta_exceptions.error }}
                             {{ form.cfta_exceptions.label_tag }}
-                            <select class="form-control" id="cfta_exceptions_en", value="{{ form.cfta_exceptions }}">
-                            </select>
+                            {% for rule in form.cfta_exceptions %}
+                                <div class="checkbox">
+                                    {{ rule }}
+                                </div>
+                            {% endfor %}
                         </div>
-                    </div>
-                    <br>
-                    <input type="submit" value="Submit" class="btn btn-primary">
-                </form>
-            </div>
+                        <br>
+                        <input type="submit" value="Submit" class="btn btn-primary">
+                    </form>
+                </div>
+            </section>
         </div>
-    </section>
-    <br />
-{% endblock %}
-{% block script %}
-
-{% endblock %}
+    </div><p></p>
+{% endblock main-content %}
 {% block custom-jquery %}
     <script src="{% static 'jquery.min.js' %}" type="text/javascript"></script>
     <script src="{% static 'js/guide.js' %}" type="text/javascript"></script>

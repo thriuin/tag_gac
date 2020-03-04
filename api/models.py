@@ -2,7 +2,25 @@ from django.db import models
 
 # TODO: Add validators
 
-class BooleanTradeAgreement(models.Model):
+class language(models.Model):
+    CHOICES = [
+        ('EN', 'English'),
+        ('FR', 'Francais')
+    ]
+    lang = models.CharField(
+        choices=CHOICES,
+        default='',
+        verbose_name='Select Language Field',
+        blank=False,
+        max_length=2
+        )
+
+
+    class Meta:
+        abstract=True
+
+
+class BooleanTradeAgreement(language):
     """
     This contains a boolean for each trade agreement
     """
@@ -70,6 +88,7 @@ class BooleanTradeAgreement(models.Model):
 
     class Meta:
         abstract=True
+
 
 class NumericTradeAgreements(models.Model):
     """
@@ -140,44 +159,44 @@ class NumericTradeAgreements(models.Model):
     class Meta:
         abstract=True
 
+
 class Entities(BooleanTradeAgreement):
     """
     Subclass of :model: 'guide.BooleanTradeAgreement'
     This class has federal departments, agencies, ect...
     """
-    name_en = models.CharField(
+    name = models.CharField(
         max_length=128,
         default='',
         unique=True,
-        verbose_name='Federal Entities'
+        verbose_name='Entities'
     )
-    name_fr = models.CharField(
-        max_length=128,
-        default='',
-        unique=True,
-        verbose_name='French Entities'
+    tc = models.BooleanField(
+        default=False,
+        verbose_name='Department of Transport',
+        blank=False
     )
-
-    def __str__(self):
-        return "{0} / {1}".format(self.name_en, self.name_fr)
-
-
-class CommodityType(models.Model):
-    commodity_type_en = models.CharField(
-        max_length=128,
-        default='',
-        unique=True,
-        verbose_name='Commodity Type EN'
-    )
-    commodity_type_fr = models.CharField(
-        max_length=128,
-        default='',
-        unique=True,
-        verbose_name='Commodity Type FR'
+    weapons_rule = models.BooleanField(
+        default=False,
+        verbose_name='Defence RCMP or CCG',
+        blank=False
     )
 
     def __str__(self):
-        return "{0} / {1}".format(self.commodity_type_en, self.commodity_type_fr)
+        return self.name
+
+
+class CommodityType(language):
+    commodity_type = models.CharField(
+        max_length=128,
+        default='',
+        unique=True,
+        verbose_name='Commodity Type'
+    )
+
+
+    def __str__(self):
+        return self.commodity_type
 
 
 class ValueThreshold(NumericTradeAgreements):
@@ -185,113 +204,63 @@ class ValueThreshold(NumericTradeAgreements):
     Subclass of :model: 'guide.NumericTradeAgreement'
     This class is for the dollar value thresholds in the trade agreements
     """
-    type_value_en = models.ForeignKey(
+    type_value = models.ForeignKey(
         CommodityType,
-        to_field='commodity_type_en',
+        to_field='commodity_type',
         related_name='+',
         max_length=128,
         default='',
-        verbose_name='Commodity Type EN',
+        verbose_name='Commodity Type',
         on_delete=models.CASCADE
-    )
-    type_value_fr = models.ForeignKey(
-        CommodityType,
-        to_field='commodity_type_fr',
-        related_name='+',
-        max_length=128,
-        default='',
-        verbose_name='Commodity Type FR',
-        on_delete=models.CASCADE
-    )
-    name_en = models.TextField(
-        default="-",
-        unique=True,
-        verbose_name="Description (English)"
-    )
-    name_fr = models.TextField(
-        default="_",
-        unique=True,
-        verbose_name="Description (Francais)"
     )
 
     def __str__(self):
-        return "{0} / {1}".format(self.name_en, self.name_fr)
+        return self.type_value
 
-
-
-class CommodityCodeSystem(models.Model):
-    commodity_code_system_en = models.CharField(
+class CommodityCodeSystem(language):
+    commodity_code_system = models.CharField(
         max_length=128,
         default='',
         unique=True,
-        verbose_name='Commodity Code System EN'
+        verbose_name='Commodity Code System'
     )
-    commodity_code_system_fr = models.CharField(
-        max_length=128,
-        default='',
-        unique=True,
-        verbose_name='Commodity Code System FR'
-    )
-
     def __str__(self):
-        return "{0} / {1}".format(self.commodity_code_system_en, self.commodity_code_system_fr)
+        return self.commodity_code_system
 
 
-class Code(models.Model):
-    type_en = models.ForeignKey(
+
+
+class Code(language):
+    type = models.ForeignKey(
         CommodityType,
-        to_field='commodity_type_en',
+        to_field='commodity_type',
         related_name='+',
         max_length=128,
         default='',
-        verbose_name='Commodity Type EN',
+        verbose_name='Commodity Type',
         on_delete=models.CASCADE,
         db_column='type_en'
     )
-    type_fr = models.ForeignKey(
-        CommodityType,
-        to_field='commodity_type_fr',
-        related_name='+',
-        max_length=128,
-        default='',
-        verbose_name='Commodity Type FR',
-        on_delete=models.CASCADE,
-        db_column='type_fr'
-    )
-    code_system_en = models.ForeignKey(
+    code_system = models.ForeignKey(
         CommodityCodeSystem,
-        to_field='commodity_code_system_en',
+        to_field='commodity_code_system',
         related_name='+',
         max_length=128,
         default='',
-        verbose_name='Commodity Code System EN',
-        on_delete=models.CASCADE
-    )
-    code_system_fr = models.ForeignKey(
-        CommodityCodeSystem,
-        to_field='commodity_code_system_fr',
-        related_name='+',
-        max_length=128,
-        default='',
-        verbose_name='Commodity Code System FR',
+        verbose_name='Commodity Code System',
         on_delete=models.CASCADE
     )
 
-    code_en = models.CharField(
+    code = models.CharField(
         max_length=20,
         default='',
-        verbose_name='Code List EN',
-        db_column='code_list_en'
-    )
-    code_fr = models.CharField(
-        max_length=20,
-        default='',
-        verbose_name='Code List FR',
-        db_column='code_list_fr'
+        verbose_name='Code List',
+        db_column='code_list'
     )
 
     def __str__(self):
-        return "{0} / {1}".format(self.code_en, self.code_fr)
+        return self.code
+
 
 
 class TenderingReason(BooleanTradeAgreement):
@@ -299,19 +268,15 @@ class TenderingReason(BooleanTradeAgreement):
     Subclass of :model: 'guide.BooleanTradeAgreement'
     This class has limited tendering reasons
     """
-    name_en = models.TextField(
+    name = models.TextField(
         default="-",
         unique=True,
-        verbose_name="Description (English)"
-    )
-    name_fr = models.TextField(
-        default="_",
-        unique=True,
-        verbose_name="Description (Francais)"
+        verbose_name="Description"
     )
 
     def __str__(self):
-        return "{0} / {1}".format(self.name_en, self.name_fr)
+        return self.name
+
 
 
 class TAException(BooleanTradeAgreement):
@@ -319,19 +284,15 @@ class TAException(BooleanTradeAgreement):
     Subclass of :model: 'guide.BooleanTradeAgreement'
     This class has trade agreement exceptions
     """
-    name_en = models.TextField(
+    name = models.TextField(
         default="-",
         unique=True,
-        verbose_name="Description (English)"
+        verbose_name="Description"
     )
-    name_fr = models.TextField(
-        default="_",
-        unique=True,
-        verbose_name="Description (Francais)"
-    )
-
     def __str__(self):
-        return "{0} / {1}".format(self.name_en, self.name_fr)
+        return self.name
+
+
 
 
 class CftaException(BooleanTradeAgreement):
@@ -339,19 +300,27 @@ class CftaException(BooleanTradeAgreement):
     Subclass of :model: 'guide.BooleanTradeAgreement'
     This class has Canada Free Trade Agreement exceptions
     """
-    name_en = models.TextField(
+    name = models.TextField(
         default="-",
         unique=True,
-        verbose_name="Description (English)"
-    )
-    name_fr = models.TextField(
-        default="_",
-        unique=True,
-        verbose_name="Description (Francais)"
+        verbose_name="Description"
     )
 
     def __str__(self):
-        return "{0} / {1}".format(self.name_en, self.name_fr)
+        return self.name
+
+
+
+
+class Instructions(language):
+    name = models.TextField(
+        default='-',
+        unique=True,
+        verbose_name='Instructions'
+    )
+
+    def __str__(self):
+        return self.name
 
 
 
