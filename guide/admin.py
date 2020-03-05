@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import GoodsCode, ConstructionCode, ServicesCode, TenderingReason, TAException, ValueThreshold
+from .models import GoodsCode, ConstructionCode, ServicesCode, TenderingReason, TAException, ValueThreshold, LimitedTendering
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
@@ -65,6 +65,16 @@ class ValueThresholdAdmin(ImportExportModelAdmin):
     resource_class = ValueThresholdResource
 
 
+class LimitedTenderingResource(resources.ModelResource):
+
+    class Meta:
+        model = LimitedTendering
+
+
+class LimitedTenderingAdmin(ImportExportModelAdmin):
+    resource_class = LimitedTenderingResource
+
+
 # Register your models here.
 admin.site.register(GoodsCode, GoodsCodeAdmin)
 admin.site.register(ConstructionCode, ConstructionCodeAdmin)
@@ -72,5 +82,6 @@ admin.site.register(ServicesCode, ServicesCodeAdmin)
 admin.site.register(TAException, TAExceptionAdmin)
 admin.site.register(TenderingReason, TenderingReasonAdmin)
 admin.site.register(ValueThreshold, ValueThresholdAdmin)
+admin.site.register(LimitedTendering, LimitedTenderingAdmin)
 
 

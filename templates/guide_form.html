@@ -53,9 +53,12 @@
         <h5 class="panel-title">{% trans 'Explanation' %}</h5>
         </header>
         <div class="panel-body">
-            {% if nafta_annex %}<h6>NAFTA Annex</h6>
+            {% if nafta %}<h6>NAFTA Annex</h6>
             <ul>
-                {% for x in nafta_annex %}
+                {% for x in nafta %}
+                <li>{{ x }}</li>
+                {% endfor %}
+                {% for x in nafta_x %}
                 <li>{{ x }}</li>
                 {% endfor %}
             </ul>{% endif %}
@@ -174,7 +177,7 @@
                             </div>
                         {% endfor %}
                         <input type="submit" value="Submit" class="btn btn-primary">
-                        <input type="reset" value="Reset Form"  class="btn btn-info">
+                        {% comment %}<input type="reset" value="Reset Form"  class="btn btn-info">{% endcomment %}
                     </form>
                 </div>
             </section>
@@ -189,9 +192,9 @@
 <li>
 &nbsp;<button class="btn btn-default" type="button" id="submit-form-button">Submit</button>
 </li>
-<li>
+{% comment %}<li>
 <button class="btn btn-default" type="button" id="clear-form-button">Reset</button>
-</li>
+</li>{% endcomment %}
 </ul>
 </section>
 

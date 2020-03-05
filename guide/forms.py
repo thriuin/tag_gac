@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from guide.models import GoodsCode, ConstructionCode, ServicesCode
+from guide.models import GoodsCode, ConstructionCode, ServicesCode, TAException, LimitedTendering
 
 
 class GuideForm(forms.Form):
@@ -46,55 +46,17 @@ class GuideForm(forms.Form):
                                               ('ss', _('Sole Source'))))
     solicitation.widget.attrs['class'] = 'form-control'
 
-    exemptions = forms.MultipleChoiceField(
-        choices=(('1', _("Shipbuilding and repair (applies to all agreements except the CFTA)")),
-                 ('2', _("Services procured in support of military forces located overseas (applies to all agreements)")),
-                 ('3', _("Contracts respecting Federal Supply Classification (FSC) 58 (communications detection and coherent radiation equipment) (applies to all agreements except for the CFTA)")),
-                 ('4', _("Set-asides for small businesses (other than indigenous businesses) (applies to all agreements except for CETA)")),
-                 ('5', _("Agricultural products made in furtherance of agricultural support programs or human feeding programs (applies to all agreements except for CFTA)")),
-                 ('6', _("Procurements respecting FSC 70 74 and 36 for the Department of Transport (applies to all agreements except for the CFTA CUFTA CKFTA WTO-AGP CETA and CPTPP)")),
-                 ('7', _("FSC 70 74 and 36 for the Department of Heritage (in respect to those functions that were formerly the responsibility of the Department of Communications) (applies to all agreements except for the CFTA CUFTA CKFTA WTO-AGP CETA and CPTPP)")),
-                 ('8', _("Indigenous Businesses set-aside (applies to all agreements)")),
-                 ('9', _("Measures necessary to protect public morals order or safety (applies to all agreements)")),
-                 ('10', _("Measures necessary to protect human animal or plant life or health (applies to all agreements)")),
-                 ('11', _("Measures necessary to protect intellectual property (applies to all agreements)")),
-                 ('12', _("Measures relating to goods or services of persons with disabilities philanthropic institutions or prison labour (applies to all agreements)")),
-                 ('13', _("Procurement of goods or services from not-for-profit institutions (applies to all agreements except for CETA and CPTPP)")),
-                 ('14', _("Procurement related to an international crossing between Canada and another country (applies to all agreements except for NAFTA CCFTA CCoFTA CHFTA CPaFTA and CPFTA)")),
-                 ('15', _("Related to space projects for the Canadian Space Agency (applies to CFTA only)")),
-                 ('16', _("Procurements for the Canadian Space Agency other than for satellite communications earth observation and global navigation satellite systems (applies to CETA only)"))),
-        widget=forms.CheckboxSelectMultiple,
-        label=_("Exceptions"),
-        required=False
-    )
+    exemptions = forms.ModelMultipleChoiceField(TAException.objects.all(),
+                                                 to_field_name="id", required=False,
+                                                 label=_("Trade Agreement Exemptions"),
+                                                 widget=forms.CheckboxSelectMultiple)
+
     exemptions.widget.attrs['class'] = 'form-control'
 
-    limited_tendering = forms.MultipleChoiceField(
-        choices=(
-            ("1", "None"),
-            ("2", "No response to bid solicitation or no suppliers applied to participate in the procurement"),
-            ("3", "No tenders conformed to the essential requirements of the tender documentation"),
-            ("4", "The tenders submitted were collusive"),
-            ("5", "Goods or services can be supplied by only a particular supplier"),
-            ("6", "Work of art"),
-            ("7", "Patent protection or copyright"),
-            ("8", "Absence of competition for technical reasons"),
-            ("9", "Economic or technical reasons, such as Interchangeable Parts"),
-            ("10", "Additional deliveries by original supplier if a change in supplier would cause duplication of "
-                   "costs or significant inconvenience"),
-            ("11", "Goods purchased on a commodities market"),
-            ("12", "Procurement of a Prototype"),
-            ("13", "Extreme urgency"),
-            ("14", "Exceptionally advantageous (not CPaFTA)S"),
-            ("15", "Winner of an architectural design contest"),
-            ("16", "Consulting services regarding matters of a confidential nature (Does not apply to CPTPP, CETA, "
-                   "WTO-GAP, CKFTA, CUFTA)"),
-            ("17", "Additional construction services (only for CPaFTA and CPTPP, CCFTA)")
-        ),
-        widget=forms.CheckboxSelectMultiple,
-        label=_("Limited Tendering Reasons"),
-        required=False
-    )
+    limited_tendering = forms.ModelMultipleChoiceField(LimitedTendering.objects.all(),
+                                                         to_field_name="id", required=False,
+                                                         label=_("Limited Tendering Reasons"),
+                                                         widget=forms.CheckboxSelectMultiple)
     limited_tendering.widget.attrs['class'] = 'form-control'
 
     cfta_exceptions = forms.MultipleChoiceField(

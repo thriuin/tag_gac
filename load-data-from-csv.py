@@ -9,7 +9,7 @@ import sys
 environ.setdefault('DJANGO_SETTINGS_MODULE', 'tag_gac.settings')
 import django
 django.setup()
-from guide.models import GoodsCode, ConstructionCode, ServicesCode, TAException, ValueThreshold
+from guide.models import GoodsCode, ConstructionCode, ServicesCode, TAException, ValueThreshold, LimitedTendering
 
 
 def load_goods(csv_file: str):
@@ -143,7 +143,7 @@ def load_dollar_thresholds(csv_file: str):
             ValueThreshold.objects.update_or_create(
                 desc_en=vt['Type'],
                 desc_fr=vt['Type'],
-                nafta_annex=vt['NAFTA'],
+                nafta=vt['NAFTA'],
                 ccfta=vt['CCFTA'],
                 ccofta=vt['CCoFTA'],
                 chfta=vt['CHFTA'],
@@ -159,6 +159,46 @@ def load_dollar_thresholds(csv_file: str):
 
         print("Thresholds: {0} loaded".format(Fore.CYAN + str(total) + Fore.RESET))
 
+
+def load_limited_tendering(csv_file: str):
+    with open (csv_file, 'r', encoding='utf8', errors="ignore") as txt_file:
+        ltr_reader = csv.DictReader(txt_file, dialect='excel')
+        total = 0
+        ta_urls_en = {}
+        for ltr in ltr_reader:
+            if ltr['Data Field'] == 'URL':
+                ta_urls_en['CFTA Article 513'] = ltr['CFTA Article 513']
+                ta_urls_en['NAFTA Article 1016'] = ltr['NAFTA Article 1016']
+                ta_urls_en['Chile (CCFTA) Article Kbis-09'] = ltr['Chile (CCFTA) Article Kbis-09']
+                ta_urls_en['Colombia (CCoFTA) Article 1409'] = ltr['Colombia (CCoFTA) Article 1409']
+                ta_urls_en['Honduras (CHFTA) Article 17.11'] = ltr['Honduras (CHFTA) Article 17.11']
+                ta_urls_en['Panama (CPaFTA) Article 16.10'] = ltr['Panama (CPaFTA) Article 16.10']
+                ta_urls_en['Korea (CKFTA) Article 14.3 (WTO) '] = ltr['Korea (CKFTA) Article 14.3 (WTO) ']
+                ta_urls_en['Peru (CPFTA) Article 1409'] = ltr['Peru (CPFTA) Article 1409']
+                ta_urls_en['WTO-AGP Article XV'] = ltr['WTO-AGP Article XV']
+                ta_urls_en['CETA 19.12'] = ltr['CETA 19.12']
+                ta_urls_en['CPTPP  Article 15.10 (2)'] = ltr['CPTPP  Article 15.10 (2)']
+            else:
+                LimitedTendering.objects.update_or_create(
+                    title_en=ltr['Data Field'],
+                    title_fr=ltr['Data Field'],
+                    nafta=ltr['NAFTA Article 1016'],
+                    ccfta=ltr['Chile (CCFTA) Article Kbis-09'],
+                    ccofta=ltr['Colombia (CCoFTA) Article 1409'],
+                    chfta=ltr['Honduras (CHFTA) Article 17.11'],
+                    cpafta=ltr['Panama (CPaFTA) Article 16.10'],
+                    cpfta='',
+                    ckfta='',
+                    cufta='',
+                    wto_agp=ltr['WTO-AGP Article XV'],
+                    ceta=ltr['CETA 19.12'],
+                    cptpp=ltr['CPTPP  Article 15.10 (2)'],
+                    cfta=ltr['CFTA Article 513']
+                )
+                total += 1
+
+        print("Limited Tendering Reasons: {0} loaded".format(Fore.CYAN + str(total) + Fore.RESET))
+
 colorama_init()
 parser = argparse.ArgumentParser(description="Load data for the Trade Agreement Guide from CSV file")
 parser.add_argument('--goods-csv', action='store', default='', help='Goods CSV file name', type=str)
@@ -166,6 +206,7 @@ parser.add_argument('--construction-csv', action='store', default='', help='Cons
 parser.add_argument('--services-csv', action='store', default='', help='Services codes CSV file name', type=str)
 parser.add_argument('--exceptions-csv', action='store', default='', help='Exception Reasons CSV file name', type=str)
 parser.add_argument('--threshold-csv', action='store', default='', help='Value Thresholds CSV file name', type=str)
+parser.add_argument('--tendering-csv', action='store', default='', help='Limited Tendering Reasons CSV file name', type=str)
 
 args = parser.parse_args()
 if not args.goods_csv == '':
@@ -197,3 +238,9 @@ if not args.threshold_csv == '':
         load_dollar_thresholds(args.threshold_csv)
     else:
         print("Cannot find file {0}{1}{2}".format(Fore.RED + Style.BRIGHT, args.threshold_csv, Style.RESET_ALL))
+
+if not args.tendering_csv == '':
+    if path.exists(args.tendering_csv):
+        load_limited_tendering(args.tendering_csv)
+    else:
+        print("Cannot find file {0}{1}{2}".format(Fore.RED + Style.BRIGHT, args.tendering_csv, Style.RESET_ALL))

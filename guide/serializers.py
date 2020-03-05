@@ -17,7 +17,7 @@ class ConstructionSerializer(serializers.HyperlinkedModelSerializer):
 class ServicesSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ServicesCode
-        fields = ['nafta_annex', 'ccs_level_2', 'gsin_class', 'desc_en', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta',
+        fields = ['nafta', 'ccs_level_2', 'gsin_class', 'desc_en', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta',
                   'ckfta', 'cufta', 'wto_agp', 'ceta', 'cptpp']
 
 
@@ -30,12 +30,12 @@ class TenderingSerializer(serializers.HyperlinkedModelSerializer):
 class TAExceptionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = TAException
-        fields = ['nafta_annex', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
+        fields = ['nafta', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
                   'wto_agp', 'ceta', 'cptpp' 'desc_en', 'desc_fr']
 
 
 class ValueThresholdSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ValueThreshold
-        fields = ['nafta_annex', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
+        fields = ['nafta', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
                   'wto_agp', 'ceta', 'cptpp' 'desc_en', 'desc_fr']

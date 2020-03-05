@@ -1,9 +1,10 @@
 from django.http import HttpRequest
 from django.shortcuts import render
+from django.utils.translation import ugettext_lazy as _
 from django.views.generic import View
 from rest_framework import viewsets
 from guide.forms import GuideForm
-from guide.models import GoodsCode, ConstructionCode, ServicesCode, TenderingReason, ValueThreshold
+from guide.models import GoodsCode, ConstructionCode, ServicesCode, TenderingReason, ValueThreshold, LimitedTendering
 from guide.serializers import GoodsSerializer, ConstructionSerializer, ServicesSerializer, TenderingSerializer
 
 
@@ -51,7 +52,7 @@ class GuideView(View):
 
 
 def set_agreement_values(trade_agreements, record):
-    trade_agreements['nafta_annex']['setting'] = record.nafta_annex
+    trade_agreements['nafta']['setting'] = record.nafta
     trade_agreements['ccfta']['setting'] = record.ccfta
     trade_agreements['ccofta']['setting'] = record.ccofta
     trade_agreements['chfta']['setting'] = record.chfta
@@ -63,6 +64,21 @@ def set_agreement_values(trade_agreements, record):
     trade_agreements['ceta']['setting'] = record.ceta
     trade_agreements['cptpp']['setting'] = record.cptpp
     return trade_agreements
+
+
+def set_extra_reasons(reasons, record, label=''):
+    if record.nafta: reasons['nafta_x'].append("{0}: {1} - {2}".format(label, record.title_en, record.nafta))
+    if record.ccfta: reasons['ccfta_x'].append("{0}: {1} - {2}".format(label, record.title_en, record.ccfta))
+    if record.ccofta: reasons['ccofta_x'].append("{0}: {1} - {2}".format(label, record.title_en, record.ccofta))
+    if record.chfta: reasons['chfta_x'].append("{0}: {1} - {2}".format(label, record.title_en, record.chfta))
+    if record.cpafta: reasons['cpafta_x'].append("{0}: {1} - {2}".format(label, record.title_en, record.cpafta))
+    if record.cpfta: reasons['cpfta_x'].append("{0}: {1} - {2}".format(label, record.title_en, record.cpfta))
+    if record.ckfta: reasons['ckfta_x'].append("{0}: {1} - {2}".format(label, record.title_en, record.ckfta))
+    if record.cufta: reasons['cufta_x'].append("{0}: {1} - {2}".format(label, record.title_en, record.cufta))
+    if record.wto_agp: reasons['wto_agp_x'].append("{0}: {1} - {2}".format(label, record.title_en, record.wto_agp))
+    if record.ceta: reasons['ceta_x'].append("{0}: {1} - {2}".format(label, record.title_en, record.ceta))
+    if record.cptpp: reasons['cptpp_x'].append("{0}: {1} - {2}".format(label, record.title_en, record.cptpp))
+    return reasons
 
 
 def find_exemptions(form, commodity_type: str):
@@ -80,7 +96,7 @@ def find_exemptions(form, commodity_type: str):
         'cptpp_yn': False,
     }
     reasons = {
-        'nafta_annex': [],
+        'nafta': [],
         'ccfta': [],
         'ccofta': [],
         'chfta': [],
@@ -92,8 +108,22 @@ def find_exemptions(form, commodity_type: str):
         'ceta': [],
         'cptpp': [],
     }
+    extras ={
+        'nafta_x': [],
+        'ccfta_x': [],
+        'ccofta_x': [],
+        'chfta_x': [],
+        'cpafta_x': [],
+        'cpfta_x': [],
+        'ckfta_X': [],
+        'cufta_x': [],
+        'wto_agp_x': [],
+        'ceta_x': [],
+        'cptpp_x': [],
+    }
+
     trade_agreements = {
-        'nafta_annex': {'setting': None, 'label': 'NAFTA', 'agreement': 'nafta_annex_yn'},
+        'nafta': {'setting': None, 'label': 'NAFTA', 'agreement': 'nafta_annex_yn'},
         'ccfta': {'setting': None, 'label': 'Chile (CCFTA) ', 'agreement': 'ccfta_yn'},
         'ccofta': {'setting': None, 'label': 'Colombia (CCoFTA)', 'agreement': 'ccofta_yn'},
         'chfta': {'setting': None, 'label': 'Honduras (CHFTA)', 'agreement': 'chfta_yn'},
@@ -133,14 +163,22 @@ def find_exemptions(form, commodity_type: str):
 
     # Find the exemptions based on dollar value
     vt = ValueThreshold.objects.get(desc_en=commodity_type)
-    set_agreement_values(trade_agreements, vt)
+    trade_agreements = set_agreement_values(trade_agreements, vt)
     for ta in trade_agreements:
         if trade_agreements[ta]['setting'] is not None and dollars < trade_agreements[ta]['setting']:
             agreements[trade_agreements[ta]['agreement']] = True
             reasons[ta].append('{0} under {1} are exempt under {2}'.format(commodity_type, trade_agreements[ta]['setting'],
                                                                            trade_agreements[ta]['label']))
 
-    return agreements, reasons
+    # Limited Tendering
+    ltr = []
+    for formitem in form.data:
+        if str(formitem).startswith('id_limited_tendering'):
+           ltr.append(LimitedTendering.objects.get(id=form.data[formitem]))
+    for lt in ltr:
+        set_extra_reasons(extras, lt, "Limited Tendering")
+
+    return agreements, reasons, extras
 
 
 class GuideFormView(View):
@@ -166,7 +204,7 @@ class GuideFormView(View):
             if commodity_type != '':
                 ta = find_exemptions(form, commodity_type)
                 # forward a merged dictionary of exemptions and  reasons to the form for display
-                context = {**ta[0], **ta[1]}
+                context = {**ta[0], **ta[1], **ta[2]}
                 # show the evaluation section on the page
                 context['show_eval'] = True
         context['form'] = form
