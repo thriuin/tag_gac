@@ -86,7 +86,7 @@ class GoodsCode(BooleanTradeAgreement):
 
 class ConstructionCode(BooleanTradeAgreement):
 
-    fs_code = models.CharField(max_length=10, default='', verbose_name="Federal Supply Code")
+    fs_code = models.CharField(max_length=128, default='', verbose_name="Federal Supply Code")
     fs_code_desc = models.CharField(max_length=128, default="", verbose_name="Federal Supply Code Description")
 
     def __str__(self):
@@ -95,11 +95,11 @@ class ConstructionCode(BooleanTradeAgreement):
 
 class ServicesCode(BooleanTradeAgreement):
 
-    nafta_code = models.CharField(max_length=12, default="",
+    nafta_code = models.CharField(max_length=128, default="",
                                   verbose_name="NAFTA Common Classification System Codes - Groups")
-    ccs_level_2 = models.CharField(max_length=12, default="",
+    ccs_level_2 = models.CharField(max_length=128, default="",
                                    verbose_name="NAFTA Common Classification System Codes - Sub-group")
-    gsin_class = models.CharField(max_length=12, default="", verbose_name="GSIN Class (4)")
+    gsin_class = models.CharField(max_length=128, default="", verbose_name="GSIN Class (4)")
     desc_en = models.CharField(max_length=128, default="", verbose_name="Code Description")
 
     class Meta:
