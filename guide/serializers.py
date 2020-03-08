@@ -1,29 +1,36 @@
-from guide.models import GoodsCode, ConstructionCode, ServicesCode, TenderingReason, TAException, ValueThreshold
+from guide.models import CommodityTypes, CommodityCodingSystem, CommodityCode, TenderingReason, TAException, ValueThreshold, CftaExceptions, Entities
 from rest_framework import serializers
 
 
-class GoodsSerializer(serializers.HyperlinkedModelSerializer):
+class CommodityTypesSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = GoodsCode
-        fields = ['fs_code', 'fs_code_desc', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
-                  'wto_agp', 'ceta', 'cptpp']
+        model = CommodityTypes
+        fields= ['type_en', 'type_fr']
 
-class ConstructionSerializer(serializers.HyperlinkedModelSerializer):
+
+class CommodityCodingSystemSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = ConstructionCode
-        fields = ['fs_code', 'fs_code_desc', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
-                  'wto_agp', 'ceta', 'cptpp']
+        model = CommodityCodingSystem
+        fields = ['system_en', 'system_fr']
 
-class ServicesSerializer(serializers.HyperlinkedModelSerializer):
+
+class CommodityCodeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = ServicesCode
-        fields = ['nafta', 'ccs_level_2', 'gsin_class', 'desc_en', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta',
-                  'ckfta', 'cufta', 'wto_agp', 'ceta', 'cptpp']
+        model = CommodityCode
+        fields = ['commodity_type_en', 'commodity_type_fr', 'commodity_code_system_en', 'commodity_code_system_fr',
+            'commodity_code_en', 'commodity_code_fr', 'nafta', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 
+            'ckfta', 'cufta', 'wto_agp', 'ceta', 'cptpp'
+        ]
 
-
-class TenderingSerializer(serializers.HyperlinkedModelSerializer):
+class TenderingReasonSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = TenderingReason
+        fields = ['desc_en', 'desc_fr']
+
+
+class EntitiesSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Entities
         fields = ['desc_en', 'desc_fr']
 
 
@@ -38,4 +45,11 @@ class ValueThresholdSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ValueThreshold
         fields = ['nafta', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
-                  'wto_agp', 'ceta', 'cptpp' 'desc_en', 'desc_fr']
+                  'wto_agp', 'ceta', 'cptpp' 'type_value_en', 'type_value_fr']
+
+
+class CftaExceptionSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = CftaExceptions
+        fields = ['nafta', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta',
+            'wto_agp', 'ceta', 'cptpp' 'desc_en', 'desc_fr']

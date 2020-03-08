@@ -167,45 +167,57 @@
                                 <p>{{ form.non_field_errors }}</p>
                             </div>
                         {% endif %}
-                        {% for ffield in form %}
-                            <div class="form-group">
-                                {% if ffield.errors %}
-                                     <div class="alert alert-warning">
-                                    {% for error in ffield.errors %}
-                                        <p>{{ error }}</p>
-                                    {% endfor %}
-                                     </div>
-                                {% endif %}
-                                <label for="{{ ffield.id_for_label }}"
-                                       {% if ffield.field.required %}class="required"{% endif %}>
-                                    {{ ffield.field.label }}
-                                    {% if ffield.field.required %}
-                                        <strong class="required">({% trans 'Required' %})</strong>{% endif %}
-                                </label>
-                                {% if ffield.field.widget.input_type == 'checkbox' %}
-                                    <fieldset>
-                                        <div class="checkbox">
-                                            {% for choice in ffield.field.choices %}
-                                                <div class="checkbox">
-                                                    <label for="{{ ffield.auto_id }}{{ choice|first }}">
-                                                        <input type="checkbox"
-                                                               name="{{ ffield.auto_id }}{{ choice|first }}"
-                                                               value="{{ choice|first }}"
-                                                               id="{{ ffield.auto_id }}{{ choice|first }}"/>
-                                                        &#160;&#160;{{ choice|last }}
-                                                    </label>
-                                                </div>
-                                            {% endfor %}
-                                        </div>
-                                    </fieldset>
-                                {% else %}
-                                    {{ ffield }}
-                                {% endif %}
-                                {% if ffield.help_text %}
-                                    <p class="help">{{ ffield.help_text|safe }}</p>
-                                {% endif %}
-                            </div>
-                        {% endfor %}
+                        <div class="form-group" role="form">
+                            {{ form.estimated_value.errors }}
+                            {{ form.estimated_value.label_tag }}
+                            {{ form.estimated_value }}
+
+                            {{ form.entities.errors }}
+                            {{ form.entities.label_tag }}
+                            {{ form.entities }}
+
+                            {{ form.commodity_type.errors }}
+                            {{ form.commodity_type.label_tag }}
+                            <select class="form-control" id="commodity_type_en" url = "{%url 'guide:get_type' %}"></select>
+
+                            {{ form.commodity_code_system.errors }}
+                            {{ form.commodity_code_system.label_tag }}
+                            <select class="form-control" id="commodity_code_system_en" url = "{%url 'guide:get_code_system' %}">
+                                <option value='all' selected>Select Code System</option>
+                            </select>
+
+                            {{ form.commodity_code.errors }}
+                            {{ form.commodity_code.label_tag }}
+                            <select class="form-control" id="commodity_code_en" url = "{%url 'guide:get_code' %}">
+                                <option value='all' selected>Select Commodity Code</option>
+                            </select>
+
+                            <hr>
+                            {{ form.limited_tendering.errors }}
+                            {{ form.limited_tendering.label_tag }}
+                            {% for rule in form.limited_tendering %}
+                                <div class="checkbox">
+                                    {{ rule }}
+                                </div>
+                            {% endfor %}
+                            <hr>
+
+                            {{ form.exemptions.errors }}
+                            {{ form.exemptions.label_tag }}
+                            {% for exemption in form.exemptions %}
+                                <div class="checkbox">
+                                    {{ exemption }}
+                                </div>
+                            {% endfor %}
+                            <hr>
+                            {{ form.cfta_exceptions.error }}
+                            {{ form.cfta_exceptions.label_tag }}
+                            {% for rule in form.cfta_exceptions %}
+                                <div class="checkbox">
+                                    {{ rule }}
+                                </div>
+                            {% endfor %}
+                        </div>
                         <input type="submit" value="Submit" class="btn btn-primary">
                         {% comment %}<input type="reset" value="Reset Form"  class="btn btn-info">{% endcomment %}
                     </form>
@@ -231,15 +243,17 @@
 {% endblock main-content %}
 
 {% block custom-jquery %}
-<script lang="js">
-    var form = document.getElementById("tag-form");
+    <!-- <script lang="js">
+        var form = document.getElementById("tag-form");
 
-    document.getElementById("submit-form-button").addEventListener("click", function () {
-      form.submit();
-    });
+        document.getElementById("submit-form-button").addEventListener("click", function () {
+        form.submit();
+        });
 
-    document.getElementById("clear-form-button").addEventListener("click", function () {
-      form.reset();
-    });
-</script>
+        document.getElementById("clear-form-button").addEventListener("click", function () {
+        form.reset();
+        });
+    </script> -->
+    <script src="{% static 'js/jquery.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/guide.js' %}"></script>
 {% endblock custom-jquery %}

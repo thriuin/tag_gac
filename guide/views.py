@@ -1,43 +1,57 @@
-from django.http import HttpRequest
+from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import View
 from rest_framework import viewsets
 from guide.forms import GuideForm
-from guide.models import GoodsCode, ConstructionCode, ServicesCode, TenderingReason, ValueThreshold, LimitedTendering
-from guide.serializers import GoodsSerializer, ConstructionSerializer, ServicesSerializer, TenderingSerializer
+from guide.models import CommodityTypes, CommodityCodingSystem, CommodityCode, \
+    TenderingReason, ValueThreshold, TAException, CftaExceptions, Entities
+from guide.serializers import CommodityTypesSerializer, CommodityCodingSystemSerializer, \
+    CommodityCodeSerializer, TenderingReasonSerializer, ValueThresholdSerializer, \
+    TAExceptionSerializer, CftaExceptionSerializer, EntitiesSerializer
 
 
-class GoodsViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows Goods Procurement Codes to be viewed or edited.
-    """
-    queryset = GoodsCode.objects.all().order_by('fs_code_desc')
-    serializer_class = GoodsSerializer
+class CommodityTypesViewSet(viewsets.ModelViewSet):
+    queryset = CommodityTypes.objects.all()
+    serializer_class = CommodityTypesSerializer
 
 
-class ConstructionViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows Construction Procurement Codes  to be viewed or edited.
-    """
-    queryset = ConstructionCode.objects.all().order_by('fs_code_desc')
-    serializer_class = ConstructionSerializer
+class CommodityCodingSystemViewSet(viewsets.ModelViewSet):
+    queryset = CommodityCodingSystem.objects.all()
+    serializer_class = CommodityCodingSystemSerializer
 
 
-class ServicesViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows Services Procurement Codes  to be viewed or edited.
-    """
-    queryset = ServicesCode.objects.all().order_by('ccs_level_2')
-    serializer_class = ServicesSerializer
+class CommodityCodeViewSet(viewsets.ModelViewSet):
+    queryset = CommodityCode.objects.all()
+    serializer_class = CommodityCodeSerializer
 
 
-class TenderingReasonsViewSet(viewsets.ModelViewSet):
+class TenderingReasonViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Tendering Reasons to be viewed or edited.
     """
     queryset = TenderingReason.objects.all().order_by('desc_en')
-    serializer_class = TenderingSerializer
+    serializer_class = TenderingReasonSerializer
+
+
+class CftaExceptionsViewSet(viewsets.ModelViewSet):
+    queryset = CftaExceptions.objects.all()
+    serializer_class = CftaExceptionSerializer
+
+
+class TAExceptionViewset(viewsets.ModelViewSet):
+    queryset = TAException.objects.all()
+    serializer_class = TAExceptionSerializer
+
+
+class EntitiesViewSet(viewsets.ModelViewSet):
+    queryset = Entities.objects.all()
+    serializer_class = EntitiesSerializer
+
+
+class ValueThresholdViewSet(viewsets.ModelViewSet):
+    queryset = ValueThreshold.objects.all()
+    serializer_class = ValueThresholdSerializer
 
 
 class GuideView(View):
@@ -137,6 +151,7 @@ def find_exemptions(form, commodity_type: str):
     }
     desc_en = ""
     dollars = form.cleaned_data['estimated_value']
+
     if commodity_type == 'goods':
         if 'goods_codes' in form.cleaned_data and form.cleaned_data['goods_codes'] is not None:
             goods = GoodsCode.objects.get(id=form.cleaned_data['goods_codes'].id)
@@ -174,7 +189,7 @@ def find_exemptions(form, commodity_type: str):
     ltr = []
     for formitem in form.data:
         if str(formitem).startswith('id_limited_tendering'):
-           ltr.append(LimitedTendering.objects.get(id=form.data[formitem]))
+           ltr.append(TenderingReason.objects.get(id=form.data[formitem]))
     for lt in ltr:
         set_extra_reasons(extras, lt, "Limited Tendering")
 
@@ -210,3 +225,60 @@ class GuideFormView(View):
         context['form'] = form
         return render(request, 'guide_form.html', context)
 
+
+def getType(request):
+    # get all the types from the database
+    # null and blank values
+    if request.method == "GET" and request.is_ajax():
+        commodity_type_en = CommodityCode.objects.\
+            exclude(commodity_type_en__isnull=True).\
+            exclude(commodity_type_en__exact='').\
+            order_by('commodity_type_en').\
+            values_list('commodity_type_en').\
+            distinct()
+        commodity_type_en = [i[0] for i in list(commodity_type_en)]
+        data = {
+            "commodity_type_en": commodity_type_en,
+        }
+        return JsonResponse(data, status = 200)
+
+
+
+def getCodeSystem(request):
+    # get the code systems from the database
+    # database excluding null and blank values
+    if request.method == "GET" and request.is_ajax():
+        commodity_type_en = request.GET.get('commodity_type_en')
+        commodity_code_system_en = CommodityCode.objects.\
+            filter(commodity_type_en = commodity_type_en).\
+            exclude(commodity_code_system_en__isnull=True).\
+            exclude(commodity_code_system_en__exact='').\
+            order_by('commodity_code_system_en').\
+            values_list('commodity_code_system_en').\
+            distinct()
+        commodity_code_system_en = [i[0] for i in list(commodity_code_system_en)]
+        data = {
+            "commodity_code_system_en": commodity_code_system_en,
+        }
+        return JsonResponse(data, status = 200)
+
+
+
+def getCode(request):
+    # get the type and code systems and filter to get code
+    # database excluding null and blank values
+    if request.method == "GET" and request.is_ajax():
+        commodity_code_system_en = request.GET.get('commodity_code_system_en')
+        commodity_type_en = request.GET.get('commodity_type_en')
+        commodity_code_en = CommodityCode.objects.\
+            filter(commodity_type_en = commodity_type_en).\
+            filter(commodity_code_system_en = commodity_code_system_en).\
+            exclude(commodity_code_en__isnull=True).\
+            exclude(commodity_code_en__exact='').\
+            values_list('commodity_code_en').\
+            distinct()
+        commodity_code_en = [i[0] for i in list(commodity_code_en)]
+        data = {
+            "commodity_code_en": commodity_code_en,
+        }
+        return JsonResponse(data, status = 200)

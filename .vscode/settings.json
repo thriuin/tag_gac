@@ -1,0 +1,23 @@
+{
+    "python.pythonPath": "C:\\Users\\danli\\venv\\tag_gac\\scripts\\python.exe",
+    "workbench.settings.editor": "json",
+    "workbench.settings.openDefaultSettings": true,
+    "workbench.colorTheme": "Laravel Extra - JetBrains",
+    "window.zoomLevel": -1,
+    "workbench.iconTheme": "city-lights-icons-vsc",
+    "terminal.integrated.shellArgs.windows": [
+        "-ExecutionPolicy",
+        "Bypass"
+    ],
+    "editor.fontSize": 14,
+    "editor.fontWeight": "500",
+    "editor.fontFamily": "Source Code Pro",
+    "debug.console.fontSize": 14,
+    "debug.console.fontFamily": "Source Code Pro",
+    "terminal.integrated.fontSize": 14,
+    "terminal.integrated.fontWeight": "500",
+    "terminal.integrated.fontFamily": "Source Code Pro",
+    "python.linting.pylintArgs": [
+        "--load-plugins=pylint_django"
+   ]  
+}
