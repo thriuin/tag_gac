@@ -13,20 +13,13 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
+from rest_framework import routers
 from django.contrib import admin
-from django.urls import path
-from guide.views import GuideView, GoodsViewSet, ConstructionViewSet, ServicesViewSet, \
-    TenderingReasonsViewSet, GuideFormView
+from django.urls import path, include
+from django.conf.urls import url
 
 
 urlpatterns = [
-    path('tag/admin/', admin.site.urls),
-    path('tag/', GuideFormView.as_view(), name='Guide'),
-    path('tag/guide/', GuideView.as_view(), name='Guide'),  # Temporary demo of SurveyJS
-    path('tag/goods/', GoodsViewSet.as_view({'get': 'list'})),
-    path('tag/construction/', ConstructionViewSet.as_view({'get': 'list'})),
-    path('tag/services/', ServicesViewSet.as_view({'get': 'list'})),
-    path('tag/tendering_reasons/', TenderingReasonsViewSet.as_view({'get': 'list'})),
-    path('tag/evaluate/', GuideFormView.as_view(), name='EvaluateForm')
+    path('admin/', admin.site.urls),
+	url("tag/", include(("guide.urls", "guide"), namespace = "guide"))
 ]

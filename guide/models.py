@@ -52,62 +52,55 @@ class TextTradeAgreements(models.Model):
     cfta = models.TextField(default='', verbose_name="Canadian Free Trade Agreement (CFTA)")
 
 
-class GenericCodesModel(BooleanTradeAgreement):
+class CommodityTypes(models.Model):
+    
+    type_en = models.CharField(max_length=128, default="-", unique=True, verbose_name="Commodity Type (English)")
+    type_fr = models.CharField(max_length=128, default="_", unique=True, verbose_name="Commodity Type (Français)")
+    
+    def __str__(self):
+        return "{0} / {1}".format(self.type_en, self.type_fr)
 
-    gsin_class = models.CharField(max_length=12, default="", verbose_name="GSIN Class (4)")
-    gsin_code = models.CharField(max_length=12, default="", verbose_name="GSIN Code")
-    gsin_desc_en = models.CharField(max_length=128, default="", verbose_name="GSIN Code Description (English)")
-    gsin_desc_fr = models.CharField(max_length=128, default="", verbose_name="GSIN Code Description (Français)")
-    unspsc_code = models.CharField(max_length=12, default="", verbose_name="UNSPSC Code")
-    unspsc_code_desc_en = models.CharField(max_length=128, default="",
-                                           verbose_name="UNSPSC Code Description (English)")
-    unspsc_code_desc_fr = models.CharField(max_length=128, default="",
-                                           verbose_name="UNSPSC Code Description (Français)")
 
-    class Meta:
-        ordering = ['gsin_class', 'gsin_code']
+class CommodityCodingSystem(models.Model):
+
+    system_en = models.CharField(max_length=128, default="-", unique=True, verbose_name="Commodity Code System (English)")
+    system_fr = models.CharField(max_length=128, default="_", unique=True, verbose_name="Commodity Code System (Français)")
+    
+    def __str__(self):
+        return "{0} / {1}".format(self.system_en, self.system_fr)
+        
+
+class CommodityCode(BooleanTradeAgreement):
+    
+    commodity_type_en = models.ForeignKey(CommodityTypes, to_field="type_en", related_name="+", 
+        max_length=128, default="-", verbose_name="Commodity Type Foreign Field (English)", 
+        on_delete=models.CASCADE)
+
+    commodity_type_fr = models.ForeignKey(CommodityTypes, to_field="type_fr", related_name="+",
+        max_length=128, default="_", verbose_name="Commodity Type Foreign Field (Français)", 
+        on_delete=models.CASCADE)
+
+    commodity_code_system_en = models.ForeignKey(CommodityCodingSystem, to_field="system_en", related_name="+", 
+        max_length=128, default="-", verbose_name="Commodity Code System Foreign Field (English)", 
+        on_delete=models.CASCADE)
+
+    commodity_code_system_fr = models.ForeignKey(CommodityCodingSystem, to_field="system_fr", related_name="+", 
+        max_length=128, default="-", verbose_name="Commodity Code System Foreign Field (Français)", 
+        on_delete=models.CASCADE)
+
+    commodity_code_en = models.CharField(max_length=128, default="-", unique=True, verbose_name="Commodity Code System (English)")
+    commodity_code_fr = models.CharField(max_length=128, default="-", unique=True, verbose_name="Commodity Code System (Français)")
 
     def __str__(self):
-        return "{0} - {1}: {2}".format(self.gsin_class, self.gsin_code, self.gsin_desc_en)
+        return "{0} / {1}".format(self.commodity_code_en, self.commodity_code_fr)
 
 
-class GoodsCode(BooleanTradeAgreement):
-
-    fs_code = models.CharField(max_length=128, default='', verbose_name="Federal Supply Code")
-    fs_code_desc = models.CharField(max_length=128, default="", verbose_name="Federal Supply Code Description")
-
-    class Meta:
-        ordering = ['fs_code', 'fs_code_desc']
-        unique_together = (('fs_code', 'fs_code_desc'),)
+class Entities(BooleanTradeAgreement):
+    desc_en = models.TextField(default="-", unique=True, verbose_name="Description (English)")
+    desc_fr = models.TextField(default="_", unique=True, verbose_name="Description (Français)")
 
     def __str__(self):
-        return "{0} - {1}".format(self.fs_code, self.fs_code_desc)
-
-
-class ConstructionCode(BooleanTradeAgreement):
-
-    fs_code = models.CharField(max_length=128, default='', verbose_name="Federal Supply Code")
-    fs_code_desc = models.CharField(max_length=128, default="", verbose_name="Federal Supply Code Description")
-
-    def __str__(self):
-        return "{0} - {1}".format(self.fs_code, self.fs_code_desc)
-
-
-class ServicesCode(BooleanTradeAgreement):
-
-    nafta_code = models.CharField(max_length=128, default="",
-                                  verbose_name="NAFTA Common Classification System Codes - Groups")
-    ccs_level_2 = models.CharField(max_length=128, default="",
-                                   verbose_name="NAFTA Common Classification System Codes - Sub-group")
-    gsin_class = models.CharField(max_length=128, default="", verbose_name="GSIN Class (4)")
-    desc_en = models.CharField(max_length=128, default="", verbose_name="Code Description")
-
-    class Meta:
-        ordering = ['nafta_code', 'ccs_level_2', 'gsin_class']
-        unique_together = (('nafta_code', 'ccs_level_2', 'gsin_class'),)
-
-    def __str__(self):
-        return "{0} - {1}".format(self.ccs_level_2, self.gsin_class)
+        return "{0} / {1}".format(self.desc_en, self.desc_fr)
 
 
 class TenderingReason(BooleanTradeAgreement):
@@ -123,9 +116,7 @@ class TAException(BooleanTradeAgreement):
 
     desc_en = models.TextField(default="-", unique=True, verbose_name="Description (English)")
     desc_fr = models.TextField(default="_", unique=True, verbose_name="Description (Français)")
-    plain_explanation_en = models.TextField(default="-", unique=False, verbose_name="Plain Language Explanation (English)")
-    plain_explanation_fr = models.TextField(default="-", unique=False, verbose_name="Plain Language Explanation (Français)")
-
+   
     def __str__(self):
         return "{0} / {1}".format(self.desc_en, self.desc_fr)
 
@@ -135,23 +126,23 @@ class TAException(BooleanTradeAgreement):
 
 class ValueThreshold(NumericTradeAgreements):
 
-    desc_en = models.TextField(default="-", unique=True, verbose_name="Description (English)")
-    desc_fr = models.TextField(default="_", unique=True, verbose_name="Description (Français)")
+    type_value_en = models.ForeignKey(CommodityTypes, to_field='type_en', related_name='+', max_length=128, 
+        default='', verbose_name='Commodity Type Value Field (English)', on_delete=models.CASCADE)
+
+    type_value_fr = models.ForeignKey(CommodityTypes, to_field='type_fr', related_name='+', max_length=128, 
+        default='', verbose_name='Commodity Type Value Field (Français)', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "{0} / {1}".format(self.type_value_en, self.type_value_fr)
+
+
+class CftaExceptions(TextTradeAgreements):
+
+    desc_en = models.TextField(default="-", unique=True, verbose_name="Reason (English)")
+    desc_fr = models.TextField(default="_", unique=True, verbose_name="Reason (Français)")
 
     def __str__(self):
         return "{0} / {1}".format(self.desc_en, self.desc_fr)
-
-    class Meta:
-        unique_together = (('desc_en', 'desc_fr'),)
-
-
-class LimitedTendering(TextTradeAgreements):
-
-    title_en = models.TextField(default="-", unique=True, verbose_name="Reason (English)")
-    title_fr = models.TextField(default="_", unique=True, verbose_name="Reason (Français)")
-
-    def __str__(self):
-        return "{0} / {1}".format(self.title_en, self.title_fr)
 
 
 class TAUrls(models.Model):
