@@ -135,6 +135,8 @@ static/
 themes-dist-GCWeb/
 wet-boew-dist-4.0.32/
 themes-dist-6.0-gcweb/
+load-data-from-csv.py
 
 
-
+/guide/app/
+/solr/
