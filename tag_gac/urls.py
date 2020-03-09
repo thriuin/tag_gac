@@ -21,5 +21,5 @@ from django.conf.urls import url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-	url(r"^tag/", include(("guide.urls", "guide"), namespace = "guide"))
+	url("tag/", include(("guide.urls", "guide"), namespace = "guide"))
 ]
