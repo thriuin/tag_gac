@@ -23,9 +23,11 @@ python manage.py createsuperuser
 
 ### Load Data ###
 
-From the project root directory, and after activating the virtual environment, run the
-load data script
-```bash
-python .\load-data-from-csv.py --goods-csv .\data\ogd_goods.csv --construction-csv .\data\construction.csv --services-csv .\data\ogd_services.csv  --exceptions-csv .\data\exceptions.csv --threshold-csv .\data\thresholds.csv
+From the project root directory, and after activating the virtual environment, load the data from fixtures
+```
+python .\manage.py loaddata guide/fixtures/data.json
+
+To create fixture file:
+python .\manage.py dumpdata --output guide/fixtures/data.json
 ```
 

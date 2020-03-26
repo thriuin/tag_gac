@@ -5,7 +5,14 @@ from guide.models import Entities, Code, TAException, TenderingReason, CftaExcep
 from django.db.models import Q
 
 
+class CodeField(forms.ModelChoiceField):
+
+    def clean(self, value):
+        return value
+
+
 class GuideFormEN(forms.Form):
+
     estimated_value = forms.IntegerField(
         label=_('Estimated Value'),
         required=True
@@ -13,39 +20,39 @@ class GuideFormEN(forms.Form):
     estimated_value.widget.attrs['class'] = 'form-control required'
 
     entities = forms.ModelChoiceField(
-        Entities.objects.filter(Q(lang='EN') | Q(lang='BI')).only('name'),
+        Entities.objects.filter(lang='EN').only('name'),
         label=_('Organization'),
         required=True
     )
     entities.widget.attrs['class'] = 'form-control'
 
-    commodity_type = forms.ModelChoiceField(
-        Code.objects.filter(Q(lang='EN') | Q(lang='BI')).only('type'),
+    type = CodeField(
+        Code.objects.filter(lang='EN').values_list('type'),
         label=_('Commodity Type'),
         required=True
     )
-    commodity_type.widget.attrs['class'] = 'form-control'
+    type.widget.attrs['class'] = 'form-control'
 
 
-    commodity_system = forms.ModelChoiceField(
-        Code.objects.filter(Q(lang='EN') | Q(lang='BI')).only('code_system'),
+    code_system = CodeField(
+        Code.objects.filter(lang='EN').only('code_system'),
         label=_('Commodity Code System'),
         required=True
     )
-    commodity_system.widget.attrs['class'] = 'form-control'
+    code_system.widget.attrs['class'] = 'form-control'
 
 
-    commodity_code = forms.ModelChoiceField(
-        Code.objects.filter(Q(lang='EN') | Q(lang='BI')).only('code'),
+    code = CodeField(
+        Code.objects.filter(lang='EN').only('code'),
         label=_('Commodity Code'),
         required=True
     )
-    commodity_code.widget.attrs['class'] = 'form-control'
+    code.widget.attrs['class'] = 'form-control'
 
 
 
     exceptions = forms.ModelMultipleChoiceField(
-        TAException.objects.filter(Q(lang='EN') | Q(lang='BI')).only('name'),
+        TAException.objects.filter(lang='EN').only('name'),
         widget=forms.CheckboxSelectMultiple,
         label=_("Exceptions"),
         required=False
@@ -54,7 +61,7 @@ class GuideFormEN(forms.Form):
 
 
     limited_tendering = forms.ModelMultipleChoiceField(
-        TenderingReason.objects.filter(Q(lang='EN') | Q(lang='BI')).only('name'),
+        TenderingReason.objects.filter(lang='EN').only('name'),
         widget=forms.CheckboxSelectMultiple,
         label=_("Limited Tendering Reasons"),
         required=False
@@ -62,7 +69,7 @@ class GuideFormEN(forms.Form):
     limited_tendering.widget.attrs['class'] = 'form-control'
 
     cfta_exceptions = forms.ModelMultipleChoiceField(
-        CftaException.objects.filter(Q(lang='EN') | Q(lang='BI')).only('name'),
+        CftaException.objects.filter(lang='EN').only('name'),
         to_field_name='id',
         widget=forms.CheckboxSelectMultiple,
         label=_("CFTA Exceptions"),
@@ -78,35 +85,35 @@ class GuideFormFR(forms.Form):
     estimated_value.widget.attrs['class'] = 'form-control required'
 
     entities = forms.ModelChoiceField(
-        Entities.objects.filter(Q(lang='FR') | Q(lang='BI')).only('name'),
+        Entities.objects.filter(lang='FR').only('name'),
         label=_('Organization'),
         required=True
     )
     entities.widget.attrs['class'] = 'form-control'
 
     commodity_type = forms.ModelChoiceField(
-        Code.objects.filter(Q(lang='FR') | Q(lang='BI')).only('type'),
+        Code.objects.filter(lang='FR').only('type'),
         label=_('Commodity Type'),
         required=True
     )
     commodity_type.widget.attrs['class'] = 'form-control'
 
     commodity_system = forms.ModelChoiceField(
-        Code.objects.filter(Q(lang='FR') | Q(lang='BI')).only('code_system'),
+        Code.objects.filter(lang='FR').only('code_system'),
         label=_('Commodity Code System'),
         required=True
     )
     commodity_system.widget.attrs['class'] = 'form-control'
 
     commodity_code = forms.ModelChoiceField(
-        Code.objects.filter(Q(lang='FR') | Q(lang='BI')).only('code'),
+        Code.objects.filter(lang='FR').only('code'),
         label=_('Commodity Code'),
         required=True
     )
     commodity_type.widget.attrs['class'] = 'form-control'
 
     exceptions = forms.ModelMultipleChoiceField(
-        TAException.objects.filter(Q(lang='FR') | Q(lang='BI')).only('name'),
+        TAException.objects.filter(lang='FR').only('name'),
         widget=forms.CheckboxSelectMultiple,
         label=_("Exceptions"),
         required=False
@@ -114,7 +121,7 @@ class GuideFormFR(forms.Form):
     exceptions.widget.attrs['class'] = 'form-control'
 
     limited_tendering = forms.ModelMultipleChoiceField(
-        TenderingReason.objects.filter(Q(lang='FR') | Q(lang='BI')).only('name'),
+        TenderingReason.objects.filter(lang='FR').only('name'),
         widget=forms.CheckboxSelectMultiple,
         label=_("Limited Tendering Reasons"),
         required=False
@@ -122,7 +129,7 @@ class GuideFormFR(forms.Form):
     limited_tendering.widget.attrs['class'] = 'form-control'
 
     cfta_exceptions = forms.ModelMultipleChoiceField(
-        CftaException.objects.filter(Q(lang='FR') | Q(lang='BI')).only('name'),
+        CftaException.objects.filter(lang='FR').only('name'),
         to_field_name='id',
         widget=forms.CheckboxSelectMultiple,
         label=_("CFTA Exceptions"),

@@ -1,43 +1,175 @@
 from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework.generics import ListAPIView
-from guide.models import Code, Instructions, ValueThreshold, Entities
+from guide.models import Code, Instructions, ValueThreshold, Entities, TAException, TenderingReason, CftaException
 from guide.forms import GuideFormEN, GuideFormFR
 from django.views.generic import View
 
+agreements = {
+    'nafta_annex': {
+    'entities': True,
+    'estimated_value': True,
+    'code': True,
+    'exceptions': False,
+    'limited_tendering': False,
+    'cfta_exceptions': False
+}, 
+    'ccfta': {
+    'entities': True,
+    'estimated_value': True,
+    'code': True,
+    'exceptions': False,
+    'limited_tendering': False,
+    'cfta_exceptions': False
+},
+    'ccofta': {
+    'entities': True,
+    'estimated_value': True,
+    'code': True,
+    'exceptions': False,
+    'limited_tendering': False,
+    'cfta_exceptions': False
+},
+    'chfta': {
+    'entities': True,
+    'estimated_value': True,
+    'code': True,
+    'exceptions': False,
+    'limited_tendering': False,
+    'cfta_exceptions': False
+},
+    'cpafta': {
+    'entities': True,
+    'estimated_value': True,
+    'code': True,
+    'exceptions': False,
+    'limited_tendering': False,
+    'cfta_exceptions': False
+},
+    'cpfta': {
+    'entities': True,
+    'estimated_value': True,
+    'code': True,
+    'exceptions': False,
+    'limited_tendering': False,
+    'cfta_exceptions': False
+},
+    'ckfta': {
+    'entities': True,
+    'estimated_value': True,
+    'code': True,
+    'exceptions': False,
+    'limited_tendering': False,
+    'cfta_exceptions': False
+},
+    'cufta': {
+    'entities': True,
+    'estimated_value': True,
+    'code': True,
+    'exceptions': False,
+    'limited_tendering': False,
+    'cfta_exceptions': False
+},
+    'wto_agp': {
+    'entities': True,
+    'estimated_value': True,
+    'code': True,
+    'exceptions': False,
+    'limited_tendering': False,
+    'cfta_exceptions': False
+},
+    'ceta': {
+    'entities': True,
+    'estimated_value': True,
+    'code': True,
+    'exceptions': False,
+    'limited_tendering': False,
+    'cfta_exceptions': False
+},
+    'cptpp': {
+    'entities': True,
+    'estimated_value': True,
+    'code': True,
+    'exceptions': False,
+    'limited_tendering': False,
+    'cfta_exceptions': False
+},
+    'cfta': {
+    'entities': True,
+    'estimated_value': True,
+    'code': True,
+    'exceptions': False,
+    'limited_tendering': False,
+    'cfta_exceptions': False
+}
+}
 
-def find_exemptions(form):
-    agreements = {
-        'nafta_annex_yn': False,
-        'ccfta_yn': False,
-        'ccofta_yn': False,
-        'chfta_yn': False,
-        'cpafta_yn': False,
-        'cpfta_yn': False,
-        'ckfta_yn': False,
-        'cufta_yn': False,
-        'wto_agp_yn': False,
-        'ceta_yn': False,
-        'cptpp_yn': False,
-        'cfta_yn': False,
-    }
-
-    reasons = {
-        'nafta_annex': [],
-        'ccfta': [],
-        'ccofta': [],
-        'chfta': [],
-        'cpafta': [],
-        'cpfta': [],
-        'ckfta': [],
-        'cufta': [],
-        'wto_agp': [],
-        'ceta': [],
-        'cptpp': [],
-        'cfta': [],
-    }
 
 
+def entities_rule(ent_dict, data):               
+    try:
+        for agreement in ent_dict:
+            check = Entities.objects.filter(name=data).values_list(agreement).get()[0]
+            print(agreement)
+            print(check)
+            print(data)
+            ent_dict[agreement]['entities'] = check
+    except:
+        raise ValueError
+    return ent_dict
+
+def value_threshold_rule(val_dict, data, type):
+    try:
+        for agreement in val_dict:
+            check = ValueThreshold.objects.filter(type_value=type).values_list(agreement).get()[0]
+            if data < check:
+                val_dict[agreement]['estimated_value'] = False
+            else:
+                val_dict[agreement]['estimated_value'] = True
+
+    except:
+        raise ValueError
+    return val_dict
+
+def code_rule(code_dict, data, entities, type):
+    try:
+        for agreement in code_dict:
+            check = Code.objects.filter(code=data).values_list(agreement).get()[0]
+            if check is False:
+                code_dict[agreement]['code'] = False
+            else:
+                code_dict[agreement]['code'] = True
+
+            if type == 'Goods':
+                defence_rule = Entities.objects.filter(name=entities).values_list('weapons_rule').get()[0]
+                if defence_rule is True:
+                    pass
+                else:
+                    code_dict[agreement]['code'] = True
+            elif type == 'Construction':
+                tc_rule = Entities.objects.filter(name=entities).values_list('tc').get()[0]
+                if tc_rule is True:
+                    code_dict[agreement]['code'] = False
+                else:
+                    pass
+            else:
+                pass
+    except:
+        raise ValueError
+    return code_dict
+
+def exceptions_rule(ex_dict, exceptions):
+    try:
+        for agreement in ex_dict:
+            for x in exceptions:
+                    check = TAException.objects.filter(name=x).values_list(agreement).get()[0]
+                    if ex_dict[agreement]['exceptions'] is True:
+                        pass
+                    else:
+                        ex_dict[agreement]['exceptions'] = check
+    except:
+        raise ValueError
+    return ex_dict
 
 class CodeViewEN(View):
 
@@ -47,16 +179,40 @@ class CodeViewEN(View):
             context_dict = {'instructions': Instructions.objects.get(id=1)}
         except:
             context_dict = {'instructions': 'No Instructions'}
-        context_dict['form'] = GuideFormEN()
+        form = GuideFormEN()
+        context_dict['form'] = form
         context_dict['show_eval']  = False
         return render(request, "guide.html", context_dict)
-
-
 
     def post(self, request, *args, **kwargs):
         form = GuideFormEN(request.POST)
 
-#         check if valid
+        if form.is_valid():
+            print('hello from valid')
+        else:
+            print('form not valid')
+            print(form.errors)
+        
+        ta = agreements
+        print(form.cleaned_data)
+        entities = form.cleaned_data['entities']
+        ta1 = entities_rule(ta, entities)
+
+        estimated_value = form.cleaned_data['estimated_value']
+        type = form.cleaned_data['type']
+        ta2 = value_threshold_rule(ta1, estimated_value, type)
+
+        code = form.cleaned_data['code']
+        ta3 = code_rule(ta2, code, entities, type)
+
+        exception = form.cleaned_data['exceptions']
+        print(exception)
+        if exception is not None:
+            ta4 = exceptions_rule(ta3, exception)
+        else:
+            ta4 = ta3
+
+        print(ta4)
         context_dict = {}
         context_dict['form'] = form
         context_dict['show_eval'] = True
@@ -77,6 +233,7 @@ class CodeViewFR(View):
         else:
             context_dict['form'] = GuideFormFR()
         return render(request, "guide.html", context_dict)
+
 
 
 def getType(request):

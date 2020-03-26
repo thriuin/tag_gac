@@ -2,6 +2,7 @@ from django.db import models
 
 # TODO: Add validators
 
+
 class Language(models.Model):
     CHOICES = [
         ('EN', 'English'),
