@@ -5,114 +5,12 @@ from guide.models import Code, Instructions, ValueThreshold, Entities, TAExcepti
 from guide.forms import GuideFormEN, GuideFormFR
 from django.views.generic import View
 
-agreements = {
-    'nafta_annex': {
-    'entities': True,
-    'estimated_value': True,
-    'code': True,
-    'exceptions': False,
-    'limited_tendering': False,
-    'cfta_exceptions': False
-}, 
-    'ccfta': {
-    'entities': True,
-    'estimated_value': True,
-    'code': True,
-    'exceptions': False,
-    'limited_tendering': False,
-    'cfta_exceptions': False
-},
-    'ccofta': {
-    'entities': True,
-    'estimated_value': True,
-    'code': True,
-    'exceptions': False,
-    'limited_tendering': False,
-    'cfta_exceptions': False
-},
-    'chfta': {
-    'entities': True,
-    'estimated_value': True,
-    'code': True,
-    'exceptions': False,
-    'limited_tendering': False,
-    'cfta_exceptions': False
-},
-    'cpafta': {
-    'entities': True,
-    'estimated_value': True,
-    'code': True,
-    'exceptions': False,
-    'limited_tendering': False,
-    'cfta_exceptions': False
-},
-    'cpfta': {
-    'entities': True,
-    'estimated_value': True,
-    'code': True,
-    'exceptions': False,
-    'limited_tendering': False,
-    'cfta_exceptions': False
-},
-    'ckfta': {
-    'entities': True,
-    'estimated_value': True,
-    'code': True,
-    'exceptions': False,
-    'limited_tendering': False,
-    'cfta_exceptions': False
-},
-    'cufta': {
-    'entities': True,
-    'estimated_value': True,
-    'code': True,
-    'exceptions': False,
-    'limited_tendering': False,
-    'cfta_exceptions': False
-},
-    'wto_agp': {
-    'entities': True,
-    'estimated_value': True,
-    'code': True,
-    'exceptions': False,
-    'limited_tendering': False,
-    'cfta_exceptions': False
-},
-    'ceta': {
-    'entities': True,
-    'estimated_value': True,
-    'code': True,
-    'exceptions': False,
-    'limited_tendering': False,
-    'cfta_exceptions': False
-},
-    'cptpp': {
-    'entities': True,
-    'estimated_value': True,
-    'code': True,
-    'exceptions': False,
-    'limited_tendering': False,
-    'cfta_exceptions': False
-},
-    'cfta': {
-    'entities': True,
-    'estimated_value': True,
-    'code': True,
-    'exceptions': False,
-    'limited_tendering': False,
-    'cfta_exceptions': False
-}
-}
-
 
 
 def entities_rule(ent_dict, data):               
     try:
         for agreement in ent_dict:
             check = Entities.objects.filter(name=data).values_list(agreement).get()[0]
-            print(agreement)
-            print(check)
-            print(data)
             ent_dict[agreement]['entities'] = check
     except:
         raise ValueError
@@ -171,6 +69,34 @@ def exceptions_rule(ex_dict, exceptions):
         raise ValueError
     return ex_dict
 
+def limited_tendering_reasons_func(lim_dict, limited_tendering_reason):
+    try:
+        for agreement in lim_dict:
+            for x in limited_tendering_reason:
+                check = TenderingReason.objects.filter(name=x).values_list(agreement).get()[0]
+                if lim_dict[agreement]['limited_tendering'] is True:
+                    pass
+                else:
+                    lim_dict[agreement]['limited_tendering'] = check
+    except:
+        raise ValueError
+    return lim_dict
+
+
+def cfta_exceptions_func(cfta_dict, cfta_exceptions):
+    try:
+        for agreement in cfta_dict:
+            for x in cfta_exceptions:
+                check = CftaException.objects.filter(name=x).values_list(agreement).get()[0]
+                if cfta_dict[agreement]['cfta_exceptions'] is True:
+                    pass
+                else:
+                    cfta_dict[agreement]['cfta_exceptions'] = check
+    except:
+        raise ValueError
+    return cfta_dict
+
+
 class CodeViewEN(View):
 
     def get(self, request, *args, **kwargs):
@@ -193,6 +119,22 @@ class CodeViewEN(View):
             print('form not valid')
             print(form.errors)
         
+        rules = {
+            'entities': True,
+            'estimated_value': True,
+            'code': True,
+            'exceptions': False,
+            'limited_tendering': False,
+            'cfta_exceptions': False
+        }
+        trade_agreements = ['nafta_annex', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta', 'wto_agp', 'ceta', 'cptpp', 'cfta']
+        
+        agreements = {}
+        for ta in trade_agreements:
+            agreements[ta] = {}
+            for key, value in rules.items():
+                agreements[ta][key] = value
+
         ta = agreements
         print(form.cleaned_data)
         entities = form.cleaned_data['entities']
@@ -206,13 +148,35 @@ class CodeViewEN(View):
         ta3 = code_rule(ta2, code, entities, type)
 
         exception = form.cleaned_data['exceptions']
-        print(exception)
+        limited_tendering_reason = form.cleaned_data['limited_tendering']
+        cfta_exceptions = form.cleaned_data['cfta_exceptions']
+        print(exception, limited_tendering_reason, cfta_exceptions)
+        except_dict = {
+            'exceptions': {
+                'model': TAException
+            }, 
+            'limited_tendering': {
+                'model': TenderingReason
+            }, 
+            'cfta_exceptions': {
+                'model': CftaException
+            }
+        }
         if exception is not None:
             ta4 = exceptions_rule(ta3, exception)
         else:
             ta4 = ta3
 
-        print(ta4)
+        if limited_tendering_reason is not None:
+            ta5 = limited_tendering_reasons_func(ta4, limited_tendering_reason)
+        else:
+            ta5 = ta4
+
+        if cfta_exceptions is not None:
+            ta6 = cfta_exceptions_func(ta5, cfta_exceptions)
+        else:
+            ta6 = ta5
+        print(ta6)
         context_dict = {}
         context_dict['form'] = form
         context_dict['show_eval'] = True
