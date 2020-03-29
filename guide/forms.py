@@ -5,12 +5,6 @@ from guide.models import Entities, Code, TAException, TenderingReason, CftaExcep
 from django.db.models import Q
 
 
-class CodeField(forms.ModelChoiceField):
-
-    def clean(self, value):
-        return value
-
-
 class GuideFormEN(forms.Form):
 
     estimated_value = forms.IntegerField(
@@ -26,24 +20,23 @@ class GuideFormEN(forms.Form):
     )
     entities.widget.attrs['class'] = 'form-control'
 
-    type = CodeField(
-        Code.objects.filter(lang='EN').values_list('type'),
+    type = forms.CharField(
         label=_('Commodity Type'),
-        required=True
+        required=True,
+        widget = forms.Select()
     )
     type.widget.attrs['class'] = 'form-control'
 
-
-    code_system = CodeField(
-        Code.objects.filter(lang='EN').only('code_system'),
+    code_system = forms.CharField(
+        widget = forms.Select(),
         label=_('Commodity Code System'),
         required=True
     )
     code_system.widget.attrs['class'] = 'form-control'
 
 
-    code = CodeField(
-        Code.objects.filter(lang='EN').only('code'),
+    code = forms.CharField(
+        widget = forms.Select(),
         label=_('Commodity Code'),
         required=True
     )
@@ -77,7 +70,31 @@ class GuideFormEN(forms.Form):
     )
     cfta_exceptions.widget.attrs['class'] = 'form-control'
 
+    def clean_type(self):
+        # raise ValidationError('Construction isnt one')
+        data = self.cleaned_data.get('type')
+        if Code.objects.filter(type=data).exists():
+            return data
+        else:
+            raise ValidationError('Invalid choice.  Please select a commodity type.')
+
+    def clean_code_system(self):
+        data = self.cleaned_data.get('code_system')
+        if Code.objects.filter(code_system=data).exists():
+            return data
+        else:
+            raise ValidationError('Invalid choice.  Please select a commodity code system')
+
+    def clean_code(self):
+        data = self.cleaned_data.get('code')
+        if Code.objects.filter(code=data).exists():
+            return data
+        else:
+            raise ValidationError('Invalid choice.  Please select a commodity code.')
+
+
 class GuideFormFR(forms.Form):
+
     estimated_value = forms.IntegerField(
         label=_('Estimated Value'),
         required=True
@@ -136,49 +153,3 @@ class GuideFormFR(forms.Form):
         required=False
     )
     cfta_exceptions.widget.attrs['class'] = 'form-control'
-
-    # def clean_commodity_type(self):
-    #     '''
-    #     Provide a custom validation for the commodity type select field. Whatever commodity type is selected the
-    #     corresponding goods, services, or construction select field must have a selected item.
-    #     :return: A ValidationError if the corresponding commodity is not selected.
-    #     '''
-    #     if self.cleaned_data['commodity_type'] == 'goods':
-    #         if 'goods_codes' not in self.data or self.data['goods_codes'] is None:
-    #             raise ValidationError(
-    #                 _('Select a good from the list below'),
-    #                 code='invalid',
-    #             )
-    #         try:
-    #             code = int(self.data['goods_codes'])
-    #         except:
-    #             raise ValidationError(
-    #                 _('Select a good from the list below'),
-    #                 code='invalid',
-    #             )
-    #     elif self.cleaned_data['commodity_type'] == 'services':
-    #         if 'services_codes' not in self.data or self.data['services_codes'] is None:
-    #             raise ValidationError(
-    #                 _('Select a service from the list below'),
-    #                 code='invalid',
-    #             )
-    #         try:
-    #             code = int(self.data['services_codes'])
-    #         except:
-    #             raise ValidationError(
-    #                 _('Select a service from the list below'),
-    #                 code='invalid',
-    #             )
-    #     elif self.cleaned_data['commodity_type'] == 'construction':
-    #         if 'construction_code' not in self.data or self.data['construction_code'] is None:
-    #             raise ValidationError(
-    #                 _('Select a construction from the list below'),
-    #                 code='invalid',
-    #             )
-    #         try:
-    #             code = int(self.data['construction_code'])
-    #         except:
-    #             raise ValidationError(
-    #                 _('Select a construction from the list below'),
-    #                 code='invalid',
-    #             )

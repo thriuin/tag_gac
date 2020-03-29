@@ -6,8 +6,8 @@ from guide.forms import GuideFormEN, GuideFormFR
 from django.views.generic import View
 
 
-
-def entities_rule(ent_dict, data, ent_reason):               
+def entities_rule(ent_dict, data, ent_reason):
+    '''Check if the trade agreements apply to the entity.'''          
     try:
         for agreement in ent_dict:
             check = Entities.objects.filter(name=data).values_list(agreement).get()[0]
@@ -70,21 +70,22 @@ def exceptions_rule(ex_dict, exceptions, ex_reason):
     try:
         for agreement in ex_dict:
             for x in exceptions:
-                    check = TAException.objects.filter(name=x).values_list(agreement).get()[0]
-                    # This is a pass because if one value is true then we want to keep it true even if others are false
-                    if (ex_dict[agreement]['exceptions'] is True) and (check is True):
-                        ex_reason[agreement]['exceptions'] = f'exceptions apply'
-                    elif (ex_dict[agreement]['exceptions'] is True) and (check is False):
-                        pass
-                    elif (ex_dict[agreement]['exceptions'] is False) and (check is True):
-                        ex_dict[agreement]['exceptions'] = True
-                        ex_reason[agreement]['exceptions'] = f'exceptions apply'
-                    elif (ex_dict[agreement]['exceptions'] is False) and (check is False):
-                        ex_reason[agreement]['exceptions'] = f'no exceptions apply'
+                check = TAException.objects.filter(name=x).values_list(agreement).get()[0]
+                # This is a pass because if one value is true then we want to keep it true even if others are false
+                if (ex_dict[agreement]['exceptions'] is True) and (check is True):
+                    ex_reason[agreement]['exceptions'] = f'exceptions apply'
+                elif (ex_dict[agreement]['exceptions'] is True) and (check is False):
+                    pass
+                elif (ex_dict[agreement]['exceptions'] is False) and (check is True):
+                    ex_dict[agreement]['exceptions'] = True
+                    ex_reason[agreement]['exceptions'] = f'exceptions apply'
+                elif (ex_dict[agreement]['exceptions'] is False) and (check is False):
+                    ex_reason[agreement]['exceptions'] = f'no exceptions apply'
 
     except:
         raise ValueError
     return ex_dict, ex_reason
+
 
 def limited_tendering_reasons_func(lim_dict, limited_tendering_reason, lim_reason):
     try:
@@ -136,84 +137,87 @@ class CodeViewEN(View):
         return render(request, "guide.html", context_dict)
 
     def post(self, request, *args, **kwargs):
+        
         form = GuideFormEN(request.POST)
-
-        if form.is_valid():
-            print('hello from valid')
-        else:
-            print('form not valid')
-            print(form.errors)
-        
-        rules = {
-            'entities': True,
-            'estimated_value': True,
-            'type': True,
-            'code_system': True,
-            'code': True,
-            'exceptions': False,
-            'limited_tendering': False,
-            'cfta_exceptions': False
-        }
-        
-        reason = {
-            'entities': {},
-            'estimated_value': {},
-            'type': {},
-            'code_system': {},
-            'code': {},
-            'exceptions': {},
-            'limited_tendering': {},
-            'cfta_exceptions': {}
-        }
-        trade_agreements = ['nafta_annex', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta', 'wto_agp', 'ceta', 'cptpp', 'cfta']
-        
-        agreements = {}
-        reasons = {}
-        for ta in trade_agreements:
-            agreements[ta] = {}
-            reasons[ta] = {}
-            for key, value in rules.items():
-                agreements[ta][key] = value
-            for key, value in reason.items():
-                reasons[ta][key] = value
-        
-        ta = agreements
-
         context_dict = {}
-        for key in reason.keys():
-            if form.cleaned_data is not None:
-                context_dict[key] = form.cleaned_data[key]
+        context_dict['form'] = form
+        if form.is_valid():        
+            print(form.cleaned_data)    
+            rules = {
+                'entities': True,
+                'estimated_value': True,
+                'type': True,
+                'code_system': True,
+                'code': True,
+                'exceptions': False,
+                'limited_tendering': False,
+                'cfta_exceptions': False
+            }
+
+            reason = {
+                'entities': {},
+                'estimated_value': {},
+                'type': {},
+                'code_system': {},
+                'code': {},
+                'exceptions': {},
+                'limited_tendering': {},
+                'cfta_exceptions': {}
+            }
+            trade_agreements = ['nafta_annex', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 'ckfta', 'cufta', 'wto_agp', 'ceta', 'cptpp', 'cfta']
+            
+            agreements = {}
+            reasons = {}
+            for ta in trade_agreements:
+                agreements[ta] = {}
+                reasons[ta] = {}
+                for key, value in rules.items():
+                    agreements[ta][key] = value
+                for key, value in reason.items():
+                    reasons[ta][key] = value
+            
+            ta = agreements
+
+            for key in reason.keys():
+                if form.cleaned_data is not None:
+                    context_dict[key] = form.cleaned_data[key]
+                else:
+                    context_dict[key] = None
+                    print(key)
+                print(context_dict[key])
+
+            ta, reasons = entities_rule(ta, context_dict['entities'], reasons)
+            ta, reasons = value_threshold_rule(ta, context_dict['estimated_value'], context_dict['type'], reasons)
+            ta, reasons = code_rule(ta, context_dict['code'], context_dict['entities'], context_dict['type'], reasons)
+
+            if context_dict['exceptions']:
+                ta, reasons = exceptions_rule(ta, context_dict['exceptions'], reasons)
             else:
-                context_dict[key] = None
-                print(key)
-            print(context_dict[key])
+                context_dict['exceptions'] = ['None']
 
-        ta, reasons = entities_rule(ta, context_dict['entities'], reasons)
-        ta, reasons = value_threshold_rule(ta, context_dict['estimated_value'], context_dict['type'], reasons)
-        ta, reasons = code_rule(ta, context_dict['code'], context_dict['entities'], context_dict['type'], reasons)
 
-        if context_dict['exceptions']:
-            ta, reasons = exceptions_rule(ta, context_dict['exceptions'], reasons)
+            if context_dict['limited_tendering']:
+                ta, reasons = limited_tendering_reasons_func(ta, context_dict['limited_tendering'], reasons)
+            else:
+                context_dict['limited_tendering'] = ['None']
+
+            if context_dict['cfta_exceptions']:
+                ta, reasons = cfta_exceptions_func(ta, context_dict['cfta_exceptions'], reasons)
+            else:
+                context_dict['cfta_exceptions'] = ['None']
+
+            context_dict['rules'] = ta
+            context_dict['reasons'] = reasons
+            context_dict['show_eval'] = True
+
+            return render (request, "guide.html", context_dict)
         else:
-            context_dict['exceptions'] = ['None']
+            context_dict['show_eval']  = False
+            return render(request, "guide.html", context_dict)
+        form = GuideFormEN()
+        context_dict['form'] = form
+        return render(request, "guide.html", context_dict)
 
-
-        if context_dict['limited_tendering']:
-            ta, reasons = limited_tendering_reasons_func(ta, context_dict['limited_tendering'], reasons)
-        else:
-            context_dict['limited_tendering'] = ['None']
-
-        if context_dict['cfta_exceptions']:
-            ta, reasons = cfta_exceptions_func(ta, context_dict['cfta_exceptions'], reasons)
-        else:
-            context_dict['cfta_exceptions'] = ['None']
-
-        context_dict['rules'] = ta
-        context_dict['reasons'] = reasons
-        context_dict['show_eval'] = True
-        print(context_dict['cfta_exceptions'])
-
-        return render (request, "guide.html", context_dict)
 
 
 
@@ -230,7 +234,6 @@ class CodeViewFR(View):
         else:
             context_dict['form'] = GuideFormFR()
         return render(request, "guide.html", context_dict)
-
 
 
 def getType(request):
@@ -290,103 +293,3 @@ def getCode(request):
         }
         return JsonResponse(data, status = 200)
 
-
-
-
-#     desc_en = ""
-#     dollars = form.cleaned_data['estimated_value']
-#     if commodity_type == 'goods':
-#         if 'goods_codes' in form.cleaned_data and form.cleaned_data['goods_codes'] is not None:
-#             goods = GoodsFscCode.objects.get(id=form.cleaned_data['goods_codes'].id)
-#             set_agreement_values(trade_agreements, goods)
-#             desc_en = goods.fs_code_desc
-#
-#     elif commodity_type == 'services':
-#         if 'services_code' in form.cleaned_data and form.cleaned_data['services_codes'] is not None:
-#             services = ServicesCcsCode.objects.get(id=form.cleaned_data['services_codes'].id)
-#             set_agreement_values(trade_agreements, services)
-#             desc_en = services.ccs_level_2
-#
-#     elif commodity_type == 'construction':
-#         if 'construction_code' in form.cleaned_data and form.cleaned_data['construction_code'] is not None:
-#             construction = ConstructionCcsCode.objects.get(id=form.cleaned_data['construction_code'].id)
-#             set_agreement_values(trade_agreements, construction)
-#             desc_en = construction.fs_code_desc
-#
-#     # Find the exemptions based on commodity type
-#     for ta in trade_agreements:
-#         if trade_agreements[ta]['setting']:
-#             agreements[trade_agreements[ta]['agreement']] = True
-#             reasons[ta].append('{0} are exempt under {1}'.format(desc_en, trade_agreements[ta]['label']))
-#
-#     # Find the exemptions based on dollar value
-#     vt = ValueThreshold.objects.get(desc_en=commodity_type)
-#     set_agreement_values(trade_agreements, vt)
-#     for ta in trade_agreements:
-#         if trade_agreements[ta]['setting'] is not None and dollars < trade_agreements[ta]['setting']:
-#             agreements[trade_agreements[ta]['agreement']] = True
-#             reasons[ta].append('{0} under {1} are exempt under {2}'.format(commodity_type, trade_agreements[ta]['setting'],
-#                                                                            trade_agreements[ta]['label']))
-#
-#     return agreements, reasons
-#
-# class GuideListView(ListView):
-#     model = ModelGuide
-#     context_object_name = 'guide'
-#
-#
-# class GuideCreateView(CreateView):
-#     model = ModelGuide
-#     fields = (
-#         'estimated_value',
-#         'federal_entities',
-#         'commodity_type',
-#         'commodity_code',
-#         'exceptions',
-#         'limited_tendering',
-#         'cfta_ex'
-#     )
-#     success_url = reverse_lazy('guide_list')
-#
-#
-# class GuideUpdateView(UpdateView):
-#     model = ModelGuide
-#     fields = (
-#         'estimated_value',
-#         'federal_entities',
-#         'commodity_type',
-#         'commodity_code',
-#         'exceptions',
-#         'limited_tendering',
-#         'cfta_ex'
-#     )
-#     success_url = reverse_lazy('guide_list')
-
-# class GuideListView(View):
-#     def __init__(self):
-#         super().__init__()
-#
-#     def get(self, request, *args, **kwargs):
-#         form = GuideFormEN()
-#         # do not display the evaluation section of the form
-#         return render(request, 'guide_form.html', {'form': form, 'show_eval': False})
-#
-#     def post(self, request, *args, **kwargs):
-#         # create a form instance and populate it with data from the request:
-#         form = GuideFormEN(request.POST)
-#         context = {'show_eval': False}
-#         # check whether it's valid:
-#         if form.is_valid():
-#             commodity_type = ''
-#             if 'commodity_type' in form.cleaned_data and form.cleaned_data['commodity_type'] is not None:
-#                 commodity_type = form.cleaned_data['commodity_type']
-#             elif 'commodity_type' in form.data and form.data['commodity_type'] in ('goods', 'services', 'construction'):
-#                 commodity_type = form.data['commodity_type']
-#             if commodity_type != '':
-#                 ta = find_exemptions(form, commodity_type)
-#                 # forward a merged dictionary of exemptions and  reasons to the form for display
-#                 context = {**ta[0], **ta[1]}
-#                 # show the evaluation section on the page
-#                 context['show_eval'] = True
-#         context['form'] = form
-#         return render(request, 'guide_form.html', context)

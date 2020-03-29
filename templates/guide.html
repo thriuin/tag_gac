@@ -14,34 +14,35 @@
     {% if show_eval %}
         {{ form.non_field_errors }}
         <div class="row mrgn-tp-md mrgn-bttm-lg">
-            <table class="table">
+            <table class="wb-tables table">
                 <thead>
+                    <th>{% trans "Form Field" %}</th>
                     <th>{% trans "User Input" %}</th>
                 </thead>
                 <tbody>
                     <tr>
-                        <th>{% trans "Estimated Value:" %}</th>
-                        <td>{{ estimated_value }}</td>
+                        <td>{% trans "Estimated Value:" %}</td>
+                        <td>{{ estimated_value|intcomma }}</td>
                     </tr>
                     <tr>
-                        <th>{% trans "Entity:" %}</th>
+                        <td>{% trans "Entity:" %}</td>
                         <td>{{ entities }}</td>
                     </tr>
                     <tr>
-                        <th>{% trans "Commodity Type:" %}</th>
+                        <td>{% trans "Commodity Type:" %}</td>
                         <td>{{ type }}</td>
                     </tr>
                     <tr>
-                        <th>{% trans "Commodity Code System:" %}</th>
+                        <td>{% trans "Commodity Code System:" %}</td>
                         <td>{{ code_system }}</td>
                     </tr>
                     <tr>
-                        <th>{% trans "Commodity Code:" %}</th>
+                        <td>{% trans "Commodity Code:" %}</td>
                         <td>{{ code }}</td>
                     </tr>
                     <br>
                     <tr>
-                        <th>{% trans "Limited Tendering Reasons:" %}</th>
+                        <td>{% trans "Limited Tendering Reasons:" %}</td>
                         <td>
                             {% for lt in limited_tendering %}
                                 <li>{{ lt }}</li>
@@ -50,7 +51,7 @@
                     </tr>
                     <br>
                     <tr>
-                        <th>{% trans "Exceptions:" %}</th>
+                        <td>{% trans "Exceptions:" %}</td>
                         <td>
                             {% for ex in exceptions %}
                                 <li>{{ ex }}</li>
@@ -59,7 +60,7 @@
                     </tr>
                     <br>
                     <tr>
-                        <th>{% trans "CFTA Exceptions:" %}</th>
+                        <td>{% trans "CFTA Exceptions:" %}</td>
                         <td>
                             {% for ce in cfta_exceptions %}
                                 <li> {{ ce }}</li>
@@ -70,76 +71,90 @@
             </table>
         </div>
         {% for key_parent, val_parent in rules.items %}
-            <li>{{ key_parent }}</li>
-            <li>{{ val_parent }}</li>
+            <ul class="list-unstyled">
+                <li>
+                    <details>
+                        <summary>
+                            {{ key_parent.upper }}
+                        </summary>
+                        <table class="wb-tables table">
+                            <thead>
+                                <th>{% trans "Form Field" %}</th>
+                                <th>{% trans "Result" %}</th>
+                            </thead>
+                            <tbody>
+                                {% for key2, val2 in val_parent.items %}
+                                    <tr>
+                                        <td>{{ key2|title }}</td>
+                                        <td>{{ val2 }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </details>
+                </li>
+            </ul>   
         {% endfor %}
-        {% for key, value in data.items %}
-            <li>{{ key }}</li>
-            <li>{{ val }}</li>
-        {% endfor %}
-        {% else %}
+    {% else %}
     <div class="row mrgn-tp-md mrgn-bttm-md">
         <div class="col-md-12">
             <section>
                 <div class="wb-frmvld">
                     <form action="/guide/en/evaluate/" method="POST" role="form" id="tag-form">
                         {% csrf_token %}
-                        {{ form.non_field_errors }}
+                        {% for ffield in form %}
                         <div class="form-group" role="form">
-                            <p>
-                                {{ instructions }}
-                            </p>
-
-                            {{ form.estimated_value.errors }}
-                            {{ form.estimated_value.label_tag }}
-                            {{ form.estimated_value }}
-
-                            {{ form.entities.errors }}
-                            {{ form.entities.label_tag }}
-                            {{ form.entities }}
-
-                            {{ form.commodity_type.errors }}
-                            {{ form.commodity_type.label_tag }}
-                            <select class="form-control" id="type" name="type" url = "{%url 'guide:get_type' %}"></select>
-
-                            {{ form.commodity_system.errors }}
-                            {{ form.commodity_system.label_tag }}
-                            <select class="form-control" id="code_system" name="code_system" url = "{%url 'guide:get_code_system' %}">
-                                <option value='all' selected>Select Code System</option>
-                            </select>
-
-                            {{ form.commodity_code.errors }}
-                            {{ form.commodity_code.label_tag }}
-                            <select class="form-control" id="code" name="code" url = "{%url 'guide:get_code' %}">
-                                <option value='all' selected>Select Commodity Code</option>
-                            </select>
-
-                            <hr>
-                            {{ form.limited_tendering.errors }}
-                            {{ form.limited_tendering.label_tag }}
-                            {% for rule in form.limited_tendering %}
-                                <div class="checkbox">
-                                    {{ rule }}
-                                </div>
-                            {% endfor %}
-                            <hr>
-
-                            {{ form.exceptions.errors }}
-                            {{ form.exceptions.label_tag }}
-                            {% for exception in form.exceptions %}
-                                <div class="checkbox">
-                                    {{ exception }}
-                                </div>
-                            {% endfor %}
-                            <hr>
-                            {{ form.cfta_exceptions.error }}
-                            {{ form.cfta_exceptions.label_tag }}
-                            {% for rule in form.cfta_exceptions %}
-                                <div class="checkbox">
-                                    {{ rule }}
-                                </div>
-                            {% endfor %}
+                            {% if ffield.errors %}
+                                {% for error in ffield.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            {% endif %}
+                            <label for="{{ ffield.id_for_label }}" {% if ffield.field.required %}class="required"{% endif %}>
+                                    {{ ffield.field.label }}	        
+                                {% if ffield.field.required %}<strong class="required">({% trans 'Required' %})</strong>{% endif %}
+                            </label>
+                            {% if ffield.name == 'estimated_value' %}
+                                {{ form.estimated_value }}
+                            {% endif %}
+                            {% if ffield.name == 'entities' %}
+                                {{ form.entities }}
+                            {% endif %}
+                            {% if ffield.name == 'type' %}
+                                <select class="form-control" id="type" name="type" url = "/guide/ajax/type/"></select>
+                            {% endif %}
+                            {% if ffield.name == 'code_system' %}
+                                <select class="form-control" id="code_system" name="code_system" url = "/guide/ajax/code_system/">
+                                    <option value='all' selected>Select Code System</option>
+                                </select>
+                            {% endif %}
+                            {% if ffield.name == 'code' %}
+                                <select class="form-control" id="code" name="code" url = "/guide/ajax/code/">
+                                    <option value='all' selected>Select Commodity Code</option>
+                                </select>
+                            {% endif %}
+                            {% if ffield.name == 'exceptions' %}
+                                {% for ex in form.exceptions %}
+                                    <div class="checkbox">
+                                        {{ ex }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            {% if ffield.name == 'limited_tendering' %}
+                                {% for lt in form.limited_tendering %}
+                                    <div class="checkbox">
+                                        {{ lt }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            {% if ffield.name == 'cfta_exceptions' %}
+                                {% for ce in form.cfta_exceptions %}
+                                    <div class="checkbox">
+                                        {{ ce }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
                         </div>
+                        {% endfor %}
                         <br>
                         <input type="submit" value="Submit" class="btn btn-primary" id="submit-form-button">
                     </form>
