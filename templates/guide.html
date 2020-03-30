@@ -123,7 +123,7 @@
                                 <strong class="required">
                                     ({% trans 'Required' %})
                                 </strong>
-                                <sup id="table1-fn1-rf"><a class="fn-lnk" href="#table1-fn1"><span class="wb-inv">table 1 note </span>{{ forloop.counter }}</a></sup>
+                                <sup id="table1-fn{{ forloop.counter }}-rf"><a class="fn-lnk" href="#table1-fn{{ forloop.counter }}"><span class="wb-inv">table 1 note </span>{{ forloop.counter }}</a></sup>
                             {% endif %}
                             </label>
                             {% if ffield.name == 'estimated_value' %}
@@ -184,6 +184,22 @@
 						                <dd id="table1-fn1">
                                             <p>"There is a footnote"</p>
                                             <p class="fn-rtn"> <a href="#table1-fn1-rf"><span class="wb-inv">Return to table 1 note </span>1<span class="wb-inv"> referrer</span></a> </p>
+                                        </dd>
+                                        <dd id="table1-fn2">
+                                            <p>"There is a footnote2"</p>
+                                            <p class="fn-rtn"> <a href="#table1-fn2-rf"><span class="wb-inv">Return to table 1 note </span>2<span class="wb-inv"> referrer</span></a> </p>
+                                        </dd>
+                                        <dd id="table1-fn3">
+                                            <p>"There is a footnote3"</p>
+                                            <p class="fn-rtn"> <a href="#table1-fn3-rf"><span class="wb-inv">Return to table 1 note </span>3<span class="wb-inv"> referrer</span></a> </p>
+                                        </dd>
+                                        <dd id="table1-fn4">
+                                            <p>"There is a footnote4"</p>
+                                            <p class="fn-rtn"> <a href="#table1-fn4-rf"><span class="wb-inv">Return to table 1 note </span>4<span class="wb-inv"> referrer</span></a> </p>
+                                        </dd>
+                                        <dd id="table1-fn5">
+                                            <p>"There is a footnote5"</p>
+                                            <p class="fn-rtn"> <a href="#table1-fn5-rf"><span class="wb-inv">Return to table 1 note </span>5<span class="wb-inv"> referrer</span></a> </p>
                                         </dd>
                                     </dl>
                                 </section>
