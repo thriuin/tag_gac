@@ -10,6 +10,14 @@
     {# --- Main title #}
     {% block main-content-title %}
         <h1 property="name" id="wb-cont">{% trans "Trade Agreement Guide" %}</h1>
+        <section class="alert alert-info">
+            <h2>Instructions</h2>
+            <div>
+                <p>
+                    {{ instructions }}
+                </p>
+            </div>
+          </section>
     {% endblock %}
     {% if show_eval %}
         {{ form.non_field_errors }}
@@ -109,9 +117,14 @@
                                     {{ error }}
                                 {% endfor %}
                             {% endif %}
-                            <label for="{{ ffield.id_for_label }}" {% if ffield.field.required %}class="required"{% endif %}>
-                                    {{ ffield.field.label }}	        
-                                {% if ffield.field.required %}<strong class="required">({% trans 'Required' %})</strong>{% endif %}
+                            <label for="{{ ffield.id_for_label }}" {% if ffield.field.required %} class="required" {% endif %}>
+                                {{ ffield.field.label }}	        
+                            {% if ffield.field.required %}
+                                <strong class="required">
+                                    ({% trans 'Required' %})
+                                </strong>
+                                <sup id="table1-fn1-rf"><a class="fn-lnk" href="#table1-fn1"><span class="wb-inv">table 1 note </span>{{ forloop.counter }}</a></sup>
+                            {% endif %}
                             </label>
                             {% if ffield.name == 'estimated_value' %}
                                 {{ form.estimated_value }}
@@ -131,20 +144,26 @@
                                 <select class="form-control" id="code" name="code" url = "/guide/ajax/code/">
                                     <option value='all' selected>Select Commodity Code</option>
                                 </select>
+                                <hr>
                             {% endif %}
                             {% if ffield.name == 'exceptions' %}
-                                {% for ex in form.exceptions %}
-                                    <div class="checkbox">
-                                        {{ ex }}
-                                    </div>
-                                {% endfor %}
+                                <div class="checkbox">
+                                    {% for ex in form.exceptions %}
+                                        <label for={{ ffield.id_for_label }}>
+                                            {{ ex }}
+                                        </label>
+                                    {% endfor %}
+                                <hr>
                             {% endif %}
                             {% if ffield.name == 'limited_tendering' %}
-                                {% for lt in form.limited_tendering %}
-                                    <div class="checkbox">
-                                        {{ lt }}
-                                    </div>
-                                {% endfor %}
+                                <div class='form-group'>
+                                    {% for lt in form.limited_tendering %}
+                                        <div class="checkbox">
+                                            {{ lt }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <hr>
                             {% endif %}
                             {% if ffield.name == 'cfta_exceptions' %}
                                 {% for ce in form.cfta_exceptions %}
@@ -156,6 +175,20 @@
                         </div>
                         {% endfor %}
                         <br>
+                        <table>
+                            <tfoot>
+                                <section class="wb-fnote">
+                                    <h2 id="table1-fn" class="wb-inv">Table 1 Notes</h2>
+                                    <dl>
+                                        <dt>Table 1 Note 1</dt>
+						                <dd id="table1-fn1">
+                                            <p>"There is a footnote"</p>
+                                            <p class="fn-rtn"> <a href="#table1-fn1-rf"><span class="wb-inv">Return to table 1 note </span>1<span class="wb-inv"> referrer</span></a> </p>
+                                        </dd>
+                                    </dl>
+                                </section>
+                            </tfoot>
+                        </table>
                         <input type="submit" value="Submit" class="btn btn-primary" id="submit-form-button">
                     </form>
                 </div>

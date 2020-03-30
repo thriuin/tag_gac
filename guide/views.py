@@ -97,6 +97,7 @@ def limited_tendering_reasons_func(lim_dict, limited_tendering_reason, lim_reaso
                 elif (lim_dict[agreement]['limited_tendering'] is True) and (check is False):
                     pass
                 elif (lim_dict[agreement]['limited_tendering'] is False) and (check is True):
+                    lim_dict[agreement]['limited_tendering'] = True
                     lim_reason[agreement]['limited_tendering'] = f'exceptions apply'
                 elif (lim_dict[agreement]['limited_tendering'] is False) and (check is False):
                     lim_reason[agreement]['limited_tendering'] = f'no exceptions apply'
@@ -115,6 +116,7 @@ def cfta_exceptions_func(cfta_dict, cfta_exceptions, cfta_reason):
                 elif (cfta_dict[agreement]['cfta_exceptions'] is True) and (check is False):
                     pass
                 elif (cfta_dict[agreement]['cfta_exceptions'] is False) and (check is True):
+                    cfta_reason[agreement]['cfta_exceptions'] = True
                     cfta_reason[agreement]['cfta_exceptions'] = f'exceptions apply'
                 elif (cfta_dict[agreement]['cfta_exceptions'] is False) and (check is False):
                     cfta_reason[agreement]['limited_tendering'] = f'no exceptions apply'
