@@ -41,10 +41,6 @@
                         <td>{{ type }}</td>
                     </tr>
                     <tr>
-                        <td>{% trans "Commodity Code System:" %}</td>
-                        <td>{{ code_system }}</td>
-                    </tr>
-                    <tr>
                         <td>{% trans "Commodity Code:" %}</td>
                         <td>{{ code }}</td>
                     </tr>
@@ -169,11 +165,6 @@
                             {% endif %}
                             {% if ffield.name == 'type' %}
                                 <select class="form-control" id="type" name="type" url = "/guide/ajax/type/"></select>
-                            {% endif %}
-                            {% if ffield.name == 'code_system' %}
-                                <select class="form-control" id="code_system" name="code_system" url = "/guide/ajax/code_system/">
-                                    <option value='all' selected>Select Code System</option>
-                                </select>
                             {% endif %}
                             {% if ffield.name == 'code' %}
                                 <select class="form-control" id="code" name="code" url = "/guide/ajax/code/">

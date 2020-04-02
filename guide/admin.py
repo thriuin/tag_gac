@@ -1,5 +1,5 @@
 from django.contrib import admin
-from guide.models import CommodityType, CommodityCodeSystem, Code, TAException, TenderingReason, CftaException, ValueThreshold, Entities, Instructions
+from guide.models import CommodityType, Code, TAException, TenderingReason, CftaException, ValueThreshold, Entities, Instructions
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
@@ -10,11 +10,6 @@ class CommodityTypeResource(resources.ModelResource):
     class Meta:
         model = CommodityType
 
-
-class CommodityCodeSystemResource(resources.ModelResource):
-
-    class Meta:
-        model = CommodityCodeSystem
 
 class CodeResource(resources.ModelResource):
 
@@ -60,9 +55,6 @@ class InstructionsResource(resources.ModelResource):
 class CommodityTypeAdmin(ImportExportModelAdmin):
     resource_class = CommodityTypeResource
 
-class CommodityCodeSystemAdmin(ImportExportModelAdmin):
-    resource_class = CommodityCodeSystemResource
-
 class CodeAdmin(ImportExportModelAdmin):
     resource_class = CodeResource
 
@@ -86,7 +78,6 @@ class InstructionsAdmin(ImportExportModelAdmin):
 
 # Register your models here
 admin.site.register(CommodityType, CommodityTypeAdmin)
-admin.site.register(CommodityCodeSystem, CommodityCodeSystemAdmin)
 admin.site.register(Code, CodeAdmin)
 admin.site.register(TAException, TAExceptionAdmin)
 admin.site.register(TenderingReason, TenderingReasonAdmin)

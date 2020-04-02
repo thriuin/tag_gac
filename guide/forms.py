@@ -27,14 +27,6 @@ class GuideFormEN(forms.Form):
     )
     type.widget.attrs['class'] = 'form-control'
 
-    code_system = forms.CharField(
-        widget = forms.Select(),
-        label=_('Commodity Code System'),
-        required=True
-    )
-    code_system.widget.attrs['class'] = 'form-control'
-
-
     code = forms.CharField(
         widget = forms.Select(),
         label=_('Commodity Code'),
@@ -78,13 +70,6 @@ class GuideFormEN(forms.Form):
         else:
             raise ValidationError('Invalid choice.  Please select a commodity type.')
 
-    def clean_code_system(self):
-        data = self.cleaned_data.get('code_system')
-        if Code.objects.filter(code_system=data).exists():
-            return data
-        else:
-            raise ValidationError('Invalid choice.  Please select a commodity code system')
-
     def clean_code(self):
         data = self.cleaned_data.get('code')
         if Code.objects.filter(code=data).exists():
@@ -115,12 +100,6 @@ class GuideFormFR(forms.Form):
     )
     commodity_type.widget.attrs['class'] = 'form-control'
 
-    commodity_system = forms.ModelChoiceField(
-        Code.objects.filter(lang='FR').only('code_system'),
-        label=_('Commodity Code System'),
-        required=True
-    )
-    commodity_system.widget.attrs['class'] = 'form-control'
 
     commodity_code = forms.ModelChoiceField(
         Code.objects.filter(lang='FR').only('code'),

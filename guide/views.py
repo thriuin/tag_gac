@@ -9,7 +9,6 @@ reason = {
     'entities': {},
     'estimated_value': {},
     'type': {},
-    'code_system': {},
     'code': {},
     'exceptions': {},
     'limited_tendering': {},
@@ -107,12 +106,15 @@ class CodeViewEN(View):
         form = GuideFormEN(request.POST)
         context_dict = {}
         context_dict['form'] = form
+        try:
+            context_dict = {'instructions': Instructions.objects.get(id=1)}
+        except:
+            context_dict = {'instructions': 'No Instructions'}
         if form.is_valid():           
             rules = {
                 'entities': True,
                 'estimated_value': True,
                 'type': True,
-                'code_system': True,
                 'code': True,
                 'exceptions': True,
                 'limited_tendering': True,
@@ -124,7 +126,6 @@ class CodeViewEN(View):
                 'entities': {},
                 'estimated_value': {},
                 'type': {},
-                'code_system': {},
                 'code': {},
                 'exceptions': {},
                 'limited_tendering': {},
@@ -203,36 +204,13 @@ def getType(request):
         return JsonResponse(data, status = 200)
 
 
-
-def getCodeSystem(request):
-    # get the code systems from the database
-    # database excluding null and blank values
-    if request.method == "GET" and request.is_ajax():
-        type = request.GET.get('type')
-        code_system = Code.objects.\
-            filter(type = type).\
-            exclude(code_system__isnull=True).\
-            exclude(code_system__exact='').\
-            order_by('code_system').\
-            values_list('code_system').\
-            distinct()
-        code_system = [i[0] for i in list(code_system)]
-        data = {
-            "code_system": code_system,
-        }
-        return JsonResponse(data, status = 200)
-
-
-
 def getCode(request):
     # get the type and code systems and filter to get code
     # database excluding null and blank values
     if request.method == "GET" and request.is_ajax():
-        code_system = request.GET.get('code_system')
         type = request.GET.get('type')
         code = Code.objects.\
             filter(type = type).\
-            filter(code_system = code_system).\
             exclude(code__isnull=True).\
             exclude(code__exact='').\
             values_list('code').\

@@ -222,19 +222,6 @@ class ValueThreshold(NumericTradeAgreements):
         return self.type_value.commodity_type
 
 
-class CommodityCodeSystem(Language):
-    commodity_code_system = models.CharField(
-        max_length=128,
-        default='',
-        unique=True,
-        verbose_name='Commodity Code System'
-    )
-    def __str__(self):
-        return self.commodity_code_system
-
-
-
-
 class Code(BooleanTradeAgreement):
     type = models.ForeignKey(
         CommodityType,
@@ -243,15 +230,6 @@ class Code(BooleanTradeAgreement):
         max_length=128,
         default='',
         verbose_name='Commodity Type',
-        on_delete=models.CASCADE
-    )
-    code_system = models.ForeignKey(
-        CommodityCodeSystem,
-        to_field='commodity_code_system',
-        related_name='+',
-        max_length=128,
-        default='',
-        verbose_name='Commodity Code System',
         on_delete=models.CASCADE
     )
 
@@ -296,9 +274,6 @@ class TAException(BooleanTradeAgreement):
     def __str__(self):
         return self.name
 
-
-
-
 class CftaException(BooleanTradeAgreement):
     """
     Subclass of :model: 'guide.BooleanTradeAgreement'
@@ -312,8 +287,6 @@ class CftaException(BooleanTradeAgreement):
 
     def __str__(self):
         return self.name
-
-
 
 
 class Instructions(Language):
