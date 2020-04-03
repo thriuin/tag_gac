@@ -21,6 +21,13 @@ python .\manage.py migrate
 python manage.py createsuperuser
 ```
 
+
+
+
+
+
+
+
 ### Load Data ###
 
 From the project root directory, and after activating the virtual environment, load the data from fixtures
