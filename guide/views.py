@@ -2,9 +2,37 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework.generics import ListAPIView
 from guide.models import Code, Instructions, ValueThreshold, Entities, TAException, TenderingReason, CftaException
-from guide.forms import GuideFormEN, GuideFormFR
+from guide.forms import MandatoryElementsEN, ExceptionsEN
 from django.views.generic import View
+from formtools.wizard.views import SessionWizardView
 
+FORMS = [("0", MandatoryElementsEN),
+         ("1", ExceptionsEN)]
+
+TEMPLATES = {"0": "mandatory_elements.html",
+             "1": "exceptions.html"}
+
+class TradeForm(SessionWizardView):
+    form_list = [MandatoryElementsEN, ExceptionsEN]
+    
+    def get_template_names(self):
+        form = [TEMPLATES[self.steps.current]]
+        print(self.steps.current)
+        print(form)
+        return form
+
+
+    def done(self, form_list, **kwargs):
+        form_data = process_form_data(form_list)
+        return render(self.request, {
+            'form_data': form_data
+        })
+
+def process_form_data(form_list):
+    form_data = [form.cleaned_data for form in form_list]
+    return form_data
+
+    
 reason = {
     'entities': {},
     'estimated_value': {},
