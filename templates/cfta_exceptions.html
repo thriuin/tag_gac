@@ -4,11 +4,8 @@
 {% load humanize %}
 {% load markdown_filter %}
 
-{% block title %}
-<h1 property="name" id="wb-cont" dir="ltr">Step {{ wizard.steps.step0 }} of {{ wizard.steps.count }}</h1>
-{% endblock %}
 {% block form %}
-<form action="" method="POST">
+<form action="" method="POST" role="form" id="ce-form">
     {% csrf_token %}
     {{ wizard.management_form }}
         {% for ffield in form %}
@@ -18,39 +15,21 @@
                     {{ error }}
                 {% endfor %}
             {% endif %}
-            <label for="{{ ffield.id_for_label }}" {% if ffield.field.required %} class="required" {% endif %}>
-                {{ ffield.field.label }}	        
-            {% if ffield.field.required %}
-                <strong class="required">
-                    ({% trans 'Required' %})
-                </strong>
-                <sup id="table1-fn{{ forloop.counter }}-rf"><a class="fn-lnk" href="#table1-fn{{ forloop.counter }}"><span class="wb-inv">table 1 note </span>{{ forloop.counter }}</a></sup>
-            {% endif %}
-            </label>
-            {% if ffield.name == 'estimated_value' %}
-                {{ form.estimated_value }}
-            {% endif %}
-            {% if ffield.name == 'entities' %}
-                {{ form.entities }}
-            {% endif %}
-            {% if ffield.name == 'type' %}
-                <select class="form-control" id="type" name="type" url = "/guide/ajax/type/"></select>
-            {% endif %}
-            {% if ffield.name == 'code' %}
-                <select class="form-control" id="code" name="code" url = "/guide/ajax/code/">
-                    <option value='all' selected>Select Commodity Code</option>
-                </select>
-                <hr>
-            {% endif %}
+            <p>{% trans "Select all exceptions, if any, which apply." %}</p>
+                {% for ce in form.cfta_exceptions %}
+                    <div class="checkbox">
+                        {{ ce }}
+                    </div>
+                {% endfor %}
+            <hr>
         </div>
-        <br>
         {% endfor %}
-        {% if wizard.steps.prev %}
-            <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">{% trans "first step" %}</button>
-            <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "prev step" %}</button>
-        {% endif %}
-        <input type="submit" value="{% trans "submit" %}"/>
-        <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.next }}" class="btn btn-primary" id="submit-form-button">{% trans "Next" %}</button>
+    <br>
+    {% if wizard.steps.prev %}
+        <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">{% trans "first step" %}</button>
+        <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "prev step" %}</button>
+    {% endif %}
+    <input type="submit" value="{% trans "submit" %}"/>
 </form>
 {% endblock %}
 {% block footnotes %}
@@ -84,4 +63,12 @@
 {% block custom-jquery %}
     <script src="{% static 'jquery.min.js' %}" type="text/javascript"></script>
     <script src="{% static 'js/guide.js' %}" type="text/javascript"></script>
+    <script lang="js">
+        var form = document.getElementById("tag-form");
+
+        document.getElementById("submit-form-button").addEventListener("click", function() {
+            form.submit();
+        });
+
+    </script>
 {% endblock %}

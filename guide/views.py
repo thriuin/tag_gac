@@ -1,36 +1,113 @@
-from django.http import JsonResponse
-from django.shortcuts import render
-from rest_framework.generics import ListAPIView
+from django.http import JsonResponse, HttpResponse
+from django.shortcuts import render, redirect
 from guide.models import Code, Instructions, ValueThreshold, Entities, TAException, TenderingReason, CftaException
-from guide.forms import MandatoryElementsEN, ExceptionsEN
+from guide.forms import MandatoryElementsEN, ExceptionsEN, LimitedTenderingEN, CftaExceptionsEN
 from django.views.generic import View
-from formtools.wizard.views import SessionWizardView
+from formtools.wizard.views import NamedUrlSessionWizardView
+from collections import OrderedDict
+
 
 FORMS = [("0", MandatoryElementsEN),
-         ("1", ExceptionsEN)]
+         ("1", ExceptionsEN),
+         ("2", LimitedTenderingEN),
+         ("3", CftaExceptionsEN)]
 
 TEMPLATES = {"0": "mandatory_elements.html",
-             "1": "exceptions.html"}
+             "1": "exceptions.html",
+             "2": "limited_tendering.html",
+             "3": "cfta_exceptions.html"}
 
-class TradeForm(SessionWizardView):
-    form_list = [MandatoryElementsEN, ExceptionsEN]
-    
+
+class TradeForm(NamedUrlSessionWizardView):
+    form_list = [MandatoryElementsEN, ExceptionsEN, LimitedTenderingEN, CftaExceptionsEN]
+    url_name = 'guide:form_step'
+    done_step_name = 'guide:done_step'
+
+    def render_revalidation_failure(self, failed_step, form, **kwargs):
+            """
+            When a step fails, we have to redirect the user to the first failing
+            step.
+            """
+            
+            self.storage.current_step = failed_step
+            print('failed_step')
+            print(failed_step)
+            if failed_step == '0':
+                print('the failed step is zero')
+            return redirect(self.get_step_url(failed_step))
+
+    def render_done(self, form, **kwargs):
+        """
+        This method gets called when all forms passed. The method should also
+        re-validate all steps to prevent manipulation. If any form fails to
+        validate, `render_revalidation_failure` should get called.
+        If everything is fine call `done`.
+        """
+        final_forms = OrderedDict()
+        # walk through the form list and try to validate the data again.
+        for form_key in self.get_form_list():
+            form_obj = self.get_form(
+                step=form_key,
+                data=self.storage.get_step_data(form_key),
+                files=self.storage.get_step_files(form_key)
+            )
+            final_forms[form_key] = form_obj
+
+        # render the done view and reset the wizard before returning the
+        # response. This is needed to prevent from rendering done with the
+        # same data twice.
+        done_response = self.done(final_forms.values(), form_dict=final_forms, **kwargs)
+        self.storage.reset()
+        return done_response
+
     def get_template_names(self):
         form = [TEMPLATES[self.steps.current]]
-        print(self.steps.current)
-        print(form)
         return form
 
+    def post(self, *args, **kwargs):
+        """
+        This method handles POST requests.
+        The wizard will render either the current step (if form validation
+        wasn't successful), the next step (if the current step was stored
+        successful) or the done view (if no more steps are available)
+        """
+        # Look for a wizard_goto_step element in the posted data which
+        # contains a valid step name. If one was found, render the requested
+        # form. (This makes stepping back a lot easier).
+        wizard_goto_step = self.request.POST.get('wizard_goto_step', None)
+        if wizard_goto_step and wizard_goto_step in self.get_form_list():
+            return self.render_goto_step(wizard_goto_step)
+
+
+        # get the form for the current step
+        form = self.get_form(data=self.request.POST, files=self.request.FILES)
+        print('does it get here')
+        # and try to validate
+        if form.is_valid():
+            # if the form is valid, store the cleaned data and files.
+            self.storage.set_step_data(self.steps.current, self.process_step(form))
+            self.storage.set_step_files(self.steps.current, self.process_step_files(form))
+
+            # check if the current step is the last step
+            if self.steps.current == self.steps.last:
+                # no more steps, render done view
+                return self.render_done(form, **kwargs)
+            else:
+                # proceed to the next step
+                return self.render_next_step(form)
+        print('form not valid')
+        return self.render(form)
 
     def done(self, form_list, **kwargs):
+        print('done')
         form_data = process_form_data(form_list)
-        return render(self.request, {
+        print(form_data)
+        return render(self.request, 'done.html', {
             'form_data': form_data
         })
 
 def process_form_data(form_list):
-    form_data = [form.cleaned_data for form in form_list]
-    return form_data
+    return form_list
 
     
 reason = {

@@ -5,8 +5,9 @@
 {% load markdown_filter %}
 
 {% block form %}
-<form action="/guide/en/" method="POST" role="form" id="ex-form">
+<form action="" method="POST" role="form" id="ex-form">
     {% csrf_token %}
+    {{ wizard.management_form }}
     {% for ffield in form %}
     <div class="form-group" role="form">
         {% if ffield.errors %}
@@ -23,8 +24,12 @@
         <hr>
     </div>
     {% endfor %}
-    <br>
-    <input type="submit" value="Submit" class="btn btn-primary" id="submit-form-button">
+    {% if wizard.steps.prev %}
+        <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">{% trans "first step" %}</button>
+        <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "prev step" %}</button>
+    {% endif %}
+    <input type="submit" value="{% trans "submit" %}"/>
+    <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.next }}" class="btn btn-primary" id="submit-form-button">{% trans "Next" %}</button>
 </form>
 {% endblock %}
 {% block footnotes %}
