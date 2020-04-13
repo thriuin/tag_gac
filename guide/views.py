@@ -5,7 +5,7 @@ from guide.forms import MandatoryElementsEN, ExceptionsEN, LimitedTenderingEN, C
 from django.views.generic import View
 from formtools.wizard.views import NamedUrlSessionWizardView
 from collections import OrderedDict
-
+from django.core.exceptions import ValidationError
 
 FORMS = [("0", MandatoryElementsEN),
          ("1", ExceptionsEN),
@@ -23,46 +23,11 @@ class TradeForm(NamedUrlSessionWizardView):
     url_name = 'guide:form_step'
     done_step_name = 'guide:done_step'
 
-    def render_revalidation_failure(self, failed_step, form, **kwargs):
-            """
-            When a step fails, we have to redirect the user to the first failing
-            step.
-            """
-            
-            self.storage.current_step = failed_step
-            print('failed_step')
-            print(failed_step)
-            if failed_step == '0':
-                print('the failed step is zero')
-            return redirect(self.get_step_url(failed_step))
-
-    def render_done(self, form, **kwargs):
-        """
-        This method gets called when all forms passed. The method should also
-        re-validate all steps to prevent manipulation. If any form fails to
-        validate, `render_revalidation_failure` should get called.
-        If everything is fine call `done`.
-        """
-        final_forms = OrderedDict()
-        # walk through the form list and try to validate the data again.
-        for form_key in self.get_form_list():
-            form_obj = self.get_form(
-                step=form_key,
-                data=self.storage.get_step_data(form_key),
-                files=self.storage.get_step_files(form_key)
-            )
-            final_forms[form_key] = form_obj
-
-        # render the done view and reset the wizard before returning the
-        # response. This is needed to prevent from rendering done with the
-        # same data twice.
-        done_response = self.done(final_forms.values(), form_dict=final_forms, **kwargs)
-        self.storage.reset()
-        return done_response
 
     def get_template_names(self):
         form = [TEMPLATES[self.steps.current]]
         return form
+
 
     def post(self, *args, **kwargs):
         """
@@ -80,9 +45,26 @@ class TradeForm(NamedUrlSessionWizardView):
 
 
         # get the form for the current step
-        form = self.get_form(data=self.request.POST, files=self.request.FILES)
-        print('does it get here')
+        query=self.request.POST
+        form = self.get_form(data=query, files=self.request.FILES)
+        print(self.request.POST)
+
         # and try to validate
+        step = query.__getitem__('trade_form-current_step')
+        print(step)
+        if step == '0':
+            type = query.__getitem__('type')
+            code = query.__getitem__('code')
+            if Code.objects.filter(lang='EN').filter(type=type).exists():
+                pass
+            else:
+                form.errors['type'] = "This field is required"
+
+            if Code.objects.filter(lang='EN').filter(code=code).exists():
+                pass
+            else:
+                form.errors['code'] = 'This field is required'
+
         if form.is_valid():
             # if the form is valid, store the cleaned data and files.
             self.storage.set_step_data(self.steps.current, self.process_step(form))
@@ -95,7 +77,6 @@ class TradeForm(NamedUrlSessionWizardView):
             else:
                 # proceed to the next step
                 return self.render_next_step(form)
-        print('form not valid')
         return self.render(form)
 
     def done(self, form_list, **kwargs):
@@ -276,20 +257,6 @@ class CodeViewEN(View):
 
 
 
-
-class CodeViewFR(View):
-
-    def get(self, request, *args, **kwargs):
-        try:
-            context_dict = {'instructions': Instructions.objects.get(id=1)}
-        except:
-            context_dict = {'instructions': 'No instructions'}
-
-        if request.method == "POST":
-            context_dict['form'] = GuideFormFR()
-        else:
-            context_dict['form'] = GuideFormFR()
-        return render(request, "guide.html", context_dict)
 
 
 def getType(request):

@@ -274,6 +274,10 @@ class TAException(BooleanTradeAgreement):
     def __str__(self):
         return self.name
 
+    def get_fields(self):
+        return [field.name for field in TAException._meta.fields]
+
+
 class CftaException(BooleanTradeAgreement):
     """
     Subclass of :model: 'guide.BooleanTradeAgreement'

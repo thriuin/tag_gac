@@ -19,40 +19,35 @@
                         <div class="row  mrgn-bttm-sm">
                             <ul class="toc lst-spcd col-md-12">
                                 <li class="col-md-4">
-                                    <a href="/en/mandatory_elements/" class="list-group-item {% if wizard.steps.step1 == 1 %} cust-active active {% endif %}">Mandatory elements</a>
+                                    <a href="guide/en/0/" class="list-group-item {% if wizard.steps.step1 == 1 %} cust-active active {% endif %}">1. Mandatory elements</a>
                                 </li>
                                 <li class="col-md-4">
-                                    <a href="/en/exceptions/" class="list-group-item {% if wizard.steps.step1 == 2 %} cust-active active {% endif %}">Exceptions</a>
-                                </li>
-                
-                                <li class="col-md-4">
-                                    <a href="/en/limited_tendering/" class="list-group-item {% if wizard.steps.step1 == 3 %} cust-active active {% endif %}">Limited Tendering</a>
+                                    <a href="guide/en/1/" class="list-group-item {% if wizard.steps.step1 == 2 %} cust-active active {% endif %}">2. Exceptions</a>
                                 </li>
                 
                                 <li class="col-md-4">
-                                    <a href="/en/cfta_exceptions/" class="list-group-item {% if wizard.steps.step1 == 4 %} cust-active active {% endif %}">CFTA Exceptions</a>
+                                    <a href="guide/en/2/" class="list-group-item {% if wizard.steps.step1 == 3 %} cust-active active {% endif %}">3. Limited Tendering</a>
+                                </li>
+                
+                                <li class="col-md-4">
+                                    <a href="guide/en/3/" class="list-group-item {% if wizard.steps.step1 == 4 %} cust-active active {% endif %}">4. CFTA Exceptions</a>
                                 </li>
                             </ul>
                         </div>
-                    </div>
-                </section>
-                <section class="alert alert-info">
-                    <h2>Instructions</h2>
-                    <div>
-                        <p>
-                            {{ instructions }}
-                        </p>
                     </div>
                 </section>
             </div>
         </div>
     </main>
     {% endblock %}
+    {% block intro %}
+    {% endblock %}
     <div class="row mrgn-tp-md mrgn-bttm-md">
         <div class="col-md-12">
             <section>
                 <div class="wb-frmvld">
-                    {% block form %}{% endblock %}
+                    {% block form %}
+                    {% endblock %}
                 </div>
             </section>
             <section>
@@ -63,7 +58,3 @@
         </div>
     </div>
 {% endblock main-content %}
-{% block custom-jquery %}
-    <script src="{% static 'jquery.min.js' %}" type="text/javascript"></script>
-    <script src="{% static 'js/guide.js' %}" type="text/javascript"></script>
-{% endblock %}

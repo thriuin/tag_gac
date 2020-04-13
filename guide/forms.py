@@ -7,11 +7,12 @@ from django.db.models import Q
 
 
 class MandatoryElementsEN(forms.Form):
+
     estimated_value = forms.IntegerField(
         label=_('Estimated Value'),
         required=True
     )
-    estimated_value.widget.attrs['class'] = 'form-control required'
+    estimated_value.widget.attrs['class'] = 'form-control'
 
     entities = forms.ModelChoiceField(
         Entities.objects.filter(lang='EN').only('name'),
@@ -22,7 +23,7 @@ class MandatoryElementsEN(forms.Form):
 
     type = forms.CharField(
         label=_('Commodity Type'),
-        required=True,
+        required=False,
         widget = forms.Select()
     )
     type.widget.attrs['class'] = 'form-control'
@@ -30,24 +31,10 @@ class MandatoryElementsEN(forms.Form):
     code = forms.CharField(
         widget = forms.Select(),
         label=_('Commodity Code'),
-        required=True
+        required=False
     )
     code.widget.attrs['class'] = 'form-control'
-
-    def clean_type(self):
-        # raise ValidationError('Construction isnt one')
-        data = self.cleaned_data.get('type')
-        if Code.objects.filter(type=data).exists():
-            return data
-        else:
-            raise ValidationError('Invalid choice.  Please select a commodity type.')
-
-    def clean_code(self):
-        data = self.cleaned_data.get('code')
-        if Code.objects.filter(code=data).exists():
-            return data
-        else:
-            raise ValidationError('Invalid choice.  Please select a commodity code.')
+    
 
 
 class ExceptionsEN(forms.Form):
