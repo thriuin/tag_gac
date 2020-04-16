@@ -40,14 +40,30 @@
         </div>
     </main>
     {% endblock %}
-    {% block intro %}
-    {% endblock %}
+    {% block intro %}{% endblock %}
     <div class="row mrgn-tp-md mrgn-bttm-md">
         <div class="col-md-12">
             <section>
                 <div class="wb-frmvld">
-                    {% block form %}
-                    {% endblock %}
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        {{ form.non_field_errors }}
+                        {{ wizard.management_form }}
+                            {% block form %}{% endblock %}
+                            <div class="mwspagination section">
+                                <nav class="mrgn-bttm-lg">
+                                    <h3 class="wb-inv">Document navigation</h3>
+                                    <ul class="pager">
+                                        <div align="right">
+                                            <li class="next">
+                                                <input type="submit" class="btn btn-primary" rel="next" id="submit-form-button" value="{% trans "Next" %}"/>
+                                                <span class="wb-inv">Go to next step.</span>
+                                            </li>
+                                        </div>
+                                    </ul>
+                                </nav>
+                            </div>
+                    </form>
                 </div>
             </section>
             <section>

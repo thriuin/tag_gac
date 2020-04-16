@@ -2,9 +2,6 @@ from django import forms
 from django.forms.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from guide.models import Entities, Code, TAException, TenderingReason, CftaException
-from django.db.models import Q
-
-
 
 class MandatoryElementsEN(forms.Form):
 
@@ -23,22 +20,33 @@ class MandatoryElementsEN(forms.Form):
 
     type = forms.CharField(
         label=_('Commodity Type'),
-        required=False,
+        required=True,
         widget = forms.Select()
     )
     type.widget.attrs['class'] = 'form-control'
-
     code = forms.CharField(
         widget = forms.Select(),
         label=_('Commodity Code'),
-        required=False
+        required=True
     )
     code.widget.attrs['class'] = 'form-control'
-    
 
+    def clean_type(self):
+        type = self.cleaned_data.get('type')
+        if Code.objects.filter(type=type).exists():
+            return type
+        else:
+            raise ValidationError('Invalid choice.  Please select a commodity type.')
+
+    def clean_code(self):
+        code = self.cleaned_data.get('code')
+        if Code.objects.filter(code=code).exists():
+            return code
+        else:
+            raise ValidationError('Invalid choice.  Please select a commodity code.')
 
 class ExceptionsEN(forms.Form):
-    prefix = ''
+
     exceptions = forms.ModelMultipleChoiceField(
         TAException.objects.filter(lang='EN').only('name'),
         widget=forms.CheckboxSelectMultiple,
@@ -49,7 +57,7 @@ class ExceptionsEN(forms.Form):
 
 
 class LimitedTenderingEN(forms.Form):
-    prefix = ''
+
     limited_tendering = forms.ModelMultipleChoiceField(
         TenderingReason.objects.filter(lang='EN').only('name'),
         widget=forms.CheckboxSelectMultiple,
@@ -60,7 +68,7 @@ class LimitedTenderingEN(forms.Form):
 
 
 class CftaExceptionsEN(forms.Form):
-    prefix = ''
+
     cfta_exceptions = forms.ModelMultipleChoiceField(
         CftaException.objects.filter(lang='EN').only('name'),
         to_field_name='id',

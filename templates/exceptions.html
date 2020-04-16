@@ -8,9 +8,6 @@
 <h1 property="name" id="wb-cont" dir="ltr">Trade Agreement Coverage Tool: Step 2. Exceptions</h1>
 {% endblock %}
 {% block form %}
-<form action="" method="POST" role="form" id="ex-form">
-    {% csrf_token %}
-    {{ wizard.management_form }}
     {% for ffield in form %}
     <div class="form-group" role="form">
         {% if ffield.errors %}
@@ -18,7 +15,7 @@
                 {{ error }}
             {% endfor %}
         {% endif %}
-        <h2>{{ ffield.field.label }}</h2>        
+        <h2>Step 2. Exceptions</h2>      
         <p>{% trans "Select all exceptions, if any, which apply." %}</p>
             {% for ex in form.exceptions %}
                 <div class="checkbox">
@@ -31,22 +28,6 @@
         <hr>
     </div>
     {% endfor %}
-    {% block pagination %}
-        <div class="mwspagination section">
-            <nav class="mrgn-bttm-lg">
-                <h3 class="wb-inv">Document navigation</h3>
-                <ul class="pager">
-                    <div align="right">
-                        <li class="next">
-                            <input type="submit" class="btn btn-primary" rel="next" id="submit-form-button" value="{% trans "Next" %}"/>
-                            <span class="wb-inv">Go to next step.</span>
-                        </li>
-                    </div>
-                </ul>
-            </nav>
-        </div>
-    {% endblock %}
-</form>
 {% endblock %}
 {% block footnotes %}
 <table>

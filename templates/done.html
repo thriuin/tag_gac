@@ -1,44 +1,136 @@
-{% extends "general_form.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 {% load static %}
 {% load humanize %}
 {% load markdown_filter %}
 
-{% block title %}
-<h1 property="name" id="wb-cont" dir="ltr">Step {{ wizard.steps.step0 }} of {{ wizard.steps.count }}</h1>
-{% endblock %}
-{% block form %}
-<h1>It works done!</h1>
-{% endblock %}
-{% block footnotes %}
-<table>
-    <tfoot>
-        <section class="wb-fnote">
-            <h2 id="table1-fn" class="wb-inv">Table 1 Notes</h2>
-            <dl>
-                <dt>Table 1 Note 1</dt>
-                <dd id="table1-fn1">
-                    <p>{% trans "Enter the maximun value of the procurement considering all forms of remuneration over the entire duration of the contract, including the total value of any options." %}</p>
-                    <p class="fn-rtn"> <a href="#table1-fn1-rf"><span class="wb-inv">Return to table 1 note </span>1<span class="wb-inv"> referrer</span></a> </p>
-                </dd>
-                <dd id="table1-fn2">
-                    <p>{% trans "Select the name of the organization that is the ultimate purchaser." %}</p>
-                    <p class="fn-rtn"> <a href="#table1-fn2-rf"><span class="wb-inv">Return to table 1 note </span>2<span class="wb-inv"> referrer</span></a> </p>
-                </dd>
-                <dd id="table1-fn3">
-                    <p>{% trans "Construction service means a service that has as its objective the realization by whatever means of civil or building works, based on Division 51 of the United Nations Provisional Central Product Classification (CPC).  Goods or services means goods or services of a type generally sold or offered for sale in the commercial marketplace." %}</p>
-                    <p class="fn-rtn"> <a href="#table1-fn3-rf"><span class="wb-inv">Return to table 1 note </span>3<span class="wb-inv"> referrer</span></a> </p>
-                </dd>
-                <dd id="table1-fn4">
-                    <p>{% trans "Select the appropriate commodity code.  These codes are based on the GSIN and matched with relevant trade agreement codes, Federal Supply Classification (FSC) for goods, or the United Nations Provisional Central Product Classification (CPC) system or Common Classification System (CCS) for services." %}</p>
-                    <p class="fn-rtn"> <a href="#table1-fn4-rf"><span class="wb-inv">Return to table 1 note </span>4<span class="wb-inv"> referrer</span></a> </p>
-                </dd>
-            </dl>
-        </section>
-    </tfoot>
-</table>
-{% endblock %}
-{% block custom-jquery %}
-    <script src="{% static 'jquery.min.js' %}" type="text/javascript"></script>
-    <script src="{% static 'js/guide.js' %}" type="text/javascript"></script>
-{% endblock %}
+{% block main-content %}
+
+    {# --- Main title #}
+    {% block main-content-title %}
+    <main role="main" property="mainContentOfPage" class="container">
+        <h1 property="name" id="wb-cont" dir="ltr">Trade Agreement Coverage Tool: Results</h1>
+    
+        <div>
+            <div class="mwsgeneric-base-html parbase section">     
+            <p class="gc-byline"><strong>From: <a href="https://www.canada.ca/en/treasury-board-secretariat.html">Treasury Board of Canada Secretariat</a></strong></p>
+                <section>
+                    <div class="mrgn-tp-md mrgn-bttm-sm brdr-bttm">
+                        <div class="row  mrgn-bttm-sm">
+                            <ul class="toc lst-spcd col-md-12">
+                                <li class="col-md-4">
+                                    <a href="guide/en/0/" class="list-group-item {% if wizard.steps.step1 == 1 %} cust-active active {% endif %}">1. Mandatory elements</a>
+                                </li>
+                                <li class="col-md-4">
+                                    <a href="guide/en/1/" class="list-group-item {% if wizard.steps.step1 == 2 %} cust-active active {% endif %}">2. Exceptions</a>
+                                </li>
+                
+                                <li class="col-md-4">
+                                    <a href="guide/en/2/" class="list-group-item {% if wizard.steps.step1 == 3 %} cust-active active {% endif %}">3. Limited Tendering</a>
+                                </li>
+                
+                                <li class="col-md-4">
+                                    <a href="guide/en/3/" class="list-group-item {% if wizard.steps.step1 == 4 %} cust-active active {% endif %}">4. CFTA Exceptions</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+    {% endblock %}
+    {% block intro %}
+        <h3>{% trans "These trade agreements apply:"%}</h3>
+        {% for k1, v1 in bool.items %}
+            {% if v1 is True %}
+                {{ k1 }}
+            {% endif %}
+        {% endfor%}
+        <h3>{% trans "These trade agreements do not apply" %}</h3>
+        {% for k1, v1 in bool.items %}
+            {% if v1 is False %}
+                {{ k1 }}
+            {% endif %}
+        {% endfor%}
+        {% for k1, v1 in ta.items %}
+        <ul class="list-unstyled">
+            <li>
+                <details>
+                    <summary>
+                        {{ k1.upper }}
+                    </summary>
+                    <table class="wb-tables table">
+                        <thead>
+                            <th>{% trans "Form Field" %}</th>
+                            <th>{% trans "Result" %}</th>
+                        </thead>
+                        <tbody>
+                            {% for k2, v2 in v1.items %}
+                                <tr>
+                                    <td>{{ k2|title }}</td>
+                                    <td>{{ v2 }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </details>
+            </li>
+        </ul>   
+    {% endfor %} 
+        <div class="row mrgn-tp-md mrgn-bttm-lg">
+            <table class="wb-tables table">
+                <thead>
+                    <th>{% trans "Form Field" %}</th>
+                    <th>{% trans "User Input" %}</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{% trans "Estimated Value:" %}</td>
+                        <td>{{ estimated_value|intcomma }}</td>
+                    </tr>
+                    <tr>
+                        <td>{% trans "Entity:" %}</td>
+                        <td>{{ entities }}</td>
+                    </tr>
+                    <tr>
+                        <td>{% trans "Commodity Type:" %}</td>
+                        <td>{{ type }}</td>
+                    </tr>
+                    <tr>
+                        <td>{% trans "Commodity Code:" %}</td>
+                        <td>{{ code }}</td>
+                    </tr>
+                    <br>
+                    <tr>
+                        <td>{% trans "Limited Tendering Reasons:" %}</td>
+                        <td>
+                            {% for lt in limited_tendering %}
+                                <li>{{ lt }}</li>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <br>
+                    <tr>
+                        <td>{% trans "Exceptions:" %}</td>
+                        <td>
+                            {% for ex in exceptions %}
+                                <li>{{ ex }}</li>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <br>
+                    <tr>
+                        <td>{% trans "CFTA Exceptions:" %}</td>
+                        <td>
+                            {% for ce in cfta_exceptions %}
+                                <li> {{ ce }}</li>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div> 
+    {% endblock %}
+
+{% endblock main-content %}

@@ -13,53 +13,37 @@
 <p>Disclaimer:  This tool is currently in development and the results may not be accurate.</p>
 {% endblock %}
 {% block form %}
-<form action="" method="POST">
-    {% csrf_token %}
-    {{ wizard.management_form }}
-        {% for ffield in form %}
-            <div class="form-group" role="form">
-            {{ ffield.errors }}
-            <label for="{{ ffield.id_for_label }}" class="required">
-                {{ ffield.field.label }}	        
-                <strong class="required">
-                    ({% trans 'Required' %})
-                </strong>
-                <sup id="table1-fn{{ forloop.counter }}-rf"><a class="fn-lnk" href="#table1-fn{{ forloop.counter }}"><span class="wb-inv">table 1 note </span>{{ forloop.counter }}</a></sup>
-            </label>
-            {% if ffield.name == 'estimated_value' %}
-                {{ form.estimated_value }}
-            {% endif %}
-            {% if ffield.name == 'entities' %}
-                {{ form.entities }}
-            {% endif %}
-            {% if ffield.name == 'type' %}
-                <select class="form-control" id="type" name="type" url = "/guide/ajax/type/"></select>
-            {% endif %}
-            {% if ffield.name == 'code' %}
-                <select class="form-control" id="code" name="code" url = "/guide/ajax/code/">
-                    <option value='all' selected>Select Commodity Code</option>
-                </select>
-                <hr>
-            {% endif %}
-        </div>
-        <br>
-        {% endfor %}
-        {% block pagination %}
-            <div class="mwspagination section">
-                <nav class="mrgn-bttm-lg">
-                    <h3 class="wb-inv">Document navigation</h3>
-                    <ul class="pager">
-                        <div align="right">
-                            <li class="next">
-                                <input type="submit" class="btn btn-primary" rel="next" id="submit-form-button" value="{% trans "Next" %}"/>
-                                <span class="wb-inv">Go to next step.</span>
-                            </li>
-                        </div>
-                    </ul>
-                </nav>
-            </div>
-        {% endblock %}
-</form>
+    {% for ffield in form %}
+        <div class="form-group" role="form">
+        <label for="{{ ffield.id_for_label }}" class="required">
+            {{ ffield.field.label }}	        
+            <strong class="required">
+                ({% trans 'Required' %})
+            </strong>
+            <sup id="table1-fn{{ forloop.counter }}-rf"><a class="fn-lnk" href="#table1-fn{{ forloop.counter }}"><span class="wb-inv">table 1 note </span>{{ forloop.counter }}</a></sup>
+        </label>
+        {% if ffield.name == 'estimated_value' %}
+            {{ form.estimated_value.errors }}
+            {{ form.estimated_value }}
+        {% endif %}
+        {% if ffield.name == 'entities' %}
+            {{ form.entities.errors }}
+            {{ form.entities }}
+        {% endif %}
+        {% if ffield.name == 'type' %}
+            {{ form.type.errors }}
+            <select class="form-control" id="type" name="0-type" url = "/guide/ajax/type/"></select>
+        {% endif %}
+        {% if ffield.name == 'code' %}
+            {{ form.code.errors }}
+            <select class="form-control" id="code" name="0-code" url = "/guide/ajax/code/">
+                <option value='all' selected>Select Commodity Code</option>
+            </select>
+            <hr>
+        {% endif %}
+    </div>
+    <br>
+    {% endfor %}
 {% endblock %}
 {% block footnotes %}
 <table>
