@@ -40,17 +40,26 @@
         </div>
     </main>
     {% endblock %}
+    {{ forloop.counter }}
     {% block intro %}
-        <h3>{% trans "These trade agreements apply:"%}</h3>
+        <h3>{% trans "The following trade agreements apply:"%}</h3>
         {% for k1, v1 in bool.items %}
             {% if v1 is True %}
-                {{ k1 }}
-            {% endif %}
+                {% if forloop.counter == 1 %}
+                    <span>{{ k1.upper }}</span>
+                {% else %}
+                    <span>, {{ k1.upper }}</span>
+                {% endif %}
+            {% endif %}        
         {% endfor%}
-        <h3>{% trans "These trade agreements do not apply" %}</h3>
+        <h3>{% trans "The following trade agreements to not apply:" %}</h3>
         {% for k1, v1 in bool.items %}
             {% if v1 is False %}
-                {{ k1 }}
+                {% if forloop.counter == 1 %}
+                    <span>{{ k1.upper }}</span>
+                {% else %}
+                    <span>, {{ k1.upper }}</span>
+                {% endif %}
             {% endif %}
         {% endfor%}
         {% for k1, v1 in ta.items %}

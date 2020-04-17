@@ -112,20 +112,23 @@ class TradeForm(NamedUrlSessionWizardView):
         context_dict = code_rule(context_dict, 'code', 'type', 'entities')
 
         def exceptions_rule(context, col, model):
-            value = context[col]
-            try:
-                for ta in trade_agreements:
-                    for ex in value:
-                        check = model.objects.filter(name=ex).values_list(ta).get()[0]
+            if context[col]:
+                value = context[col]
+                try:
+                    for ta in trade_agreements:
+                        for ex in value:
+                            check = model.objects.filter(name=ex).values_list(ta).get()[0]
 
-                        if (context['ta'][ta][col] is False):
-                            pass
-                        elif (context['ta'][ta][col] is True) and (check is False):
-                            pass
-                        elif (context['ta'][ta][col] is True) and (check is True):
-                            context['ta'][ta][col] = False
-            except:
-                raise ValueError
+                            if (context['ta'][ta][col] is False):
+                                pass
+                            elif (context['ta'][ta][col] is True) and (check is False):
+                                pass
+                            elif (context['ta'][ta][col] is True) and (check is True):
+                                context['ta'][ta][col] = False
+                except:
+                    raise ValueError
+            else:
+                context[col]= ['None']
             return context
         context_dict = exceptions_rule(context_dict, 'exceptions', TAException)
         context_dict = exceptions_rule(context_dict, 'limited_tendering', TenderingReason)
