@@ -20,14 +20,3 @@ python .\manage.py migrate
 ```bash
 python manage.py createsuperuser
 ```
-
-### Load Data ###
-
-From the project root directory, and after activating the virtual environment, load the data from fixtures
-```
-python .\manage.py loaddata guide/fixtures/data.json
-
-To create fixture file:
-python .\manage.py dumpdata --output guide/fixtures/data.json
-```
-

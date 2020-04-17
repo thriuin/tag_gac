@@ -1,10 +1,10 @@
-Babel==2.8.0
-bleach==3.1.0
-colorama==0.4.3
 defusedxml==0.6.0
 diff-match-patch==20181111
-Django==2.2.8
 django-import-export==2.0.2
+Babel
+bleach==3.1.4
+colorama
+Django==2.2.10
 django-markdown-filter==0.0.1
 djangorestframework==3.11.0
 et-xmlfile==1.0.1
