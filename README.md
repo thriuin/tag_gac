@@ -22,11 +22,18 @@ python manage.py createsuperuser
 Create username and pasword.
 Login to the application at /admin/
 
-Populate the models with your trade agreement data.
+Populate the models with your trade agreement data.  There are 8 models.  
+First enter the commodity types (Goods, Services, Construction).  Then enter the commodity codes for those commodity types.  
+Enter the entities, these are the departments and agencies of the Government of Canada.
+
+Then the limited tendering reasons, trade agreement exceptions, and Canada Free Trade Agreement exceptions.
+
 
 ## Use ##
 The main page is /guide/en/0/ or guide/fr/0/
 
 Populate the first page with the mandatory information.  
+
+
 A proceed through the next three optional steps.
 Upon submitting the final form the user will be presented with guidance on trade agreement applicability.
