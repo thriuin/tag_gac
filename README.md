@@ -33,7 +33,7 @@ Then the limited tendering reasons, trade agreement exceptions, and Canada Free 
 The main page is /guide/en/0/ or guide/fr/0/
 
 Populate the first page with the mandatory information.  
-[mandatory_elements](me.png)
+![mandatory_elements](https://github.com/liverms/tag_gac/blob/master/me.PNG)
 
 A proceed through the next three optional steps.
 Upon submitting the final form the user will be presented with guidance on trade agreement applicability.
