@@ -36,4 +36,15 @@ Populate the first page with the mandatory information.
 ![mandatory_elements](https://github.com/liverms/tag_gac/blob/master/me.PNG)
 
 A proceed through the next three optional steps.
-Upon submitting the final form the user will be presented with guidance on trade agreement applicability.
+First general exceptions:
+![exceptions](https://github.com/liverms/tag_gac/blob/master/ex.PNG)
+
+Next are the limited tendering reasons:
+![limited_tendering](https://github.com/liverms/tag_gac/blob/master/lt.PNG)
+
+Next are the CFTA exceptions:
+![cfta_exceptions](https://github.com/liverms/tag_gac/blob/master/ce.PNG)
+
+The next screen is the final screen showing the results:
+![done](https://github.com/liverms/tag_gac/blob/master/done.PNG)
+
