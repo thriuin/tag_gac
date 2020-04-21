@@ -6,6 +6,10 @@ Create a virtual environment
 ```
 python3 -m venv /path/to/new/virtual/environment
 ```
+Install requirements:
+```
+pip install -r requirements.txt
+```
 ## Setup ##
 
 + Setting up the database
