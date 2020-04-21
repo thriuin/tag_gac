@@ -1,0 +1,29 @@
+{% extends "general_form.html" %}
+{% load i18n %}
+{% load static %}
+{% load humanize %}
+{% load markdown_filter %}
+
+{% block title %}
+<h1 property="name" id="wb-cont" dir="ltr">Trade Agreement Coverage Tool: Step 4. CFTA Exceptions</h1>
+{% endblock %}
+{% block form %}
+    {% for ffield in form %}
+    <div class="form-group" role="form">
+        {% if ffield.errors %}
+            {% for error in ffield.errors %}
+                {{ error }}
+            {% endfor %}
+        {% endif %}
+        <h2>Step 4. CFTA Exceptions</h2>
+        <p>{% trans "Select all exceptions, if any, which apply." %}</p>
+            {% for ce in form.cfta_exceptions %}
+                <div class="checkbox">
+                    {{ ce }}
+                </div>
+            {% endfor %}
+        <hr>
+    </div>
+    {% endfor %}
+{% endblock %}
+

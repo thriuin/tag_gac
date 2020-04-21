@@ -10,6 +10,29 @@
     {# --- Main title #}
     {% block main-content-title %}
         <h1 property="name" id="wb-cont">{% trans "Trade Agreement Guide" %}</h1>
+        <section>
+            <div class="mrgn-tp-md mrgn-bttm-sm brdr-bttm">
+                <div class="row  mrgn-bttm-sm">
+                    <ul class="toc lst-spcd col-md-12">
+                        <li class="col-md-4">
+                            <a href="/en/treasury-board-secretariat/services/government-communications/canada-content-information-architecture-specification/usage-canadaca-design.html" class="list-group-item">Who has to use this design system</a>
+                        </li>
+                        <li class="col-md-4">
+                            <a href="/en/treasury-board-secretariat/services/government-communications/canada-content-information-architecture-specification/mandatory-elements.html" class="list-group-item cust-active active">Mandatory elements</a>
+                        </li>
+        
+                        <li class="col-md-4">
+                            <a href="/en/treasury-board-secretariat/services/government-communications/canada-content-information-architecture-specification/organizing-content.html" class="list-group-item">Organizing content</a>
+                        </li>
+        
+                        <li class="col-md-4">
+                            <a href="/en/treasury-board-secretariat/services/government-communications/canada-content-information-architecture-specification/templates.html" class="list-group-item">Designing content</a>
+                        </li>
+        
+                    </ul>
+                </div>
+            </div>
+        </section>
         <section class="alert alert-info">
             <h2>Instructions</h2>
             <div>
@@ -39,10 +62,6 @@
                     <tr>
                         <td>{% trans "Commodity Type:" %}</td>
                         <td>{{ type }}</td>
-                    </tr>
-                    <tr>
-                        <td>{% trans "Commodity Code System:" %}</td>
-                        <td>{{ code_system }}</td>
                     </tr>
                     <tr>
                         <td>{% trans "Commodity Code:" %}</td>
@@ -78,12 +97,14 @@
                 </tbody>
             </table>
         </div>
-        {% for key_parent, val_parent in rules.items %}
+    <h3>These trade agreements apply.</h3>
+    {% for k, v in ta.items %}
+        {% if v.applies is True %}
             <ul class="list-unstyled">
                 <li>
                     <details>
                         <summary>
-                            {{ key_parent.upper }}
+                            {{ k.upper }}
                         </summary>
                         <table class="wb-tables table">
                             <thead>
@@ -91,10 +112,10 @@
                                 <th>{% trans "Result" %}</th>
                             </thead>
                             <tbody>
-                                {% for key2, val2 in val_parent.items %}
+                                {% for k2, v2 in v.items %}
                                     <tr>
-                                        <td>{{ key2|title }}</td>
-                                        <td>{{ val2 }}</td>
+                                        <td>{{ k2|title }}</td>
+                                        <td>{{ v2|yesno:"TA applies, TA does not apply, maybe" }}</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -102,7 +123,40 @@
                     </details>
                 </li>
             </ul>   
-        {% endfor %}
+        {% else %}
+
+        {% endif %}
+    {% endfor %}
+    <h3>These trade agreements do not apply.</h3>
+    {% for k, v in ta.items %}
+        {% if v.applies is False %}
+            <ul class="list-unstyled">
+                <li>
+                    <details>
+                        <summary>
+                            {{ k.upper }}
+                        </summary>
+                        <table class="wb-tables table">
+                            <thead>
+                                <th>{% trans "Form Field" %}</th>
+                                <th>{% trans "Result" %}</th>
+                            </thead>
+                            <tbody>
+                                {% for k2, v2 in v.items %}
+                                    <tr>
+                                        <td>{{ k2|title }}</td>
+                                        <td>{{ v2|yesno:"TA applies, TA does not apply, maybe" }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </details>
+                </li>
+            </ul>   
+        {% else %}
+
+        {% endif %}
+    {% endfor%}
     {% else %}
     <div class="row mrgn-tp-md mrgn-bttm-md">
         <div class="col-md-12">
@@ -135,11 +189,6 @@
                             {% if ffield.name == 'type' %}
                                 <select class="form-control" id="type" name="type" url = "/guide/ajax/type/"></select>
                             {% endif %}
-                            {% if ffield.name == 'code_system' %}
-                                <select class="form-control" id="code_system" name="code_system" url = "/guide/ajax/code_system/">
-                                    <option value='all' selected>Select Code System</option>
-                                </select>
-                            {% endif %}
                             {% if ffield.name == 'code' %}
                                 <select class="form-control" id="code" name="code" url = "/guide/ajax/code/">
                                     <option value='all' selected>Select Commodity Code</option>
@@ -147,30 +196,30 @@
                                 <hr>
                             {% endif %}
                             {% if ffield.name == 'exceptions' %}
-                                <div class="checkbox">
+                                <p>{% trans "Select all exceptions, if any, which apply." %}</p>
                                     {% for ex in form.exceptions %}
-                                        <label for={{ ffield.id_for_label }}>
+                                        <div class="checkbox">
                                             {{ ex }}
-                                        </label>
+                                        </div>
                                     {% endfor %}
                                 <hr>
                             {% endif %}
                             {% if ffield.name == 'limited_tendering' %}
-                                <div class='form-group'>
+                                <p>{% trans "Select all reasons, if any, which permit limited tendering." %}</p>
                                     {% for lt in form.limited_tendering %}
-                                        <div class="checkbox">
+                                        <div class='checkbox'>
                                             {{ lt }}
                                         </div>
                                     {% endfor %}
-                                </div>
                                 <hr>
                             {% endif %}
                             {% if ffield.name == 'cfta_exceptions' %}
-                                {% for ce in form.cfta_exceptions %}
-                                    <div class="checkbox">
-                                        {{ ce }}
-                                    </div>
-                                {% endfor %}
+                                <p>{% trans "Select all exceptions, if any, to the Canadian Free Trade Agreement which apply." %}</p>
+                                    {% for ce in form.cfta_exceptions %}
+                                        <div class="checkbox">
+                                            {{ ce }}
+                                        </div>
+                                    {% endfor %}
                             {% endif %}
                         </div>
                         {% endfor %}
@@ -182,23 +231,23 @@
                                     <dl>
                                         <dt>Table 1 Note 1</dt>
 						                <dd id="table1-fn1">
-                                            <p>"There is a footnote"</p>
+                                            <p>{% trans "Enter the maximun value of the procurement considering all forms of remuneration over the entire duration of the contract, including the total value of any options." %}</p>
                                             <p class="fn-rtn"> <a href="#table1-fn1-rf"><span class="wb-inv">Return to table 1 note </span>1<span class="wb-inv"> referrer</span></a> </p>
                                         </dd>
                                         <dd id="table1-fn2">
-                                            <p>"There is a footnote2"</p>
+                                            <p>{% trans "Select the name of the organization that is the ultimate purchaser." %}</p>
                                             <p class="fn-rtn"> <a href="#table1-fn2-rf"><span class="wb-inv">Return to table 1 note </span>2<span class="wb-inv"> referrer</span></a> </p>
                                         </dd>
                                         <dd id="table1-fn3">
-                                            <p>"There is a footnote3"</p>
+                                            <p>{% trans "Construction service means a service that has as its objective the realization by whatever means of civil or building works, based on Division 51 of the United Nations Provisional Central Product Classification (CPC).  Goods or services means goods or services of a type generally sold or offered for sale in the commercial marketplace." %}</p>
                                             <p class="fn-rtn"> <a href="#table1-fn3-rf"><span class="wb-inv">Return to table 1 note </span>3<span class="wb-inv"> referrer</span></a> </p>
                                         </dd>
                                         <dd id="table1-fn4">
-                                            <p>"There is a footnote4"</p>
+                                            <p> {% trans "Select the commodity coding system.  Currently only option is GSIN." %}</p>
                                             <p class="fn-rtn"> <a href="#table1-fn4-rf"><span class="wb-inv">Return to table 1 note </span>4<span class="wb-inv"> referrer</span></a> </p>
                                         </dd>
                                         <dd id="table1-fn5">
-                                            <p>"There is a footnote5"</p>
+                                            <p>{% trans "Select the appropriate commodity code.  These codes are based on the GSIN and matched with relevant trade agreement codes, Federal Supply Classification (FSC) for goods, or the United Nations Provisional Central Product Classification (CPC) system or Common Classification System (CCS) for services." %}</p>
                                             <p class="fn-rtn"> <a href="#table1-fn5-rf"><span class="wb-inv">Return to table 1 note </span>5<span class="wb-inv"> referrer</span></a> </p>
                                         </dd>
                                     </dl>
