@@ -6,27 +6,27 @@ from guide.models import Entities, Code, TAException, TenderingReason, CftaExcep
 class MandatoryElementsEN(forms.Form):
 
     estimated_value = forms.IntegerField(
-        label=_('Estimated Value'),
+        label=_('What is the total estimated Value of the procurement?'),
         required=True
     )
     estimated_value.widget.attrs['class'] = 'form-control'
 
     entities = forms.ModelChoiceField(
         Entities.objects.filter(lang='EN').only('name'),
-        label=_('Organization'),
+        label=_('Who is the procuring entity?'),
         required=True
     )
     entities.widget.attrs['class'] = 'form-control'
 
     type = forms.CharField(
-        label=_('Commodity Type'),
+        label=_('What is the procurement commodity type?'),
         required=True,
         widget = forms.Select()
     )
     type.widget.attrs['class'] = 'form-control'
     code = forms.CharField(
         widget = forms.Select(),
-        label=_('Commodity Code'),
+        label=_('What is the trade agreement commodity code most closely associated with the procurement?'),
         required=True
     )
     code.widget.attrs['class'] = 'form-control'

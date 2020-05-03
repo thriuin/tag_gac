@@ -5,18 +5,14 @@ from formtools.wizard.views import NamedUrlSessionWizardView
 from django.http import JsonResponse
 
 FORMS = [("0", MandatoryElementsEN),
-         ("1", ExceptionsEN),
-         ("2", LimitedTenderingEN),
-         ("3", CftaExceptionsEN)]
+         ("1", ExceptionsEN)]
 
 TEMPLATES = {"0": "mandatory_elements.html",
-             "1": "exceptions.html",
-             "2": "limited_tendering.html",
-             "3": "cfta_exceptions.html"}
+             "1": "exceptions.html"}
 
 
 class TradeForm(NamedUrlSessionWizardView):
-    form_list = [MandatoryElementsEN, ExceptionsEN, LimitedTenderingEN, CftaExceptionsEN]
+    form_list = [MandatoryElementsEN, ExceptionsEN]
     url_name = 'guide:form_step'
     done_step_name = 'guide:done_step'
 
@@ -26,7 +22,7 @@ class TradeForm(NamedUrlSessionWizardView):
 
     def done(self, form_list, form_dict, **kwargs):
         trade_agreements = {
-            'nafta_annex': {}, 
+            'nafta': {}, 
             'ccfta': {}, 
             'ccofta': {}, 
             'chfta': {}, 
@@ -131,8 +127,6 @@ class TradeForm(NamedUrlSessionWizardView):
                 context[col]= ['None']
             return context
         context_dict = exceptions_rule(context_dict, 'exceptions', TAException)
-        context_dict = exceptions_rule(context_dict, 'limited_tendering', TenderingReason)
-        context_dict = exceptions_rule(context_dict, 'cfta_exceptions', CftaException)
 
         context_dict['bool'] = {}
         for ta in trade_agreements:

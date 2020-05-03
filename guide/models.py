@@ -26,7 +26,7 @@ class BooleanTradeAgreement(Language):
     This contains a boolean for each trade agreement
     """
     id = models.AutoField(primary_key=True)
-    nafta_annex = models.BooleanField(
+    nafta = models.BooleanField(
         default=False,
         verbose_name="NAFTA Annex 1001.1b-1",
         blank=False
@@ -96,7 +96,7 @@ class NumericTradeAgreements(models.Model):
     This gives every trade agreement a number field to use for value thresholds
     """
     id = models.AutoField(primary_key=True)
-    nafta_annex = models.IntegerField(
+    nafta = models.IntegerField(
         default=0,
         verbose_name="NAFTA Annex 1001.1b-1",
         blank=False

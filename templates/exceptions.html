@@ -5,7 +5,7 @@
 {% load markdown_filter %}
 
 {% block title %}
-<h1 property="name" id="wb-cont" dir="ltr">Trade Agreement Coverage Tool: Step 2. Exceptions</h1>
+<h1 property="name" id="wb-cont" dir="ltr">Trade Agreement Determination Tool</h1>
 {% endblock %}
 {% block form %}
     {% for ffield in form %}
@@ -15,14 +15,16 @@
                 {{ error }}
             {% endfor %}
         {% endif %}
-        <h2>Step 2. Exceptions</h2>      
-        <p>{% trans "Select all exceptions, if any, which apply." %}</p>
+        <h2>Step 2. Trade Agreement Exceptions and Exclusions</h2>      
+        <p>{% trans "Instructions: Select the trade agreement exceptions/exclusions apply, if any, to the procurement by reviewing and selecting from the list." %}</p>
+        <p>{% trans "Note: If an exception/exclusion only applies to part of a procurement, it should not be selected." %}</p>
+        <p>{% trans "Please note that some of the exceptions/exclusions listed below only apply to some of Canada's trade agreements.  The tool will automatically determine whether a trade agreement contains the specific trade agreement exception or exclusion in the final result.  For more information on which exceptions or exclusions are included in Canada's trade agreements, refer to the footnotes." %}</p> 
             {% for ex in form.exceptions %}
                 <div class="checkbox">
                     <span>
                         {{ ex }}	
                     </span> 
-                    <sup id="table1-fn{{ forloop.counter }}-rf"><a class="fn-lnk" href="#table1-fn{{ forloop.counter }}"><span class="wb-inv">table 1 note </span>{{ forloop.counter }}</a></sup>
+                    <sup id="table1-fn{% cycle 1 2 3 5 6 7 8 9 10 11 12 13 14 15 %}-rf"><a class="fn-lnk" href="#table1-fn{% cycle 1 2 3 5 6 7 8 9 10 11 12 13 14 15 %}"><span class="wb-inv">table 1 note </span>{% cycle 1 2 3 5 6 7 8 9 10 11 12 13 14 15 %}</a></sup>
                 </div>
             {% endfor %}
         <hr>
@@ -30,77 +32,77 @@
     {% endfor %}
 {% endblock %}
 {% block footnotes %}
+<h3>{% trans "Important Caveat:" %}</h3>
+<p>{% trans "The following trade agreement exceptions/exclusions have not been factored into this tool.  Procurement officers will need to consult the text of Canada's trade agreements on the application of trade agreement coverage for these procurements:" %}</p>
+<ul>
+    <li>{% trans "Procurement of goods or services from non-for-profit institutions." %}</li>
+    <li>{% trans "Procurement related to an international crossing between Canada and another country." %}</li>
+    <li>{% trans "Procurement related to space projects for the Canadian Space Agency." %}</li>
+    <li>{% trans "Procurement of satellite communications, earth observations and global navigation systems for the Canadian Space Agency." %}</li>
+</ul>
 <table>
     <tfoot>
         <section class="wb-fnote">
             <h2 id="table1-fn" class="wb-inv">Table 1 Notes</h2>
+            <h3>{% trans "Footnotes" %}</h3>
             <dl>
                 <dt>Table 1 Note 1</dt>
                 <dd id="table1-fn1">
-                    <p>{% trans "Does not apply to CFTA." %}</p> 
+                    <p>{% trans "Shipbuilding and repair applies to all agreements except CFTA." %}</p> 
                     <p class="fn-rtn"> <a href="#table1-fn1-rf"><span class="wb-inv">Return to table 1 note </span>1<span class="wb-inv"> referrer</span></a> </p>
                 </dd>
                 <dd id="table1-fn2">
-                    <p>{% trans "Applies to all agreements." %}</p>
+                    <p>{% trans "Urban rail and urban transportation equipment systems, components and materials applies to all agreements except CFTA, CETA, and CPTPP." %}</p>
                     <p class="fn-rtn"> <a href="#table1-fn2-rf"><span class="wb-inv">Return to table 1 note </span>2<span class="wb-inv"> referrer</span></a> </p>
                 </dd>
                 <dd id="table1-fn3">
-                    <p>{% trans "Does not apply to CFTA." %}</p>
+                    <p>{% trans "Contracts respected Federal Supply Classification (FSC) 58 communications, detection and coherent radiation equipment applies to all agreements except CFTA, CETA, and CPTPP." %}</p>
                     <p class="fn-rtn"> <a href="#table1-fn3-rf"><span class="wb-inv">Return to table 1 note </span>3<span class="wb-inv"> referrer</span></a> </p>
                 </dd>
-                <dd id="table1-fn4">
-                    <p>{% trans "Does not apply to CETA." %}</p>
-                    <p class="fn-rtn"> <a href="#table1-fn4-rf"><span class="wb-inv">Return to table 1 note </span>4<span class="wb-inv"> referrer</span></a> </p>
-                </dd>
                 <dd id="table1-fn5">
-                    <p>{% trans "Does not apply to CFTA." %}</p>
+                    <p>{% trans "Agricultural products made in furtherance of agricultural support programs or human feeding programs applies to all agreements except CFTA." %}</p>
                     <p class="fn-rtn"> <a href="#table1-fn5-rf"><span class="wb-inv">Return to table 1 note </span>5<span class="wb-inv"> referrer</span></a> </p>
                 </dd>
                 <dd id="table1-fn6">
-                    <p>{% trans "Does not apply to CFTA, CUFTA, CKFTA, WTO-AGP, CETA, and CPTPP." %}</p>
+                    <p>{% trans "The Depts. of Transport, Communications, and Fisheries and Oceans respecting FSC 70, 74, 36 applies to all agreements except CFTA, CUFTA, CKFTA, WTO-AGP, CETA, and CPTPP." %}</p>
                     <p class="fn-rtn"> <a href="#table1-fn6-rf"><span class="wb-inv">Return to table 1 note </span>6<span class="wb-inv"> referrer</span></a> </p>
                 </dd>
                 <dd id="table1-fn7">
-                    <p>{% trans "Does not apply to CFTA, CUFTA, CKFTA, WTO-AGP, CETA, and CPTPP." %}</p>
+                    <p>{% trans "Any measures for Indigenous peoples and businesses, including set asides for Indigenous businesses (applies to all agreements)" %}</p>
                     <p class="fn-rtn"> <a href="#table1-fn7-rf"><span class="wb-inv">Return to table 1 note </span>7<span class="wb-inv"> referrer</span></a> </p>
                 </dd>
                 <dd id="table1-fn8">
-                    <p>{% trans "Applies to all agreements" %}</p>
+                    <p>{% trans "Set-asides for small businesses, other than Indigenous businesses (applies to all agreements except CETA)." %}</p>
                     <p class="fn-rtn"> <a href="#table1-fn8-rf"><span class="wb-inv">Return to table 1 note </span>8<span class="wb-inv"> referrer</span></a> </p>
                 </dd>
                 <dd id="table1-fn9">
-                    <p>{% trans "Applies to all agreements" %}</p>
+                    <p>{% trans "Measures necessary to protect public morals, order or safety (applies to all agreements)." %}</p>
                     <p class="fn-rtn"> <a href="#table1-fn9-rf"><span class="wb-inv">Return to table 1 note </span>9<span class="wb-inv"> referrer</span></a> </p>
                 </dd>
                 <dd id="table1-fn10">
-                    <p>{% trans "Applies to all agreements" %}</p>
+                    <p>{% trans "Measures necessary to protect human, animal or plant life or health (applies to all agreements)." %}</p>
                     <p class="fn-rtn"> <a href="#table1-fn10-rf"><span class="wb-inv">Return to table 1 note </span>10<span class="wb-inv"> referrer</span></a> </p>
                 </dd>
                 <dd id="table1-fn11">
-                    <p>{% trans "Applies to all agreements" %}</p>
+                    <p>{% trans "Measures necessary to protect intellectual property (applies to all agreements)." %}</p>
                     <p class="fn-rtn"> <a href="#table1-fn11-rf"><span class="wb-inv">Return to table 1 note </span>11<span class="wb-inv"> referrer</span></a> </p>
                 </dd>
                 <dd id="table1-fn12">
-                    <p>{% trans "Applies to all agreements" %}</p>
+                    <p>{% trans "Measures relating to goods or services of persons with disabilities, philanthropic institutions or prison labour (applies to all agreements)." %}</p>
                     <p class="fn-rtn"> <a href="#table1-fn12-rf"><span class="wb-inv">Return to table 1 note </span>12<span class="wb-inv"> referrer</span></a> </p>
                 </dd>
                 <dd id="table1-fn13">
-                    <p>{% trans "Does not apply to CETA and CPTPP." %}</p>
+                    <p>{% trans "Services procured in support of military forces located overseas (applies to all agreements)." %}</p>
                     <p class="fn-rtn"> <a href="#table1-fn13-rf"><span class="wb-inv">Return to table 1 note </span>13<span class="wb-inv"> referrer</span></a> </p>
                 </dd>
                 <dd id="table1-fn14">
-                    <p>{% trans "Does not apply to NAFTA, CCFTA, CCoFTA, CHFTA, CPaFTA and CPFTA." %}</p>
+                    <p>{% trans "Research and development services (applies to all agreements except CFTA)." %}</p>
                     <p class="fn-rtn"> <a href="#table1-fn14-rf"><span class="wb-inv">Return to table 1 note </span>14<span class="wb-inv"> referrer</span></a> </p>
                 </dd>
                 <dd id="table1-fn15">
-                    <p>{% trans "Only applies to CFTA." %}</p>
+                    <p>{% trans "National Security Exception (applies to all trade agreements)." %}</p>
                     <p class="fn-rtn"> <a href="#table1-fn15-rf"><span class="wb-inv">Return to table 1 note </span>15<span class="wb-inv"> referrer</span></a> </p>
                 </dd>
-                <dd id="table1-fn16">
-                    <p>{% trans "Only applies to CETA" %}</p>
-                    <p class="fn-rtn"> <a href="#table1-fn16-rf"><span class="wb-inv">Return to table 1 note </span>16<span class="wb-inv"> referrer</span></a> </p>
-                </dd>
-
             </dl>
         </section>
     </tfoot>

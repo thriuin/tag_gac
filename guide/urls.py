@@ -6,9 +6,7 @@ from guide.forms import MandatoryElementsEN, ExceptionsEN, LimitedTenderingEN, C
 
 named_forms = (
     ('0', MandatoryElementsEN),
-    ('1', ExceptionsEN),
-    ('2', LimitedTenderingEN),
-    ('3', CftaExceptionsEN)
+    ('1', ExceptionsEN)
 )
 trade_wizard = TradeForm.as_view(named_forms, url_name='guide:form_step', done_step_name='guide:done_step')
 
