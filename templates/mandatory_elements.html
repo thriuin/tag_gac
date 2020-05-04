@@ -11,7 +11,7 @@
 <p>This tool is developed as a reference tool to help users determine which trade agreements would likely apply to a government procurement based on input of basic procurement information relevant to determine trade agreement coverage.  This tool is designed for procurement officers, or users who are generally familiar with the Government of Canada's government procurement tendering obligations under Canada's domestic and international trade agreements and it is expected that users would have this knowledge when using this tool.</p>
 <p><b>Important: </b>The results provided by this tool is a suggestion only.  It is still the responsibility of the procurement officer to identify actual trade agreement coverage based on the full considerations of the procurement including exceptions and exclusions that would apply to the entire procurement.</p>
 <h2>Step 1. Mandatory Elements</h2>
-<p>Determine which of Canada's trade agreements apply to your procurement by responding to the following questions and clicking the submit button below.  Refer to the instructions section of this website for more information on completing each of the questions.</p>
+<p>Determine which of Canada's trade agreements apply to your procurement by responding to the following questions and clicking the next button below.  Refer to the instructions section of this website for more information on completing each of the questions.</p>
 {% endblock %}
 {% block form %}
     {% for ffield in form %}
@@ -59,12 +59,12 @@
                     <p class="fn-rtn"> <a href="#table1-fn1-rf"><span class="wb-inv">Return to table 1 note </span>1<span class="wb-inv"> referrer</span></a> </p>
                 </dd>
                 <dd id="table1-fn2">
-                    <p>{% trans "Select the name of the federal department or departmental agency that is the procuring entity.  Note: This tool cannot be used for procurements on behalf of federal Crown Corporations or other procuring entities not listed in Schedules I, I.1 or II of the Financial Administration Act." %}</p>
+                    <p>{% trans "Select the name of the federal department or departmental agency that is the procuring entity.  Note: This tool cannot be used for procurements on behalf of federal Crown Corporations or other procuring entities not listed in Schedules I, I.1 or II of the "%}<i>{% trans "Financial Administration Act." %}</i></p>
                     <p class="fn-rtn"> <a href="#table1-fn2-rf"><span class="wb-inv">Return to table 1 note </span>2<span class="wb-inv"> referrer</span></a> </p>
                 </dd>
                 <dd id="table1-fn3">
                     <p>{% trans "Select the commodity type.  If a procurement includes more than one commodity type (e.g. a combination of goods and services procurement), select the one that makes up the largest portion of the estimated contract value." %}</p>
-                    <p>{% trans "Construction service means a service that has as its objective the realization by whatever means of civil or building works, based on Division 51 of the United Nations Provisional Central Product Classification (CPC).  Goods or services means goods or services of a type generally sold or offered for sale in the commercial marketplace." %}</p>
+                    <p>{% trans "Goods or services means goods or services of a type generally sold or offered for sale in the commercial marketplace.  Construction service means a service that has as its objective the realization by whatever means of civil or building works, based on Division 51 of the United Nations Provisional Central Product Classification (CPC)." %}</p>
                     <p class="fn-rtn"> <a href="#table1-fn3-rf"><span class="wb-inv">Return to table 1 note </span>3<span class="wb-inv"> referrer</span></a> </p>
                 </dd>
                 <dd id="table1-fn4">

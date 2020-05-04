@@ -6,7 +6,7 @@ from guide.models import Entities, Code, TAException, TenderingReason, CftaExcep
 class MandatoryElementsEN(forms.Form):
 
     estimated_value = forms.IntegerField(
-        label=_('What is the total estimated Value of the procurement?'),
+        label=_('What is the total estimated value of the procurement?'),
         required=True
     )
     estimated_value.widget.attrs['class'] = 'form-control'

@@ -20,6 +20,7 @@
     {% endblock %}
     {% block intro %}
         <h3>{% trans "Based on the information that was provided (e.g. Total Estimated Value, Procuring Entity, Commodity Type and Commodity Code).  It is suggested that the following trade agreements will likely apply:"%}</h3>
+        <br>
         {% if True not in bool.values %}
             <span>None</span>
         {% else %}
@@ -30,9 +31,46 @@
                 {% endif %}        
             {% endfor%}
         {% endif %}
+        <br>
+        <hr>
         <p>{% trans "Important: The results provided is a suggestion only.  It is still the responsibility of the procurement officer to identify actual trade agreement coverage based on the full considerations of the procurement including exceptions and exclusions that would apply to the entire procurement." %}</p>
         <p><i>{% trans "Note: If there are any discrepancies between the suggestion(s) and the text of the trade agreement(s), the text of the trade agreement(s) take precedence." %}</i></p>
         <hr>
+        <h3>{% trans "Abbreviation Reference:" %}</h3>
+            <ul>
+                <li>{% trans "NAFTA: North American Free Trade Agreement" %}</li>
+                <li>{% trans "WTO-AGP: World Trade Organization - Agreement on Government Procurement" %}</li>
+                <li>{% trans "CCFTA: Canada-Chile Free Trade Agreement" %}</li>
+                <li>{% trans "CPFTA: Canada-Peru Free Trade Agreement" %}</li>
+                <li>{% trans "CCOFTA: Canada-Colombia Free Trade Agreement" %}</li>
+                <li>{% trans "CPAFTA: Canada-Panama Free Trade Agreement" %}</li>
+                <li>{% trans "CHFTA: Canada-Honduras Free Trade Agreement" %}</li>
+                <li>{% trans "CKFTA: Canada-Korea Free Trade Agreement" %}</li>
+                <li>{% trans "CFTA: Canadian Free Trade Agreement" %}</li>
+                <li>{% trans "CETA: Comprehensive Economic Trade Agreement" %}</li>
+                <li>{% trans "CPTPP: Comprehensive and Progressive Agreement for Trans-Pacific Partnership" %}</li>
+                <li>{% trans "CUFTA: Canada-Ukraine Free Trade Agreement" %}</li>
+            </ul>
+            <hr>
+            <h3>{% trans "Limited Tendering" %}</h3>
+            <p>{% trans "If a procurement is considered as covered by the applicable trade agreements, procurement officers must follow the open or selective tendering procurement obligations prescribed by the applicable trade agreements.  If there are any deviations from the tendering obligations of the applicable trade agreements, procurement officers must consider the following applicable limited tendering rationale in order to determine whether a limited tendering approach can be used." %}</p>
+            <ul>
+                <li>{% trans "No response to bid solicitation (rationale applies to all trade agreements)" %}</li>
+                <li>{% trans "Goods purchased on a commodity market (rationale applies to all trade agreements)" %}</li>
+                <li>{% trans "Purchases made under exceptionally advantageous conditions (rationale applies to all trade agreements)" %}</li>
+                <li>{% trans "Winner of an architectural design context (rationale applies to all trade agreements)" %}</li>
+                <li>{% trans "Exclusive rights (rationale applies to all trade agreements)" %}</li>
+                <li>{% trans "Prototype purchase (rationale applies to all trade agreements)" %}</li>
+                <li>{% trans "Additional deliveries (formerly Interchangeable Parts)(Rationale applies to all trade agreements)" %}</li>
+                <li>{% trans "Extreme urgency (rationale applies to all trade agreements)" %}</li>
+                <li>{% trans "Consulting services regarding matters of a confidential nature (rationale only applies to contracts not covered by CETA, CFTA, WTO-AGP, CPTPP, CKFTA, and CUFTA)" %}</li>
+                <li>{% trans "Work on a property by a contractor according to a warranty or guarantee (rationale only applies to contracts that are only covered by the CFTA)" %}</li>
+                <li>{% trans "Work on a leased building or related property performed only by the lessor (rationale only applies to contracts that are only covered by the CFTA)" %}</li>
+                <li>{% trans "Subscription to newspapers, magazines, or other periodicals (rationale only applies to contracts that are only covered by the CFTA)" %}</li>
+            </ul>
+            <br>
+            <p>{% trans "In order to proceed with a limited tendering procurement strategy, a valid limited tendering reason must exist in each applicable trade agreement.  The applicable limited tendering rationale used to justify the procurement strategy must be documented on the procurement file." %}</p>
+            <hr>
             <div class="row mrgn-tp-md mrgn-bttm-lg">
                 <table>
                     <h2>{% trans "Summary" %}</h2>
@@ -69,6 +107,7 @@
                     </tbody>
                 </table>
             </div> 
+        <hr>
         <h2>{% trans "Details" %}</h2>
         {% for k1, v1 in ta.items %}
             <ul class="list-unstyled">
