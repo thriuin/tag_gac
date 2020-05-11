@@ -6,11 +6,22 @@ from django.http import JsonResponse
 
 FORMS = [("0", MandatoryElementsEN),
          ("1", ExceptionsEN),
-         ("2", CftaExceptionsEN)]
+         ("2", CftaExceptionsEN),
+         ("3", LimitedTenderingEN)]
 
 TEMPLATES = {"0": "mandatory_elements.html",
              "1": "exceptions.html",
-             "2": "cfta_exceptions.html"}
+             "2": "cfta_exceptions.html",
+             "3": "limited_tendering.html"}
+
+agreements = [
+    'nafta', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 
+    'ckfta', 'cufta', 'wto_agp', 'ceta', 'cptpp', 'cfta'
+]
+
+url_name='guide:form_step'
+done_step_name='guide:done_step'
+
 
 def entities_rule(context, org_name):
     """Checks which trade agreements apply to the selected entity
@@ -68,7 +79,7 @@ def value_threshold_rule(context, value_name, type_name):
     return context
 
 def code_rule(context, code_name, type_name, org_name):
-    """[summary]
+    """Checks if the code selected by the user is covered by each trade agreement.
 
     Arguments:
         context {dictionary} -- Context tracks user input and analysis
@@ -151,6 +162,47 @@ def exceptions_rule(context, exception_name, model):
         context[exception_name]= ['None']
     return context
 
+"""
+def show_message_form_condition(wizard):
+    # try to get the cleaned data of step 1
+    cleaned_data = wizard.get_cleaned_data_for_step('0') or {}
+    # check if the field ``leave_message`` was checked.
+    return cleaned_data.get('leave_message', True)
+"""
+def lt_condition(wizard):
+    form_list = [f[0] for f in FORMS[:3]]
+    context_dict = {}
+    trade_agreements = {ta:{} for ta in agreements}
+
+    for form in form_list:
+        val = wizard.get_cleaned_data_for_step(form)
+        if not val:
+            return False
+        else:
+            for k, v, in val.items():
+                context_dict[k] = v
+                for k2 in trade_agreements.keys():
+                    trade_agreements[k2][k] = True
+    context_dict['ta'] = trade_agreements
+
+    context_dict = value_threshold_rule(context_dict, 'estimated_value', 'type')
+    context_dict = entities_rule(context_dict, 'entities')
+    context_dict = code_rule(context_dict, 'code', 'type', 'entities')
+    context_dict = exceptions_rule(context_dict, 'exceptions', TAException)
+    context_dict = exceptions_rule(context_dict, 'cfta_exceptions', CftaException)
+
+    context_dict['bool'] = {}
+    for ta in trade_agreements:
+        context_dict['bool'][ta] = True
+        for k, v in context_dict['ta'][ta].items():
+                if v is False:
+                    context_dict['bool'][ta] = False
+    
+    if True in context_dict['bool']:
+        return True
+    else:
+        return False
+
 class TradeForm(NamedUrlSessionWizardView):
     """
     This form wizard goes through each each form and template.
@@ -160,27 +212,28 @@ class TradeForm(NamedUrlSessionWizardView):
     Forms
         MandatoryElementsEN
             Uses these models
-                :model:`guide.ValueThreshold`,
-                :model:'guide.Entities',
-                :model:'guide.Code'
+                :model:`guide.ValueThreshold`
+                :model:`guide.Entities`
+                :model:`guide.Code`
             Uses this template
                 :template:'guide.mandatory_elements.html'
         
         ExceptionsEN
             Uses these models
-                :model:'guide.TAExceptions'
+                :model:`guide.TAExceptions`
             Uses this template
-                :model:'guide.exceptions.html'
+                :model:`guide.exceptions.html`
         
         CftaExceptionsEN
             Uses these models:
-                :model:'guide.CftaExceptions'
+                :model:`guide.CftaExceptions`
             Uses this template:
-                :model:'guide.cfta_exceptions.html'
+                :model:`guide.cfta_exceptions.html`
     """
-    form_list = [MandatoryElementsEN, ExceptionsEN, CftaExceptionsEN]
-    url_name = 'guide:form_step'
-    done_step_name = 'guide:done_step'
+
+    form_list = [f[1] for f in FORMS]
+    url_name=url_name
+    done_step_name=done_step_name
 
     def get_template_names(self):
         """Takes the dictionary of template names defined above and returns them for the current step
@@ -201,22 +254,9 @@ class TradeForm(NamedUrlSessionWizardView):
         Returns:
             [html] -- Renders done.html with the context that will display the
         """
-        trade_agreements = {
-            'nafta': {}, 
-            'ccfta': {}, 
-            'ccofta': {}, 
-            'chfta': {}, 
-            'cpafta': {}, 
-            'cpfta': {}, 
-            'ckfta': {}, 
-            'cufta': {}, 
-            'wto_agp': {}, 
-            'ceta': {}, 
-            'cptpp': {}, 
-            'cfta': {}
-            }
-
         context_dict = {}
+        trade_agreements = {ta:{} for ta in agreements}
+
         for form in form_list:
             for k, v in form.cleaned_data.items():
                 context_dict[k] = v
@@ -236,11 +276,10 @@ class TradeForm(NamedUrlSessionWizardView):
             for k, v in context_dict['ta'][ta].items():
                  if v is False:
                      context_dict['bool'][ta] = False
-        print(context_dict)
         return render(self.request, 'done.html', context_dict)
 
 
-def getType(request):
+def ajax_type(request):
     """
     This view is triggered by changing Commodity Type in the MandatoryElementsEn form.
     get all the types from the database
@@ -249,9 +288,9 @@ def getType(request):
     **Context**
 
     Uses this model
-        :model:'guide.Code'
+        :model:`guide.Code`
     Uses this template
-        :template:'guide.mandatory_elements.html'
+        :template:`guide.mandatory_elements.html`
     """
     if request.method == "GET" and request.is_ajax():
         type = Code.objects.\
@@ -267,7 +306,7 @@ def getType(request):
         return JsonResponse(data, status = 200)
 
 
-def getCode(request):
+def ajax_code(request):
     """
     This view is triggered by changing Commodity Type in the MandatoryElementsEn form.
     get the type and filter to get code
@@ -276,9 +315,9 @@ def getCode(request):
     **Context**
 
     Uses this models
-        :model:'guide.Code'
+        :model:`guide.Code`
     Uses this template
-        :template:'guide.mandatory_elements.html'
+        :template:`guide.mandatory_elements.html`
     """
     if request.method == "GET" and request.is_ajax():
         type = request.GET.get('type')

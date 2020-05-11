@@ -4,9 +4,6 @@
 {% load humanize %}
 {% load markdown_filter %}
 
-{% block title %}
-<h1 property="name" id="wb-cont" dir="ltr">Trade Agreement Coverage Tool: Step 3. Limited Tendering Reasons</h1>
-{% endblock %}
 {% block form %}
     {% for ffield in form %}
     <div class="form-group" role="form">
@@ -15,7 +12,7 @@
                 {{ error }}
             {% endfor %}
         {% endif %}
-        <h2>Step 2. Limited Tendering Reasons</h2> 
+        <h2>Step 4. Limited Tendering Reasons</h2> 
         <p>{% trans "Select all exceptions, if any, which apply." %}</p>
             {% for lt in form.limited_tendering %}
                 <div class="checkbox">

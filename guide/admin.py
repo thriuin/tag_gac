@@ -4,7 +4,6 @@ from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
 
-
 class CommodityTypeResource(resources.ModelResource):
 
     class Meta:
@@ -34,6 +33,7 @@ class CftaExceptionResource(resources.ModelResource):
     class Meta:
         model = CftaException
 
+
 class ValueThresholdResource(resources.ModelResource):
 
     class Meta:
@@ -49,20 +49,26 @@ class EntitiesResource(resources.ModelResource):
 class CommodityTypeAdmin(ImportExportModelAdmin):
     resource_class = CommodityTypeResource
 
+
 class CodeAdmin(ImportExportModelAdmin):
     resource_class = CodeResource
+
 
 class TAExceptionAdmin(ImportExportModelAdmin):
     resource_class = TAExceptionResource
 
+
 class TenderingReasonAdmin(ImportExportModelAdmin):
     resource_class = TenderingReasonResource
+
 
 class CftaExceptionAdmin(ImportExportModelAdmin):
     resource_class = CftaExceptionResource
 
+
 class ValueThresholdAdmin(ImportExportModelAdmin):
     resource_class = ValueThresholdResource
+
 
 class EntitiesAdmin(ImportExportModelAdmin):
     resource_class = EntitiesResource
