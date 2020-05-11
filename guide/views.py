@@ -1,26 +1,206 @@
 from django.shortcuts import render
-from guide.models import Code, Instructions, ValueThreshold, Entities, TAException, TenderingReason, CftaException
+from guide.models import Code, ValueThreshold, Entities, TAException, TenderingReason, CftaException
 from guide.forms import MandatoryElementsEN, ExceptionsEN, LimitedTenderingEN, CftaExceptionsEN
 from formtools.wizard.views import NamedUrlSessionWizardView
 from django.http import JsonResponse
 
 FORMS = [("0", MandatoryElementsEN),
-         ("1", ExceptionsEN)]
+         ("1", ExceptionsEN),
+         ("2", CftaExceptionsEN)]
 
 TEMPLATES = {"0": "mandatory_elements.html",
-             "1": "exceptions.html"}
+             "1": "exceptions.html",
+             "2": "cfta_exceptions.html"}
 
+def entities_rule(context, org_name):
+    """Checks which trade agreements apply to the selected entity
+
+    Arguments:
+        context {dictionary} -- The context keeps track of all the values submitted and the analysis
+        org_name {string} -- From context this gets the submitted value
+
+    Raises:
+        ValueError: Returns value error if there is a problem with context
+
+    Returns:
+        [dictionary] -- Returns updated context dict with analysis (true or false)
+    """
+    org = context[org_name]
+    trade_agreements = context['ta']
+    try:
+        for ta in trade_agreements:
+            check = Entities.objects.filter(name=org).values_list(ta).get()[0]
+            if check is False:
+                context['ta'][ta][org_name] = False
+            else:
+                context['ta'][ta][org_name] = True
+    except:
+        raise ValueError
+    return context
+
+def value_threshold_rule(context, value_name, type_name):
+    """Checks whether the value submitted by the user is less than or greater than the
+    value in the trade agreement.
+
+    Arguments:
+        context {dictionary} -- The context keeps track of all the values submitted and the analysis
+        col_estimated_value {string} -- From context this gets the submitted value
+        col_type {string} -- From context this gets the submitted value
+
+    Raises:
+        ValueError: Output if there is an error with the context
+
+    Returns:
+        [dictionary] -- Updates context with the analyzed value, either true or false
+    """
+    value = context[value_name]
+    type = context[type_name]
+    trade_agreements = context['ta']
+    try:
+        for ta in trade_agreements:
+            check = ValueThreshold.objects.filter(type_value=type).values_list(ta).get()[0]
+            if value < check:
+                context['ta'][ta][value_name] = False
+            else:
+                context['ta'][ta][value_name] = True
+    except:
+        raise ValueError
+    return context
+
+def code_rule(context, code_name, type_name, org_name):
+    """[summary]
+
+    Arguments:
+        context {dictionary} -- Context tracks user input and analysis
+        col_code {string} -- String to select user value for code from the context
+        type_col {string} -- String to select user value for type from the context
+        org_name {string} -- String to select user value for org from the context
+
+    Raises:
+        ValueError: If error in context
+
+    Returns:
+        [dictionary] -- Returns context with updated analysis
+    """
+    value = context[code_name]
+    type = context[type_name]
+    org = context[org_name]
+    trade_agreements = context['ta']
+
+    try:
+        if type == 'Goods':
+            defence_rule = Entities.objects.filter(name=org).values_list('weapons_rule').get()[0]
+            for ta in trade_agreements:
+                if defence_rule is False:
+                    context['ta'][ta][code_name] = True
+                else:
+                    context['ta'][ta][code_name] = False
+                return context
+        elif type == 'Construction':
+            tc_rule = Entities.objects.filter(name=org).values_list('tc').get()[0]
+            for ta in trade_agreements:
+                if tc_rule is False:
+                    context['ta'][ta][code_name] = True
+                else:
+                    context['ta'][ta][code_name] = False
+            return context
+        else:
+            for ta in trade_agreements:
+                check = Code.objects.filter(code=value).values_list(ta).get()[0]
+                if check is False:
+                    context['ta'][ta][code_name] = False
+                else:
+                    context['ta'][ta][code_name] = True
+    except:
+        raise ValueError
+    return context
+
+def exceptions_rule(context, exception_name, model):
+    """This function goes through the exceptions that the user selected and checks which trade agreements
+    apply to each exception.  If a user selects a trade agreements and an exception applies then that
+    agreement is set to False.
+
+    Arguments:
+        context {dictionary} -- Context tracks user input and analysis
+        col {[type]} -- From context this gets the submitted value
+        model {model} -- This gets the model related to the submitted value
+
+    Raises:
+        ValueError: If error in context
+
+    Returns:
+        Dictionary -- Returns updated context dictionary with analysis
+    """
+    trade_agreements = context['ta']
+    if context[exception_name]:
+        value = context[exception_name]
+        try:
+            for ta in trade_agreements:
+                for ex in value:
+                    check = model.objects.filter(name=ex).values_list(ta).get()[0]
+
+                    if (context['ta'][ta][exception_name] is False):
+                        pass
+                    elif (context['ta'][ta][exception_name] is True) and (check is False):
+                        pass
+                    elif (context['ta'][ta][exception_name] is True) and (check is True):
+                        context['ta'][ta][exception_name] = False
+        except:
+            raise ValueError
+    else:
+        context[exception_name]= ['None']
+    return context
 
 class TradeForm(NamedUrlSessionWizardView):
-    form_list = [MandatoryElementsEN, ExceptionsEN]
+    """
+    This form wizard goes through each each form and template.
+
+    **Context**
+
+    Forms
+        MandatoryElementsEN
+            Uses these models
+                :model:`guide.ValueThreshold`,
+                :model:'guide.Entities',
+                :model:'guide.Code'
+            Uses this template
+                :template:'guide.mandatory_elements.html'
+        
+        ExceptionsEN
+            Uses these models
+                :model:'guide.TAExceptions'
+            Uses this template
+                :model:'guide.exceptions.html'
+        
+        CftaExceptionsEN
+            Uses these models:
+                :model:'guide.CftaExceptions'
+            Uses this template:
+                :model:'guide.cfta_exceptions.html'
+    """
+    form_list = [MandatoryElementsEN, ExceptionsEN, CftaExceptionsEN]
     url_name = 'guide:form_step'
     done_step_name = 'guide:done_step'
 
     def get_template_names(self):
+        """Takes the dictionary of template names defined above and returns them for the current step
+
+        Returns:
+            html file -- Returns html file for form with right template
+        """
         form = [TEMPLATES[self.steps.current]]
         return form
 
     def done(self, form_list, form_dict, **kwargs):
+        """This function outputs the parameters for the final page done.html
+
+        Arguments:
+            form_list {list} -- list of all the forms
+            form_dict {dictionary} -- list of user submitted values for each form
+
+        Returns:
+            [html] -- Renders done.html with the context that will display the
+        """
         trade_agreements = {
             'nafta': {}, 
             'ccfta': {}, 
@@ -44,89 +224,11 @@ class TradeForm(NamedUrlSessionWizardView):
                     trade_agreements[k2][k] = True
         context_dict['ta'] = trade_agreements
 
-        def value_threshold_rule(context, col1, col2):
-            value = context[col1]
-            type = context[col2]
-            try:
-                for ta in trade_agreements:
-                    check = ValueThreshold.objects.filter(type_value=type).values_list(ta).get()[0]
-                    if value < check:
-                        context['ta'][ta][col1] = False
-                    else:
-                        context['ta'][ta][col1] = True
-            except:
-                raise ValueError
-            return context
         context_dict = value_threshold_rule(context_dict, 'estimated_value', 'type')
-
-        def entities_rule(context, col):
-            entity = context_dict[col]
-            try:
-                for ta in trade_agreements:
-                    check = Entities.objects.filter(name=entity).values_list(ta).get()[0]
-                    if check is False:
-                        context['ta'][ta][col] = False
-                    else:
-                        context['ta'][ta][col] = True
-            except:
-                raise ValueError
-            return context
         context_dict = entities_rule(context_dict, 'entities')
-
-        def code_rule(context, code_col, type_col, entities_col):
-            value = context[code_col]
-            type = context[type_col]
-            entity = context[entities_col]
-
-            try:
-                if type == 'Goods':
-                    defence_rule = Entities.objects.filter(name=entity).values_list('weapons_rule').get()[0]
-                    for ta in trade_agreements:
-                        if defence_rule is False:
-                            context['ta'][ta][code_col] = True
-                        else:
-                            context['ta'][ta][code_col] = False
-                        return context
-                elif type == 'Construction':
-                    tc_rule = Entities.objects.filter(name=entity).values_list('tc').get()[0]
-                    for ta in trade_agreements:
-                        if tc_rule is False:
-                            context['ta'][ta][code_col] = True
-                        else:
-                            context['ta'][ta][code_col] = False
-                    return context
-                else:
-                    for ta in trade_agreements:
-                        check = Code.objects.filter(code=value).values_list(ta).get()[0]
-                        if check is False:
-                            context['ta'][ta][code_col] = False
-                        else:
-                            context['ta'][ta][code_col] = True
-            except:
-                raise ValueError
-            return context
         context_dict = code_rule(context_dict, 'code', 'type', 'entities')
-
-        def exceptions_rule(context, col, model):
-            if context[col]:
-                value = context[col]
-                try:
-                    for ta in trade_agreements:
-                        for ex in value:
-                            check = model.objects.filter(name=ex).values_list(ta).get()[0]
-
-                            if (context['ta'][ta][col] is False):
-                                pass
-                            elif (context['ta'][ta][col] is True) and (check is False):
-                                pass
-                            elif (context['ta'][ta][col] is True) and (check is True):
-                                context['ta'][ta][col] = False
-                except:
-                    raise ValueError
-            else:
-                context[col]= ['None']
-            return context
         context_dict = exceptions_rule(context_dict, 'exceptions', TAException)
+        context_dict = exceptions_rule(context_dict, 'cfta_exceptions', CftaException)
 
         context_dict['bool'] = {}
         for ta in trade_agreements:
@@ -139,8 +241,18 @@ class TradeForm(NamedUrlSessionWizardView):
 
 
 def getType(request):
-    # get all the types from the database
-    # null and blank values
+    """
+    This view is triggered by changing Commodity Type in the MandatoryElementsEn form.
+    get all the types from the database
+    null and blank values
+    
+    **Context**
+
+    Uses this model
+        :model:'guide.Code'
+    Uses this template
+        :template:'guide.mandatory_elements.html'
+    """
     if request.method == "GET" and request.is_ajax():
         type = Code.objects.\
             exclude(type__isnull=True).\
@@ -156,8 +268,18 @@ def getType(request):
 
 
 def getCode(request):
-    # get the type and code systems and filter to get code
-    # database excluding null and blank values
+    """
+    This view is triggered by changing Commodity Type in the MandatoryElementsEn form.
+    get the type and filter to get code
+    database excluding null and blank values
+    
+    **Context**
+
+    Uses this models
+        :model:'guide.Code'
+    Uses this template
+        :template:'guide.mandatory_elements.html'
+    """
     if request.method == "GET" and request.is_ajax():
         type = request.GET.get('type')
         code = Code.objects.\

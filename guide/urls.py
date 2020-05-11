@@ -1,14 +1,9 @@
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url
-from guide.views import getType, getCode, TradeForm
-from guide.forms import MandatoryElementsEN, ExceptionsEN, LimitedTenderingEN, CftaExceptionsEN
+from guide.views import getType, getCode, TradeForm, FORMS
 
-named_forms = (
-    ('0', MandatoryElementsEN),
-    ('1', ExceptionsEN)
-)
-trade_wizard = TradeForm.as_view(named_forms, url_name='guide:form_step', done_step_name='guide:done_step')
+trade_wizard = TradeForm.as_view(FORMS, url_name='guide:form_step', done_step_name='guide:done_step')
 
 urlpatterns = [
     url(r'^en/(?P<step>.+)/$', trade_wizard, name='form_step'),
