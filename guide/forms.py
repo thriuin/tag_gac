@@ -3,7 +3,7 @@ from django.forms.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from guide.models import Organization, Code, GeneralException, TenderingReason, CftaException
 
-class MandatoryElementsEN(forms.Form):
+class RequiredFieldsFormEN(forms.Form):
 
     estimated_value = forms.IntegerField(
         label=_('What is the total estimated value of the procurement?'),
@@ -45,7 +45,7 @@ class MandatoryElementsEN(forms.Form):
         else:
             raise ValidationError('Invalid choice.  Please select a commodity code.')
 
-class ExceptionsEN(forms.Form):
+class GeneralExceptionFormEN(forms.Form):
 
     exceptions = forms.ModelMultipleChoiceField(
         GeneralException.objects.filter(lang='EN').only('name'),
@@ -56,7 +56,7 @@ class ExceptionsEN(forms.Form):
     exceptions.widget.attrs['class'] = 'form-control'
 
 
-class LimitedTenderingEN(forms.Form):
+class LimitedTenderingFormEN(forms.Form):
 
     limited_tendering = forms.ModelMultipleChoiceField(
         TenderingReason.objects.filter(lang='EN').only('name'),
@@ -67,7 +67,7 @@ class LimitedTenderingEN(forms.Form):
     limited_tendering.widget.attrs['class'] = 'form-control'
 
 
-class CftaExceptionsEN(forms.Form):
+class CftaExceptionFormEN(forms.Form):
 
     cfta_exceptions = forms.ModelMultipleChoiceField(
         CftaException.objects.filter(lang='EN').only('name'),
