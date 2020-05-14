@@ -104,7 +104,7 @@ class BooleanTradeAgreement(Language):
         abstract=True
 
 
-class NumericTradeAgreements(models.Model):
+class NumericTradeAgreement(models.Model):
     """
     This gives every trade agreement a number field to use for value thresholds
     This is inherited by :model:`guide.ValueThreshold`
@@ -175,7 +175,7 @@ class NumericTradeAgreements(models.Model):
         abstract=True
 
 
-class Entities(BooleanTradeAgreement):
+class Organization(BooleanTradeAgreement):
     """
     Subclass of :model:`guide.BooleanTradeAgreement`
     This class has federal departments, agencies, ect...
@@ -221,7 +221,7 @@ class CommodityType(Language):
         return self.commodity_type
 
 
-class ValueThreshold(NumericTradeAgreements):
+class ValueThreshold(NumericTradeAgreement):
     """
     Subclass of :model:`guide.NumericTradeAgreement`
     This class is for the dollar value thresholds in the trade agreements
@@ -282,7 +282,7 @@ class TenderingReason(BooleanTradeAgreement):
         return self.name
 
 
-class TAException(BooleanTradeAgreement):
+class GeneralException(BooleanTradeAgreement):
     """
     Subclass of :model:`guide.BooleanTradeAgreement`
     This class has trade agreement exceptions
@@ -296,7 +296,7 @@ class TAException(BooleanTradeAgreement):
         return self.name
 
     def get_fields(self):
-        return [field.name for field in TAException._meta.fields]
+        return [field.name for field in GeneralException._meta.fields]
 
 
 class CftaException(BooleanTradeAgreement):

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from guide.models import Code, ValueThreshold, Entities, TAException, TenderingReason, CftaException
+from guide.models import Code, ValueThreshold, Organization, GeneralException, TenderingReason, CftaException
 from guide.forms import MandatoryElementsEN, ExceptionsEN, LimitedTenderingEN, CftaExceptionsEN
 from formtools.wizard.views import NamedUrlSessionWizardView
 from django.http import JsonResponse
@@ -40,7 +40,7 @@ def entities_rule(context, org_name):
     trade_agreements = context['ta']
     try:
         for ta in trade_agreements:
-            check = Entities.objects.filter(name=org).values_list(ta).get()[0]
+            check = Organization.objects.filter(name=org).values_list(ta).get()[0]
             if check is False:
                 context['ta'][ta][org_name] = False
             else:
@@ -100,7 +100,7 @@ def code_rule(context, code_name, type_name, org_name):
 
     try:
         if type == 'Goods':
-            defence_rule = Entities.objects.filter(name=org).values_list('weapons_rule').get()[0]
+            defence_rule = Organization.objects.filter(name=org).values_list('weapons_rule').get()[0]
             for ta in trade_agreements:
                 if defence_rule is False:
                     context['ta'][ta][code_name] = True
@@ -108,7 +108,7 @@ def code_rule(context, code_name, type_name, org_name):
                     context['ta'][ta][code_name] = False
                 return context
         elif type == 'Construction':
-            tc_rule = Entities.objects.filter(name=org).values_list('tc').get()[0]
+            tc_rule = Organization.objects.filter(name=org).values_list('tc').get()[0]
             for ta in trade_agreements:
                 if tc_rule is False:
                     context['ta'][ta][code_name] = True
@@ -188,7 +188,7 @@ def lt_condition(wizard):
     context_dict = value_threshold_rule(context_dict, 'estimated_value', 'type')
     context_dict = entities_rule(context_dict, 'entities')
     context_dict = code_rule(context_dict, 'code', 'type', 'entities')
-    context_dict = exceptions_rule(context_dict, 'exceptions', TAException)
+    context_dict = exceptions_rule(context_dict, 'exceptions', GeneralException)
     context_dict = exceptions_rule(context_dict, 'cfta_exceptions', CftaException)
 
     context_dict['bool'] = {}
@@ -197,11 +197,12 @@ def lt_condition(wizard):
         for k, v in context_dict['ta'][ta].items():
                 if v is False:
                     context_dict['bool'][ta] = False
+    print(context_dict)
     
-    if True in context_dict['bool']:
-        return True
-    else:
-        return False
+    for v in context_dict['bool'].values():
+        if v is True:
+            return True
+    return False
 
 class TradeForm(NamedUrlSessionWizardView):
     """
@@ -267,7 +268,7 @@ class TradeForm(NamedUrlSessionWizardView):
         context_dict = value_threshold_rule(context_dict, 'estimated_value', 'type')
         context_dict = entities_rule(context_dict, 'entities')
         context_dict = code_rule(context_dict, 'code', 'type', 'entities')
-        context_dict = exceptions_rule(context_dict, 'exceptions', TAException)
+        context_dict = exceptions_rule(context_dict, 'exceptions', GeneralException)
         context_dict = exceptions_rule(context_dict, 'cfta_exceptions', CftaException)
 
         context_dict['bool'] = {}

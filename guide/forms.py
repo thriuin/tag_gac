@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from guide.models import Entities, Code, TAException, TenderingReason, CftaException
+from guide.models import Organization, Code, GeneralException, TenderingReason, CftaException
 
 class MandatoryElementsEN(forms.Form):
 
@@ -12,7 +12,7 @@ class MandatoryElementsEN(forms.Form):
     estimated_value.widget.attrs['class'] = 'form-control'
 
     entities = forms.ModelChoiceField(
-        Entities.objects.filter(lang='EN').only('name'),
+        Organization.objects.filter(lang='EN').only('name'),
         label=_('Who is the procuring entity?'),
         required=True
     )
@@ -48,7 +48,7 @@ class MandatoryElementsEN(forms.Form):
 class ExceptionsEN(forms.Form):
 
     exceptions = forms.ModelMultipleChoiceField(
-        TAException.objects.filter(lang='EN').only('name'),
+        GeneralException.objects.filter(lang='EN').only('name'),
         widget=forms.CheckboxSelectMultiple,
         label=_("Exceptions"),
         required=False

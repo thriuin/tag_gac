@@ -1,5 +1,5 @@
 from django.contrib import admin
-from guide.models import CommodityType, Code, TAException, TenderingReason, CftaException, ValueThreshold, Entities
+from guide.models import CommodityType, Code, GeneralException, TenderingReason, CftaException, ValueThreshold, Organization
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
@@ -16,10 +16,10 @@ class CodeResource(resources.ModelResource):
         model = Code
 
 
-class TAExceptionResource(resources.ModelResource):
+class GeneralExceptionResource(resources.ModelResource):
 
     class Meta:
-        model = TAException
+        model = GeneralException
 
 
 class TenderingReasonResource(resources.ModelResource):
@@ -40,10 +40,10 @@ class ValueThresholdResource(resources.ModelResource):
         model = ValueThreshold
 
 
-class EntitiesResource(resources.ModelResource):
+class OrganizationResource(resources.ModelResource):
 
     class Meta:
-        model = Entities
+        model = Organization
 
 
 class CommodityTypeAdmin(ImportExportModelAdmin):
@@ -54,8 +54,8 @@ class CodeAdmin(ImportExportModelAdmin):
     resource_class = CodeResource
 
 
-class TAExceptionAdmin(ImportExportModelAdmin):
-    resource_class = TAExceptionResource
+class GeneralExceptionAdmin(ImportExportModelAdmin):
+    resource_class = GeneralExceptionResource
 
 
 class TenderingReasonAdmin(ImportExportModelAdmin):
@@ -70,15 +70,15 @@ class ValueThresholdAdmin(ImportExportModelAdmin):
     resource_class = ValueThresholdResource
 
 
-class EntitiesAdmin(ImportExportModelAdmin):
-    resource_class = EntitiesResource
+class OrganizationAdmin(ImportExportModelAdmin):
+    resource_class = OrganizationResource
 
 
 # Register your models here
 admin.site.register(CommodityType, CommodityTypeAdmin)
 admin.site.register(Code, CodeAdmin)
-admin.site.register(TAException, TAExceptionAdmin)
+admin.site.register(GeneralException, GeneralExceptionAdmin)
 admin.site.register(TenderingReason, TenderingReasonAdmin)
 admin.site.register(CftaException, CftaExceptionAdmin),
 admin.site.register(ValueThreshold, ValueThresholdAdmin)
-admin.site.register(Entities, EntitiesAdmin)
+admin.site.register(Organization, OrganizationAdmin)
