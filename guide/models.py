@@ -41,62 +41,62 @@ class BooleanTradeAgreement(Language):
     id = models.AutoField(primary_key=True)
     nafta = models.BooleanField(
         default=False,
-        verbose_name="NAFTA Annex 1001.1b-1",
+        verbose_name="NAFTA",
         blank=False
     )
     ccfta = models.BooleanField(
         default=False,
-        verbose_name="Chile (CCFTA) Annex K bis-01.1-3",
+        verbose_name="CCFTA",
         blank=False
     )
     ccofta = models.BooleanField(
         default=False,
-        verbose_name="Colombia (CCoFTA) Annex 1401-4",
+        verbose_name="CCoFTA",
         blank=False
     )
     chfta = models.BooleanField(
         default=False,
-        verbose_name="Honduras (CHFTA) Annex 17.3",
+        verbose_name="CHFTA",
         blank=False
     )
     cpafta = models.BooleanField(
         default=False,
-        verbose_name="Panama (CPaFTA) Annex 4",
+        verbose_name="CPaFTA",
         blank=False
     )
     cpfta = models.BooleanField(
         default=False,
-        verbose_name="Peru (CPFTA) Annex 1401. 1-3",
+        verbose_name="CPFTA",
         blank=False
     )
     ckfta = models.BooleanField(
         default=False,
-        verbose_name="Korea (CKFTA) Annex 14-A",
+        verbose_name="CKFTA",
         blank=False
     )
     cufta = models.BooleanField(
         default=False,
-        verbose_name="Ukraine (CUFTA) Annex 10-3",
+        verbose_name="CUFTA",
         blank=False
     )
     wto_agp = models.BooleanField(
         default=False,
-        verbose_name="WTO-AGP Canada Annex 1",
+        verbose_name="WTO-AGP",
         blank=False
     )
     ceta = models.BooleanField(
         default=False,
-        verbose_name="CETA Annex 19-4",
+        verbose_name="CETA",
         blank=False
     )
     cptpp = models.BooleanField(
         default=False,
-        verbose_name="CPTPP Chapter 15-A Section D",
+        verbose_name="CPTPP",
         blank=False
     )
     cfta = models.BooleanField(
         default=False,
-        verbose_name="CFTA Chapter 5",
+        verbose_name="CFTA",
         blank=False
     )
 
@@ -112,62 +112,62 @@ class NumericTradeAgreement(models.Model):
     id = models.AutoField(primary_key=True)
     nafta = models.IntegerField(
         default=0,
-        verbose_name="NAFTA Annex 1001.1b-1",
+        verbose_name="NAFTA",
         blank=False
     )
     ccfta = models.IntegerField(
         default=0,
-        verbose_name="Chile (CCFTA) Annex K bis-01.1-3",
+        verbose_name="CCFTA",
         blank=False
     )
     ccofta = models.IntegerField(
         default=0,
-        verbose_name="Colombia (CCoFTA) Annex 1401-4",
+        verbose_name="CCoFTA",
         blank=False
     )
     chfta = models.IntegerField(
         default=0,
-        verbose_name="Honduras (CHFTA) Annex 17.3",
+        verbose_name="CHFTA",
         blank=False
     )
     cpafta = models.IntegerField(
         default=0,
-        verbose_name="Panama (CPaFTA) Annex 4",
+        verbose_name="CPaFTA",
         blank=False
     )
     cpfta = models.IntegerField(
         default=0,
-        verbose_name="Peru (CPFTA) Annex 1401. 1-3",
+        verbose_name="CPFTA",
         blank=False
     )
     ckfta = models.IntegerField(
         default=0,
-        verbose_name="Korea (CKFTA) Annex 14-A",
+        verbose_name="CKFTA",
         blank=False
     )
     cufta = models.IntegerField(
         default=0,
-        verbose_name="Ukraine (CUFTA) Annex 10-3",
+        verbose_name="CUFTA",
         blank=False
     )
     wto_agp = models.IntegerField(
         default=0,
-        verbose_name="WTO-AGP Canada Annex 1",
+        verbose_name="WTO-AGP",
         blank=False
     )
     ceta = models.IntegerField(
         default=0,
-        verbose_name="CETA Annex 19-4",
+        verbose_name="CETA",
         blank=False
     )
     cptpp = models.IntegerField(
         default=0,
-        verbose_name="CPTPP Chapter 15-A Section D",
+        verbose_name="CPTPP",
         blank=False
     )
     cfta = models.IntegerField(
         default=0,
-        verbose_name="CFTA Chapter 5",
+        verbose_name="CFTA",
         blank=False
     )
 
@@ -191,7 +191,7 @@ class Organization(BooleanTradeAgreement):
         verbose_name='Department of Transport',
         blank=False
     )
-    weapons_rule = models.BooleanField(
+    goods_rule = models.BooleanField(
         default=False,
         verbose_name='Defence RCMP or CCG',
         blank=False
