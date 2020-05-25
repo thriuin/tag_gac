@@ -20,3 +20,5 @@ python .\manage.py migrate
 ```bash
 python manage.py createsuperuser
 ```
+
+python manage.py dumpdata > guide/fixtures/data.json --indent 4

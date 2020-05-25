@@ -115,57 +115,57 @@ class NumericTradeAgreement(models.Model):
         verbose_name="NAFTA",
         blank=False
     )
-    ccfta = models.IntegerField(
+    ccfta = models.PositiveIntegerField(
         default=0,
         verbose_name="CCFTA",
         blank=False
     )
-    ccofta = models.IntegerField(
+    ccofta = models.PositiveIntegerField(
         default=0,
         verbose_name="CCoFTA",
         blank=False
     )
-    chfta = models.IntegerField(
+    chfta = models.PositiveIntegerField(
         default=0,
         verbose_name="CHFTA",
         blank=False
     )
-    cpafta = models.IntegerField(
+    cpafta = models.PositiveIntegerField(
         default=0,
         verbose_name="CPaFTA",
         blank=False
     )
-    cpfta = models.IntegerField(
+    cpfta = models.PositiveIntegerField(
         default=0,
         verbose_name="CPFTA",
         blank=False
     )
-    ckfta = models.IntegerField(
+    ckfta = models.PositiveIntegerField(
         default=0,
         verbose_name="CKFTA",
         blank=False
     )
-    cufta = models.IntegerField(
+    cufta = models.PositiveIntegerField(
         default=0,
         verbose_name="CUFTA",
         blank=False
     )
-    wto_agp = models.IntegerField(
+    wto_agp = models.PositiveIntegerField(
         default=0,
         verbose_name="WTO-AGP",
         blank=False
     )
-    ceta = models.IntegerField(
+    ceta = models.PositiveIntegerField(
         default=0,
         verbose_name="CETA",
         blank=False
     )
-    cptpp = models.IntegerField(
+    cptpp = models.PositiveIntegerField(
         default=0,
         verbose_name="CPTPP",
         blank=False
     )
-    cfta = models.IntegerField(
+    cfta = models.PositiveIntegerField(
         default=0,
         verbose_name="CFTA",
         blank=False
@@ -237,7 +237,7 @@ class ValueThreshold(NumericTradeAgreement):
     )
 
     def __str__(self):
-        return self.type_value.commodity_type
+        return str(self.type_value)
 
 
 class Code(BooleanTradeAgreement):
@@ -295,8 +295,8 @@ class GeneralException(BooleanTradeAgreement):
     def __str__(self):
         return self.name
 
-    def get_fields(self):
-        return [field.name for field in GeneralException._meta.fields]
+    # def get_fields(self):
+    #     return [field.name for field in GeneralException._meta.fields]
 
 
 class CftaException(BooleanTradeAgreement):
@@ -314,6 +314,12 @@ class CftaException(BooleanTradeAgreement):
         return self.name
 
 
-
+# class TradeAgreement(Language):
+#     name = models.CharField(
+#         default='',
+#         unique=True,
+#         verbose_name = 'Trade Agreement',
+#         max_length = 100
+#     )
 
 

@@ -45,6 +45,13 @@ class OrganizationResource(resources.ModelResource):
     class Meta:
         model = Organization
 
+# class TradeAgreementResource(resources.ModelResource):
+
+#     class Meta:
+#         model = TradeAgreement
+
+# class TradeAgreementAdmin(ImportExportModelAdmin):
+#     resource_class = TradeAgreementResource
 
 class CommodityTypeAdmin(ImportExportModelAdmin):
     resource_class = CommodityTypeResource
@@ -102,3 +109,4 @@ admin.site.register(TenderingReason, TenderingReasonAdmin)
 admin.site.register(CftaException, CftaExceptionAdmin),
 admin.site.register(ValueThreshold, ValueThresholdAdmin)
 admin.site.register(Organization, OrganizationAdmin)
+# admin.site.register(TradeAgreement, TradeAgreementAdmin)

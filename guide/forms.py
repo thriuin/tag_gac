@@ -7,7 +7,8 @@ class RequiredFieldsFormEN(forms.Form):
 
     estimated_value = forms.IntegerField(
         label=_('What is the total estimated value of the procurement?'),
-        required=True
+        required=True,
+        min_value=0
     )
     estimated_value.widget.attrs['class'] = 'form-control'
 
