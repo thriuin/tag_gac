@@ -12,12 +12,12 @@ TEMPLATES = {"0": "mandatory_elements.html",
              "3": "limited_tendering.html"}
 
 agreements = [
-    'nafta', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 
+    'cusma', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 
     'ckfta', 'cufta', 'wto_agp', 'ceta', 'cptpp', 'cfta'
 ]
 
 url_name='guide:form_step'
-done_step_name='guide:done_step'
+done_step_name='done_step'
 
 def build_context_dict():
     cxt = {}

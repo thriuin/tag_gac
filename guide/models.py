@@ -39,9 +39,9 @@ class BooleanTradeAgreement(Language):
     :model:`guide.CftaException`
     """
     id = models.AutoField(primary_key=True)
-    nafta = models.BooleanField(
+    cusma = models.BooleanField(
         default=False,
-        verbose_name="NAFTA",
+        verbose_name="CUSMA",
         blank=False
     )
     ccfta = models.BooleanField(
@@ -110,9 +110,9 @@ class NumericTradeAgreement(models.Model):
     This is inherited by :model:`guide.ValueThreshold`
     """
     id = models.AutoField(primary_key=True)
-    nafta = models.IntegerField(
+    cusma = models.IntegerField(
         default=0,
-        verbose_name="NAFTA",
+        verbose_name="CUSMA",
         blank=False
     )
     ccfta = models.PositiveIntegerField(
@@ -216,6 +216,7 @@ class CommodityType(Language):
 
     class Meta:
         unique_together = ['commodity_type', 'lang']
+        ordering = ['id']
 
     def __str__(self):
         return self.commodity_type
@@ -295,9 +296,6 @@ class GeneralException(BooleanTradeAgreement):
     def __str__(self):
         return self.name
 
-    # def get_fields(self):
-    #     return [field.name for field in GeneralException._meta.fields]
-
 
 class CftaException(BooleanTradeAgreement):
     """
@@ -312,14 +310,3 @@ class CftaException(BooleanTradeAgreement):
 
     def __str__(self):
         return self.name
-
-
-# class TradeAgreement(Language):
-#     name = models.CharField(
-#         default='',
-#         unique=True,
-#         verbose_name = 'Trade Agreement',
-#         max_length = 100
-#     )
-
-

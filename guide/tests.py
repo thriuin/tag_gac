@@ -1,7 +1,7 @@
 from django.test import TestCase
 from guide.models import Organization, CommodityType, Code, ValueThreshold, TenderingReason, GeneralException, CftaException, BooleanTradeAgreement, NumericTradeAgreement, Language
 from django.urls import reverse
-from guide.logic import FORMS, TEMPLATES, url_name, done_step_name
+from guide.logic import FORMS, TEMPLATES, agreements, url_name, done_step_name, determine_final_coverage, organization_rule, value_threshold_rule, code_rule, exceptions_rule, build_context_dict, process_form
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.firefox.webdriver import WebDriver
 import time
@@ -108,6 +108,45 @@ class TestViews(TestCase):
         self.assertEqual(wizard['steps'].count, 3)
         self.assertEqual(wizard['url_name'], self.wizard_urlname)
 
+entities_list = {'default', 'tc', 'goods_rule'}
+commodity_type_list = {'Goods', 'Services', 'Construction'}
+commodity_code_default = Code.objects.filter(type='Goods').values_list('code')[1]
+
+def step_through_form(self, estimated_value=1000000000, entities='default', commodity_type='Goods', 
+                            general_exception=False, cfta_exception=False, limited_tendering_reason = False):
+    self.selenium.get(self.live_server_url + '/guide/en/0/')
+    # Mandatory elements page
+    estimated_value_input = self.selenium.find_element_by_name("0-estimated_value")
+    estimated_value_input.send_keys(estimated_value)
+    
+    entities_input = Select(self.selenium.find_element_by_name("0-entities"))
+    value = Organization.objects.filter(tc=False).values_list('name')[0]
+    entities_input.select_by_visible_text(value)
+
+    type_input = Select(self.selenium.find_element_by_name("0-type"))
+    type_input.select_by_visible_text(commodity_type)
+
+    code_input = Select(self.selenium.find_element_by_name("0-code"))
+    value = Code.objects.filter(type=commodity_type).values_list('code')[1]
+    code_input.select_by_visible_text(value)
+    time.sleep(3)
+    self.selenium.find_element_by_xpath('//input[@value="Next"]').click()
+
+    # General Exceptions
+    time.sleep(1)
+    check = self.selenium.find_element_by_id('id_1-exceptions_0')
+    check.click()
+    self.selenium.find_element_by_xpath('//input[@value="Next"]').click()
+
+    # Cfta exceptions
+    time.sleep(1)
+    check2 = self.selenium.find_element_by_id('id_2-cfta_exceptions_1')
+    check2.click()
+    time.sleep(5)
+    submit = self.selenium.find_element_by_id('submit-form-button')
+    submit.submit()
+    time.sleep(10)
+
 class SeleniumTests(StaticLiveServerTestCase):
     port = 8001
     fixtures = ["guide/fixtures/db.json"]
@@ -126,23 +165,6 @@ class SeleniumTests(StaticLiveServerTestCase):
         super().tearDownClass()
 
     def test_form_1(self):
-        self.selenium.get(self.live_server_url + '/guide/en/0/')
-        time.sleep(1)
-        estimated_value_input = self.selenium.find_element_by_name("0-estimated_value")
-        estimated_value_input.send_keys(1000)
+        t = step_through_form(self)
+
         
-        entities_input = Select(self.selenium.find_element_by_name("0-entities"))
-        entities_input.select_by_value('1')
-
-        time.sleep(5)
-        type_input = Select(self.selenium.find_element_by_name("0-type"))
-        type_input.select_by_visible_text('Construction')
-
-        time.sleep(5)
-        code_input = Select(self.selenium.find_element_by_name("0-code"))
-        value = Code.objects.filter(type='Construction').values_list('code')[1]
-        code_input.select_by_visible_text(value)
-
-        time.sleep(5)
-        self.selenium.find_element_by_xpath('//input[@value="Next"]').click()
-        time.sleep(5)

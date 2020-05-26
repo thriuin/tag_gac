@@ -12,7 +12,7 @@ trade_wizard = TradeForm.as_view(
 
 urlpatterns = [
     url(r'^en/(?P<step>.+)/$', trade_wizard, name='form_step'),
-    url('/en/done/', trade_wizard, name='done_step'),
+    url('/en/done/', trade_wizard, name=done_step_name),
     path("ajax/type/", ajax_type, name = 'ajax_type'),
 	path("ajax/code/", ajax_code, name = 'ajax_code')
 ]
