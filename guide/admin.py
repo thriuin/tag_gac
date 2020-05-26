@@ -1,8 +1,7 @@
 from django.contrib import admin
-from guide.models import CommodityType, Code, TAException, TenderingReason, CftaException, ValueThreshold, Entities, Instructions
+from guide.models import CommodityType, Code, GeneralException, TenderingReason, CftaException, ValueThreshold, Organization
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
-
 
 
 class CommodityTypeResource(resources.ModelResource):
@@ -17,10 +16,10 @@ class CodeResource(resources.ModelResource):
         model = Code
 
 
-class TAExceptionResource(resources.ModelResource):
+class GeneralExceptionResource(resources.ModelResource):
 
     class Meta:
-        model = TAException
+        model = GeneralException
 
 
 class TenderingReasonResource(resources.ModelResource):
@@ -34,54 +33,80 @@ class CftaExceptionResource(resources.ModelResource):
     class Meta:
         model = CftaException
 
+
 class ValueThresholdResource(resources.ModelResource):
 
     class Meta:
         model = ValueThreshold
 
 
-class EntitiesResource(resources.ModelResource):
+class OrganizationResource(resources.ModelResource):
 
     class Meta:
-        model = Entities
+        model = Organization
 
+# class TradeAgreementResource(resources.ModelResource):
 
-class InstructionsResource(resources.ModelResource):
+#     class Meta:
+#         model = TradeAgreement
 
-    class Meta:
-        model = Instructions
-
+# class TradeAgreementAdmin(ImportExportModelAdmin):
+#     resource_class = TradeAgreementResource
 
 class CommodityTypeAdmin(ImportExportModelAdmin):
     resource_class = CommodityTypeResource
+    list_display = [f.name for f in CommodityType._meta.get_fields()][::-1]
+    list_editable = [f.name for f in CommodityType._meta.get_fields() if f.name != 'id']
+    list_display_links = ['id']
+
 
 class CodeAdmin(ImportExportModelAdmin):
     resource_class = CodeResource
+    list_display = [f.name for f in Code._meta.get_fields()][::-1]
+    list_editable = [f.name for f in Code._meta.get_fields() if f.name != 'id']
+    list_display_links = ['id']
 
-class TAExceptionAdmin(ImportExportModelAdmin):
-    resource_class = TAExceptionResource
+
+class GeneralExceptionAdmin(ImportExportModelAdmin):
+    resource_class = GeneralExceptionResource
+    list_display = [f.name for f in GeneralException._meta.get_fields()][::-1]
+    list_editable = [f.name for f in GeneralException._meta.get_fields() if f.name != 'id']
+    list_display_links = ['id']
+
 
 class TenderingReasonAdmin(ImportExportModelAdmin):
     resource_class = TenderingReasonResource
+    list_display = [f.name for f in TenderingReason._meta.get_fields()][::-1]
+    list_editable = [f.name for f in TenderingReason._meta.get_fields() if f.name != 'id']
+    list_display_links = ['id']
+
 
 class CftaExceptionAdmin(ImportExportModelAdmin):
     resource_class = CftaExceptionResource
+    list_display = [f.name for f in CftaException._meta.get_fields()][::-1]
+    list_editable = [f.name for f in CftaException._meta.get_fields() if f.name != 'id']
+    list_display_links = ['id']
+
 
 class ValueThresholdAdmin(ImportExportModelAdmin):
     resource_class = ValueThresholdResource
+    list_display = [f.name for f in ValueThreshold._meta.get_fields()][::-1]
+    list_editable = [f.name for f in ValueThreshold._meta.get_fields() if (f.name != 'id' and f.name != 'type_value')]
+    list_display_links = ['id']
 
-class EntitiesAdmin(ImportExportModelAdmin):
-    resource_class = EntitiesResource
 
-class InstructionsAdmin(ImportExportModelAdmin):
-    resource_class = InstructionsResource
+class OrganizationAdmin(ImportExportModelAdmin):
+    resource_class = OrganizationResource
+    list_display = [f.name for f in Organization._meta.get_fields()][::-1]
+    list_editable = [f.name for f in Organization._meta.get_fields() if f.name != 'id']
+    list_display_links = ['id']
 
 # Register your models here
 admin.site.register(CommodityType, CommodityTypeAdmin)
 admin.site.register(Code, CodeAdmin)
-admin.site.register(TAException, TAExceptionAdmin)
+admin.site.register(GeneralException, GeneralExceptionAdmin)
 admin.site.register(TenderingReason, TenderingReasonAdmin)
 admin.site.register(CftaException, CftaExceptionAdmin),
 admin.site.register(ValueThreshold, ValueThresholdAdmin)
-admin.site.register(Entities, EntitiesAdmin)
-admin.site.register(Instructions, InstructionsAdmin)
+admin.site.register(Organization, OrganizationAdmin)
+# admin.site.register(TradeAgreement, TradeAgreementAdmin)

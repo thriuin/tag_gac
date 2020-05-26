@@ -27,6 +27,8 @@ python .\manage.py migrate
 ```bash
 python manage.py createsuperuser
 ```
+
+python manage.py dumpdata > guide/fixtures/data.json --indent 4
 Create username and pasword.
 Login to the application at /admin/
 

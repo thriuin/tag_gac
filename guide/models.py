@@ -4,6 +4,12 @@ from django.db import models
 
 
 class Language(models.Model):
+    """
+    This facilitates the app being bilingual.  This base model is inherited by the following models:
+    :model:`guide.BooleanTradeAgreement`,
+    :model:`guide.NumericTradeAgreement`,
+    :model:`guide.CommodityType`
+    """
     CHOICES = [
         ('EN', 'English'),
         ('FR', 'Francais')
@@ -23,67 +29,74 @@ class Language(models.Model):
 
 class BooleanTradeAgreement(Language):
     """
-    This contains a boolean for each trade agreement
+    This model has a True/False for each trade agreement.
+    This model inherits from :model:'guide.Language'
+    This model is inherited by the following models:
+    :model:`guide.Entities`
+    :model:`guide.Code`
+    :model:`guide.TenderingReason`
+    :model:`guide.TAException`
+    :model:`guide.CftaException`
     """
     id = models.AutoField(primary_key=True)
-    nafta_annex = models.BooleanField(
+    cusma = models.BooleanField(
         default=False,
-        verbose_name="NAFTA Annex 1001.1b-1",
+        verbose_name="CUSMA",
         blank=False
     )
     ccfta = models.BooleanField(
         default=False,
-        verbose_name="Chile (CCFTA) Annex K bis-01.1-3",
+        verbose_name="CCFTA",
         blank=False
     )
     ccofta = models.BooleanField(
         default=False,
-        verbose_name="Colombia (CCoFTA) Annex 1401-4",
+        verbose_name="CCoFTA",
         blank=False
     )
     chfta = models.BooleanField(
         default=False,
-        verbose_name="Honduras (CHFTA) Annex 17.3",
+        verbose_name="CHFTA",
         blank=False
     )
     cpafta = models.BooleanField(
         default=False,
-        verbose_name="Panama (CPaFTA) Annex 4",
+        verbose_name="CPaFTA",
         blank=False
     )
     cpfta = models.BooleanField(
         default=False,
-        verbose_name="Peru (CPFTA) Annex 1401. 1-3",
+        verbose_name="CPFTA",
         blank=False
     )
     ckfta = models.BooleanField(
         default=False,
-        verbose_name="Korea (CKFTA) Annex 14-A",
+        verbose_name="CKFTA",
         blank=False
     )
     cufta = models.BooleanField(
         default=False,
-        verbose_name="Ukraine (CUFTA) Annex 10-3",
+        verbose_name="CUFTA",
         blank=False
     )
     wto_agp = models.BooleanField(
         default=False,
-        verbose_name="WTO-AGP Canada Annex 1",
+        verbose_name="WTO-AGP",
         blank=False
     )
     ceta = models.BooleanField(
         default=False,
-        verbose_name="CETA Annex 19-4",
+        verbose_name="CETA",
         blank=False
     )
     cptpp = models.BooleanField(
         default=False,
-        verbose_name="CPTPP Chapter 15-A Section D",
+        verbose_name="CPTPP",
         blank=False
     )
     cfta = models.BooleanField(
         default=False,
-        verbose_name="CFTA Chapter 5",
+        verbose_name="CFTA",
         blank=False
     )
 
@@ -91,69 +104,70 @@ class BooleanTradeAgreement(Language):
         abstract=True
 
 
-class NumericTradeAgreements(models.Model):
+class NumericTradeAgreement(models.Model):
     """
     This gives every trade agreement a number field to use for value thresholds
+    This is inherited by :model:`guide.ValueThreshold`
     """
     id = models.AutoField(primary_key=True)
-    nafta_annex = models.IntegerField(
+    cusma = models.IntegerField(
         default=0,
-        verbose_name="NAFTA Annex 1001.1b-1",
+        verbose_name="CUSMA",
         blank=False
     )
-    ccfta = models.IntegerField(
+    ccfta = models.PositiveIntegerField(
         default=0,
-        verbose_name="Chile (CCFTA) Annex K bis-01.1-3",
+        verbose_name="CCFTA",
         blank=False
     )
-    ccofta = models.IntegerField(
+    ccofta = models.PositiveIntegerField(
         default=0,
-        verbose_name="Colombia (CCoFTA) Annex 1401-4",
+        verbose_name="CCoFTA",
         blank=False
     )
-    chfta = models.IntegerField(
+    chfta = models.PositiveIntegerField(
         default=0,
-        verbose_name="Honduras (CHFTA) Annex 17.3",
+        verbose_name="CHFTA",
         blank=False
     )
-    cpafta = models.IntegerField(
+    cpafta = models.PositiveIntegerField(
         default=0,
-        verbose_name="Panama (CPaFTA) Annex 4",
+        verbose_name="CPaFTA",
         blank=False
     )
-    cpfta = models.IntegerField(
+    cpfta = models.PositiveIntegerField(
         default=0,
-        verbose_name="Peru (CPFTA) Annex 1401. 1-3",
+        verbose_name="CPFTA",
         blank=False
     )
-    ckfta = models.IntegerField(
+    ckfta = models.PositiveIntegerField(
         default=0,
-        verbose_name="Korea (CKFTA) Annex 14-A",
+        verbose_name="CKFTA",
         blank=False
     )
-    cufta = models.IntegerField(
+    cufta = models.PositiveIntegerField(
         default=0,
-        verbose_name="Ukraine (CUFTA) Annex 10-3",
+        verbose_name="CUFTA",
         blank=False
     )
-    wto_agp = models.IntegerField(
+    wto_agp = models.PositiveIntegerField(
         default=0,
-        verbose_name="WTO-AGP Canada Annex 1",
+        verbose_name="WTO-AGP",
         blank=False
     )
-    ceta = models.IntegerField(
+    ceta = models.PositiveIntegerField(
         default=0,
-        verbose_name="CETA Annex 19-4",
+        verbose_name="CETA",
         blank=False
     )
-    cptpp = models.IntegerField(
+    cptpp = models.PositiveIntegerField(
         default=0,
-        verbose_name="CPTPP Chapter 15-A Section D",
+        verbose_name="CPTPP",
         blank=False
     )
-    cfta = models.IntegerField(
+    cfta = models.PositiveIntegerField(
         default=0,
-        verbose_name="CFTA Chapter 5",
+        verbose_name="CFTA",
         blank=False
     )
 
@@ -161,9 +175,9 @@ class NumericTradeAgreements(models.Model):
         abstract=True
 
 
-class Entities(BooleanTradeAgreement):
+class Organization(BooleanTradeAgreement):
     """
-    Subclass of :model: 'guide.BooleanTradeAgreement'
+    Subclass of :model:`guide.BooleanTradeAgreement`
     This class has federal departments, agencies, ect...
     """
     name = models.CharField(
@@ -177,7 +191,7 @@ class Entities(BooleanTradeAgreement):
         verbose_name='Department of Transport',
         blank=False
     )
-    weapons_rule = models.BooleanField(
+    goods_rule = models.BooleanField(
         default=False,
         verbose_name='Defence RCMP or CCG',
         blank=False
@@ -188,6 +202,10 @@ class Entities(BooleanTradeAgreement):
 
 
 class CommodityType(Language):
+    '''
+    Inherits from :model:`guide.Language`
+    This is for Goods, Services, Construction
+    '''
     commodity_type = models.CharField(
         max_length=128,
         default='',
@@ -198,14 +216,15 @@ class CommodityType(Language):
 
     class Meta:
         unique_together = ['commodity_type', 'lang']
+        ordering = ['id']
 
     def __str__(self):
         return self.commodity_type
 
 
-class ValueThreshold(NumericTradeAgreements):
+class ValueThreshold(NumericTradeAgreement):
     """
-    Subclass of :model: 'guide.NumericTradeAgreement'
+    Subclass of :model:`guide.NumericTradeAgreement`
     This class is for the dollar value thresholds in the trade agreements
     """
     type_value = models.ForeignKey(
@@ -219,10 +238,15 @@ class ValueThreshold(NumericTradeAgreements):
     )
 
     def __str__(self):
-        return self.type_value.commodity_type
+        return str(self.type_value)
 
 
 class Code(BooleanTradeAgreement):
+    '''
+    Inherits from :model:`guide.BooleanTradeAgreement`
+    Foreign key from :model:`guide.CommodityType`
+    This combines commodity types with specific commodity codes.
+    '''
     type = models.ForeignKey(
         CommodityType,
         to_field='commodity_type',
@@ -244,10 +268,9 @@ class Code(BooleanTradeAgreement):
         return self.code
 
 
-
 class TenderingReason(BooleanTradeAgreement):
     """
-    Subclass of :model: 'guide.BooleanTradeAgreement'
+    Subclass of :model:`guide.BooleanTradeAgreement`
     This class has limited tendering reasons
     """
     name = models.TextField(
@@ -260,10 +283,9 @@ class TenderingReason(BooleanTradeAgreement):
         return self.name
 
 
-
-class TAException(BooleanTradeAgreement):
+class GeneralException(BooleanTradeAgreement):
     """
-    Subclass of :model: 'guide.BooleanTradeAgreement'
+    Subclass of :model:`guide.BooleanTradeAgreement`
     This class has trade agreement exceptions
     """
     name = models.TextField(
@@ -274,13 +296,10 @@ class TAException(BooleanTradeAgreement):
     def __str__(self):
         return self.name
 
-    def get_fields(self):
-        return [field.name for field in TAException._meta.fields]
-
 
 class CftaException(BooleanTradeAgreement):
     """
-    Subclass of :model: 'guide.BooleanTradeAgreement'
+    Subclass of :model:`guide.BooleanTradeAgreement`
     This class has Canada Free Trade Agreement exceptions
     """
     name = models.TextField(
@@ -291,19 +310,3 @@ class CftaException(BooleanTradeAgreement):
 
     def __str__(self):
         return self.name
-
-
-class Instructions(Language):
-    name = models.TextField(
-        default='-',
-        unique=True,
-        verbose_name='Instructions'
-    )
-
-    def __str__(self):
-        return self.name
-
-
-
-
-

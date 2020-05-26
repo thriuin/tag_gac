@@ -1,32 +1,33 @@
 from django import forms
 from django.forms.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from guide.models import Entities, Code, TAException, TenderingReason, CftaException
+from guide.models import Organization, Code, GeneralException, TenderingReason, CftaException
 
-class MandatoryElementsEN(forms.Form):
+class RequiredFieldsFormEN(forms.Form):
 
     estimated_value = forms.IntegerField(
-        label=_('Estimated Value'),
-        required=True
+        label=_('What is the total estimated value of the procurement?'),
+        required=True,
+        min_value=0
     )
     estimated_value.widget.attrs['class'] = 'form-control'
 
     entities = forms.ModelChoiceField(
-        Entities.objects.filter(lang='EN').only('name'),
-        label=_('Organization'),
+        Organization.objects.filter(lang='EN').only('name'),
+        label=_('Who is the procuring entity?'),
         required=True
     )
     entities.widget.attrs['class'] = 'form-control'
 
     type = forms.CharField(
-        label=_('Commodity Type'),
+        label=_('What is the procurement commodity type?'),
         required=True,
         widget = forms.Select()
     )
     type.widget.attrs['class'] = 'form-control'
     code = forms.CharField(
         widget = forms.Select(),
-        label=_('Commodity Code'),
+        label=_('What is the trade agreement commodity code most closely associated with the procurement?'),
         required=True
     )
     code.widget.attrs['class'] = 'form-control'
@@ -45,10 +46,10 @@ class MandatoryElementsEN(forms.Form):
         else:
             raise ValidationError('Invalid choice.  Please select a commodity code.')
 
-class ExceptionsEN(forms.Form):
+class GeneralExceptionFormEN(forms.Form):
 
     exceptions = forms.ModelMultipleChoiceField(
-        TAException.objects.filter(lang='EN').only('name'),
+        GeneralException.objects.filter(lang='EN').only('name'),
         widget=forms.CheckboxSelectMultiple,
         label=_("Exceptions"),
         required=False
@@ -56,7 +57,7 @@ class ExceptionsEN(forms.Form):
     exceptions.widget.attrs['class'] = 'form-control'
 
 
-class LimitedTenderingEN(forms.Form):
+class LimitedTenderingFormEN(forms.Form):
 
     limited_tendering = forms.ModelMultipleChoiceField(
         TenderingReason.objects.filter(lang='EN').only('name'),
@@ -67,7 +68,7 @@ class LimitedTenderingEN(forms.Form):
     limited_tendering.widget.attrs['class'] = 'form-control'
 
 
-class CftaExceptionsEN(forms.Form):
+class CftaExceptionFormEN(forms.Form):
 
     cfta_exceptions = forms.ModelMultipleChoiceField(
         CftaException.objects.filter(lang='EN').only('name'),
