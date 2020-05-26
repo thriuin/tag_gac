@@ -17,11 +17,14 @@
             {% for lt in form.limited_tendering %}
                 <div class="checkbox">
                     {{ lt }}
+                    {% if forloop.counter == 8 %}
+                        <sup id="table-fn1-rf"><a class="fn-lnk" href="#table1-fn1"><span class="wb-inv">table 1 note</span>1</a></sup>
+                    {% endif %}
                     {% if forloop.counter == 15 %}
-                        <sup id="table1-fn1-rf"><a class="fn-lnk" href="#table1-fn1"><span class="wb-inv">table 1 note </span>1</a></sup>
+                        <sup id="table1-fn2-rf"><a class="fn-lnk" href="#table1-fn2"><span class="wb-inv">table 1 note </span>2</a></sup>
                     {% endif %}
                     {% if forloop.counter == 16 %}
-                        <sup id="table1-fn2-rf"><a class="fn-lnk" href="#table1-fn2"><span class="wb-inv">table 1 note </span>2</a></sup>
+                        <sup id="table1-fn3-rf"><a class="fn-lnk" href="#table1-fn3"><span class="wb-inv">table 1 note </span>3</a></sup>
                     {% endif %}
                 </div>
             {% endfor %}
@@ -37,12 +40,16 @@
             <dl>
                 <dt>Table 1 Note 1</dt>
                 <dd id="table1-fn1">
-                    <p>{% trans "Does not apply to CPTPP, CETA, WTO-GAP, CKFTA, CUFTA." %}</p>
-                    <p class="fn-rtn"> <a href="#table1-fn1-rf"><span class="wb-inv">Return to table 1 note </span>1<span class="wb-inv"> referrer</span></a> </p>
+                    <p>{% trans "Only applies to CFTA" %}</p>
+                    <p class="fn-rtn"><a href="table1-fn1-rf"><span class="wb-inv">Return to table 1 note</span>1<span class="wb-inv"> referrer</span></a></p>
                 </dd>
                 <dd id="table1-fn2">
-                    <p>{% trans "Only applies to CPaFTA, CPTPP, CCFTA." %}</p>
+                    <p>{% trans "Does not apply to CPTPP, CETA, WTO-GAP, CKFTA, CUFTA." %}</p>
                     <p class="fn-rtn"> <a href="#table1-fn2-rf"><span class="wb-inv">Return to table 1 note </span>2<span class="wb-inv"> referrer</span></a> </p>
+                </dd>
+                <dd id="table1-fn3">
+                    <p>{% trans "Only applies to CPaFTA, CPTPP, CCFTA." %}</p>
+                    <p class="fn-rtn"> <a href="#table1-fn3-rf"><span class="wb-inv">Return to table 1 note </span>3<span class="wb-inv"> referrer</span></a> </p>
                 </dd>
             </dl>
         </section>
