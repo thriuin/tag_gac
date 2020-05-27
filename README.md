@@ -43,18 +43,18 @@ Then the limited tendering reasons, trade agreement exceptions, and Canada Free 
 The main page is /guide/en/0/ or guide/fr/0/
 
 Populate the first page with the mandatory information.  
-![mandatory_elements](https://github.com/liverms/tag_gac/blob/master/me.PNG)
+![mandatory_elements](https://github.com/liverms/tag_gac/blob/master/screenshots/me.PNG)
 
 A proceed through the next three optional steps.
 First general exceptions:
-![exceptions](https://github.com/liverms/tag_gac/blob/master/ex.PNG)
+![exceptions](https://github.com/liverms/tag_gac/blob/master/screenshots/ex.PNG)
 
 Next are the limited tendering reasons:
-![limited_tendering](https://github.com/liverms/tag_gac/blob/master/lt.PNG)
+![limited_tendering](https://github.com/liverms/tag_gac/blob/master/screenshots/lt.PNG)
 
 Next are the CFTA exceptions:
-![cfta_exceptions](https://github.com/liverms/tag_gac/blob/master/ce.PNG)
+![cfta_exceptions](https://github.com/liverms/tag_gac/blob/master/screenshots/ce.PNG)
 
 The next screen is the final screen showing the results:
-![done](https://github.com/liverms/tag_gac/blob/master/done.PNG)
+![done](https://github.com/liverms/tag_gac/blob/master/screenshots/done.PNG)
 
