@@ -1,6 +1,6 @@
 Trade Agreement Coverage Tool
 
-THe Government of Canada is party to 12 trade agreements with government procurement chapters (eleven international and one domestic).  This permits Canadian suppliers to sell goods, services, or construction services to countries abroad and reciprocal treatment is given for foreign suppliers.  Whenever the Government of Canada considers purchasing a commodity a procurement officer must determine which trade agreements apply.  This tool was built to assist in that determination.  
+The Government of Canada is party to 12 trade agreements with government procurement chapters (eleven international and one domestic).  This permits Canadian suppliers to sell goods, services, or construction services to countries abroad and reciprocal treatment is given for foreign suppliers.  Whenever the Government of Canada considers purchasing a commodity a procurement officer must determine which trade agreements apply.  This tool was built to assist in that determination.  
 
 Create a virtual environment
 ```
@@ -43,18 +43,18 @@ Then the limited tendering reasons, trade agreement exceptions, and Canada Free 
 The main page is /guide/en/0/ or guide/fr/0/
 
 Populate the first page with the mandatory information.  
-![mandatory_elements](https://github.com/liverms/tag_gac/blob/master/me.PNG)
+![mandatory_elements](https://github.com/liverms/tag_gac/blob/master/screenshots/me.PNG)
 
 A proceed through the next three optional steps.
 First general exceptions:
-![exceptions](https://github.com/liverms/tag_gac/blob/master/ex.PNG)
+![exceptions](https://github.com/liverms/tag_gac/blob/master/screenshots/ex.PNG)
 
 Next are the limited tendering reasons:
-![limited_tendering](https://github.com/liverms/tag_gac/blob/master/lt.PNG)
+![limited_tendering](https://github.com/liverms/tag_gac/blob/master/screenshots/lt.PNG)
 
 Next are the CFTA exceptions:
-![cfta_exceptions](https://github.com/liverms/tag_gac/blob/master/ce.PNG)
+![cfta_exceptions](https://github.com/liverms/tag_gac/blob/master/screenshots/ce.PNG)
 
 The next screen is the final screen showing the results:
-![done](https://github.com/liverms/tag_gac/blob/master/done.PNG)
+![done](https://github.com/liverms/tag_gac/blob/master/screenshots/done.PNG)
 

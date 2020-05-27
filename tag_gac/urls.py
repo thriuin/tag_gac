@@ -24,5 +24,5 @@ from django.conf.urls import url
 urlpatterns = [
     path('tag/admin/doc/', include('django.contrib.admindocs.urls')),
     path('tag/admin/', admin.site.urls),
-	url(r"guide/", include(("guide.urls", "guide"), namespace = "guide"))
+	url(r"tag/", include(("guide.urls", "guide"), namespace = "guide"))
 ]
