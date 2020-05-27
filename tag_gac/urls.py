@@ -22,7 +22,7 @@ from django.conf.urls import url
 
 
 urlpatterns = [
-    path('admin/doc/', include('django.contrib.admindocs.urls')),
-    path('admin/', admin.site.urls),
+    path('tag/admin/doc/', include('django.contrib.admindocs.urls')),
+    path('tag/admin/', admin.site.urls),
 	url(r"guide/", include(("guide.urls", "guide"), namespace = "guide"))
 ]
