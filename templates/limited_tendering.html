@@ -12,7 +12,7 @@
                 {{ error }}
             {% endfor %}
         {% endif %}
-        <h2>Step 4. Limited Tendering Reasons</h2> 
+        <h2>{% trans "Step 4. Limited Tendering Reasons" %}</h2> 
         <p>{% trans "Select all exceptions, if any, which apply." %}</p>
             {% for lt in form.limited_tendering %}
                 <div class="checkbox">

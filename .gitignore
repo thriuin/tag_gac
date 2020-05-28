@@ -142,4 +142,3 @@ coverage
 db.sqlite3
 geckodriver.log
 htmlcov
-

@@ -11,7 +11,7 @@
     <main role="main" property="mainContentOfPage" class="container">
         <div>
             <div class="mwsgeneric-base-html parbase section">     
-                <p class="gc-byline"><strong>From: <a href="https://www.canada.ca/en/treasury-board-secretariat.html">Treasury Board of Canada Secretariat</a></strong></p>
+                <p class="gc-byline"><strong>From: <a href="https://www.canada.ca/en/treasury-board-secretariat.html">{% trans "Treasury Board of Canada Secretariat" %}</a></strong></p>
             </div>
         </div>
     </main>
@@ -20,7 +20,7 @@
         <h3>{% trans "Based on the information that was provided (e.g. Total Estimated Value, Procuring Entity, Commodity Type and Commodity Code).  It is suggested that the following trade agreements will likely apply:"%}</h3>
         <br>
         {% if True not in bool.values %}
-            <span>None</span>
+            <span>{% "No trade agreements apply." %}</span>
         {% else %}
             {% for k1, v1 in bool.items %}
                 {% if v1 is True %}
