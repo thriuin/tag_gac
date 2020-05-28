@@ -18,11 +18,17 @@ from rest_framework import routers
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
+from django.conf.urls.i18n import i18n_patterns
+from django.utils.translation import gettext_lazy as _
 
-
-
-urlpatterns = [
+urlpatterns=[
     path('tag/admin/doc/', include('django.contrib.admindocs.urls')),
-    path('tag/admin/', admin.site.urls),
-	url(r"tag/", include(("guide.urls", "guide"), namespace = "guide"))
+    path('tag/admin/', admin.site.urls)
 ]
+site_patterns = ([
+	url(r"", include(("guide.urls", "guide"), namespace = "guide"))
+], 'tag')
+
+urlpatterns += i18n_patterns(
+    path(_('tag/'), include(site_patterns, namespace='tag'))
+)
