@@ -20,3 +20,9 @@ urlpatterns = [
     path('', lambda request: redirect(r'en/0/', permanent=False)),
     url('^.*$', lambda request: redirect(r'en/0/', permanent=False))
 ]
+
+
+    # url('^.*$', redirect('en/0/', permanent=False))
+    #     path('', lambda request: redirect('hola/', permanent=False)),
+    # path('hola/', include("hola.urls")),
+    # path('admin/', admin.site.urls),

@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.utils.translation import gettext_lazy as _
 # TODO: Add validators
 
 
@@ -41,62 +41,62 @@ class BooleanTradeAgreement(Language):
     id = models.AutoField(primary_key=True)
     cusma = models.BooleanField(
         default=False,
-        verbose_name="CUSMA",
+        verbose_name=_('CUSMA'),
         blank=False
     )
     ccfta = models.BooleanField(
         default=False,
-        verbose_name="CCFTA",
+        verbose_name=_('CCFTA'),
         blank=False
     )
     ccofta = models.BooleanField(
         default=False,
-        verbose_name="CCoFTA",
+        verbose_name=_('CCoFTA'),
         blank=False
     )
     chfta = models.BooleanField(
         default=False,
-        verbose_name="CHFTA",
+        verbose_name=_('CHFTA'),
         blank=False
     )
     cpafta = models.BooleanField(
         default=False,
-        verbose_name="CPaFTA",
+        verbose_name=_('CPaFTA'),
         blank=False
     )
     cpfta = models.BooleanField(
         default=False,
-        verbose_name="CPFTA",
+        verbose_name=_('CPFTA'),
         blank=False
     )
     ckfta = models.BooleanField(
         default=False,
-        verbose_name="CKFTA",
+        verbose_name=_('CKFTA'),
         blank=False
     )
     cufta = models.BooleanField(
         default=False,
-        verbose_name="CUFTA",
+        verbose_name=_('CUFTA'),
         blank=False
     )
     wto_agp = models.BooleanField(
         default=False,
-        verbose_name="WTO-AGP",
+        verbose_name=_('WTO-AGP'),
         blank=False
     )
     ceta = models.BooleanField(
         default=False,
-        verbose_name="CETA",
+        verbose_name=_('CETA'),
         blank=False
     )
     cptpp = models.BooleanField(
         default=False,
-        verbose_name="CPTPP",
+        verbose_name=_('CPTPP'),
         blank=False
     )
     cfta = models.BooleanField(
         default=False,
-        verbose_name="CFTA",
+        verbose_name=_('CFTA'),
         blank=False
     )
 
@@ -112,62 +112,62 @@ class NumericTradeAgreement(models.Model):
     id = models.AutoField(primary_key=True)
     cusma = models.IntegerField(
         default=0,
-        verbose_name="CUSMA",
+        verbose_name=_('CUSMA'),
         blank=False
     )
     ccfta = models.PositiveIntegerField(
         default=0,
-        verbose_name="CCFTA",
+        verbose_name=_('CCFTA'),
         blank=False
     )
     ccofta = models.PositiveIntegerField(
         default=0,
-        verbose_name="CCoFTA",
+        verbose_name=_('CCoFTA'),
         blank=False
     )
     chfta = models.PositiveIntegerField(
         default=0,
-        verbose_name="CHFTA",
+        verbose_name=_('CHFTA'),
         blank=False
     )
     cpafta = models.PositiveIntegerField(
         default=0,
-        verbose_name="CPaFTA",
+        verbose_name=_('CPaFTA'),
         blank=False
     )
     cpfta = models.PositiveIntegerField(
         default=0,
-        verbose_name="CPFTA",
+        verbose_name=_('CPFTA'),
         blank=False
     )
     ckfta = models.PositiveIntegerField(
         default=0,
-        verbose_name="CKFTA",
+        verbose_name=_('CKFTA'),
         blank=False
     )
     cufta = models.PositiveIntegerField(
         default=0,
-        verbose_name="CUFTA",
+        verbose_name=_('CUFTA'),
         blank=False
     )
     wto_agp = models.PositiveIntegerField(
         default=0,
-        verbose_name="WTO-AGP",
+        verbose_name=_('WTO-AGP'),
         blank=False
     )
     ceta = models.PositiveIntegerField(
         default=0,
-        verbose_name="CETA",
+        verbose_name=_('CETA'),
         blank=False
     )
     cptpp = models.PositiveIntegerField(
         default=0,
-        verbose_name="CPTPP",
+        verbose_name=_('CPTPP'),
         blank=False
     )
     cfta = models.PositiveIntegerField(
         default=0,
-        verbose_name="CFTA",
+        verbose_name=_('CFTA'),
         blank=False
     )
 
@@ -184,16 +184,16 @@ class Organization(BooleanTradeAgreement):
         max_length=128,
         default='',
         unique=True,
-        verbose_name='Entities'
+        verbose_name=_('Entities')
     )
     tc = models.BooleanField(
         default=False,
-        verbose_name='Department of Transport',
+        verbose_name=_('Department of Transport'),
         blank=False
     )
     goods_rule = models.BooleanField(
         default=False,
-        verbose_name='Defence RCMP or CCG',
+        verbose_name=_('DND, RCMP or CCG'),
         blank=False
     )
 
@@ -210,7 +210,7 @@ class CommodityType(Language):
         max_length=128,
         default='',
         unique=True,
-        verbose_name='Commodity Type'
+        verbose_name=_('Commodity Type')
     )
 
 
@@ -233,7 +233,7 @@ class ValueThreshold(NumericTradeAgreement):
         related_name='+',
         max_length=128,
         default='',
-        verbose_name='Commodity Type',
+        verbose_name=_('Commodity Type'),
         on_delete=models.CASCADE
     )
 
@@ -253,14 +253,14 @@ class Code(BooleanTradeAgreement):
         related_name='+',
         max_length=128,
         default='',
-        verbose_name='Commodity Type',
+        verbose_name=_('Commodity Type'),
         on_delete=models.CASCADE
     )
 
     code = models.CharField(
         max_length=128,
         default='',
-        verbose_name='Code List',
+        verbose_name=_('Code List'),
         db_column='code_list'
     )
 
@@ -276,7 +276,7 @@ class TenderingReason(BooleanTradeAgreement):
     name = models.TextField(
         default="-",
         unique=True,
-        verbose_name="Description"
+        verbose_name=_('Description')
     )
 
     def __str__(self):
@@ -291,7 +291,7 @@ class GeneralException(BooleanTradeAgreement):
     name = models.TextField(
         default="-",
         unique=True,
-        verbose_name="Description"
+        verbose_name=_('Description')
     )
     def __str__(self):
         return self.name
@@ -305,7 +305,7 @@ class CftaException(BooleanTradeAgreement):
     name = models.TextField(
         default="-",
         unique=True,
-        verbose_name="Description"
+        verbose_name=_('Description')
     )
 
     def __str__(self):
