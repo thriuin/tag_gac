@@ -127,7 +127,10 @@ def code_rule(cxt, code_name, type_name, org_name):
             return cxt
         if type == 'Construction' and tc_rule is True:
             for ta in cxt['ta']:
-                cxt['ta'][ta][code_name] = False
+                if ta == 'cfta':
+                    pass
+                else:
+                    cxt['ta'][ta][code_name] = False
             return cxt
         data = Code.objects.filter(code=value)
         cxt = check_if_trade_agreement_applies(cxt, data, code_name)

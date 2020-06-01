@@ -6,6 +6,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.firefox.webdriver import WebDriver
 import time
 from selenium.webdriver.support.ui import Select
+import unittest
 
 # models tests
 class ModelTest(TestCase):
@@ -19,37 +20,37 @@ class ModelTest(TestCase):
         TenderingReason.objects.create(name='Model Limited Tendering Reason')
         GeneralException.objects.create(name='Model General Exception')
         CftaException.objects.create(name='Model CFTA Exception')
-
+    @unittest.skip('none')
     def test_organization(self):
         label = Organization.objects.get(id=1)
         self.assertEqual(str(label), label.__str__())
         self.assertTrue(isinstance(label, Organization))
-
+    @unittest.skip('none')
     def test_commodity_type(self):
         label = CommodityType.objects.get(id=1)
         self.assertEqual(str(label), label.__str__())
         self.assertTrue(isinstance(label, CommodityType))
-
+    @unittest.skip('none')
     def test_code(self):
         label = Code.objects.get(id=1)
         self.assertEqual(str(label), label.__str__())
         self.assertTrue(isinstance(label, Code))
-
+    @unittest.skip('none')
     def test_value_threshold(self):
         label = ValueThreshold.objects.get(id=1)
         self.assertEqual(str(label), label.__str__())
         self.assertTrue(isinstance(label, ValueThreshold))
-
+    @unittest.skip('none')
     def test_tendering_reason(self):
         label = TenderingReason.objects.get(id=1)
         self.assertEqual(str(label), label.__str__())
         self.assertTrue(label, TenderingReason)
-
+    @unittest.skip('none')
     def test_general_exception(self):
         label = GeneralException.objects.get(id=1)
         self.assertEqual(str(label), label.__str__())
         self.assertTrue(label, GeneralException)
-
+    @unittest.skip('none')
     def test_cfta_exception(self):
         label = CftaException.objects.get(id=1)
         self.assertEqual(str(label), label.__str__())    
@@ -94,7 +95,7 @@ class TestViews(TestCase):
             'trade_wizard-current_step': '3',
         }
     )
-    
+    @unittest.skip('none')
     def test_initial_call(self):
         response = self.client.get(reverse(self.wizard_urlname, args=['0']))
         self.assertEqual(response.status_code, 200)
@@ -108,18 +109,20 @@ class TestViews(TestCase):
         self.assertEqual(wizard['steps'].count, 3)
         self.assertEqual(wizard['url_name'], self.wizard_urlname)
 
-entities_list = {'default', 'tc', 'goods_rule'}
 commodity_type_list = {'Goods', 'Services', 'Construction'}
 commodity_code_default = Code.objects.filter(type='Goods').values_list('code')[1]
 
-def step_through_form(self, estimated_value=1000000000, entities='default', commodity_type='Goods', 
+def step_through_form(self, estimated_value=1000000000, organization=None, commodity_type='Goods', 
                             general_exception=None, cfta_exception=None, lt_page=True, limited_tendering_reason=None):
     self.selenium.get(self.live_server_url + '/en/tag/0/')
+
+    if estimated_value < 0:
+        raise ValueError('Estimated value cannot be less than zero')
 
     # Mandatory elements page
     try:
         estimated_value_input = self.selenium.find_element_by_name("0-estimated_value")
-        entities_input = Select(self.selenium.find_element_by_name("0-entities"))
+        org_input = Select(self.selenium.find_element_by_name("0-entities"))
         type_input = Select(self.selenium.find_element_by_name("0-type"))
         code_input = Select(self.selenium.find_element_by_name("0-code"))
     except:
@@ -127,8 +130,22 @@ def step_through_form(self, estimated_value=1000000000, entities='default', comm
 
     estimated_value_input.send_keys(estimated_value)
     
-    org = Organization.objects.filter(tc=False).values_list('name')[0]
-    entities_input.select_by_visible_text(org)
+    if organization:
+        valid_orgs = Organization.objects.values_list('name')
+        if organization not in valid_orgs:
+            raise ValueError('Organization not in model')
+        org = organization
+    else:
+        org = Organization.objects.filter(tc=False).\
+                filter(goods_rule=False).filter(cusma=True).\
+                filter(ccfta=True).filter(ccofta=True).\
+                filter(chfta=True).filter(cpafta=True).\
+                filter(cpfta=True).filter(ckfta=True).\
+                filter(cufta=True).filter(wto_agp=True).\
+                filter(ceta=True).filter(cptpp=True).\
+                filter(cfta=True).values_list('name')[0]
+
+    org_input.select_by_visible_text(org)
 
     type_input.select_by_visible_text(commodity_type)
 
@@ -141,8 +158,9 @@ def step_through_form(self, estimated_value=1000000000, entities='default', comm
     def checklist(element):
         time.sleep(1)
         if element:
-            try: 
-                check = self.selenium.find_element_by_id(element)
+            element=element[0]
+            try:
+                check = self.selenium.find_element_by_xpath(".//div[@class='checkbox']/span/label[contains(., '" + element + "')]/input")
                 check.click()
             except:
                 raise Exception('Cannot find ' + element)
@@ -155,7 +173,8 @@ def step_through_form(self, estimated_value=1000000000, entities='default', comm
     if lt_page:
         checklist(limited_tendering_reason)
 
-    
+    output = self.selenium.find_element_by_id('output').text
+    return output    
 
 class SeleniumTests(StaticLiveServerTestCase):
     port = 8000
@@ -167,14 +186,90 @@ class SeleniumTests(StaticLiveServerTestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.selenium = WebDriver()
-        cls.selenium.implicitly_wait(10)
+        cls.selenium.implicitly_wait(5)
 
     @classmethod
     def tearDownClass(cls):
         cls.selenium.quit()
         super().tearDownClass()
-
-    def test_form_1(self):
-        t = step_through_form(self)
-
+    
+    @unittest.skip('none')
+    def test_all_apply(self):
+        output = step_through_form(self)
         
+        for ta in agreements:
+            self.assertIn(ta.upper(), output)
+    @unittest.skip('none')
+    def test_low_estimated_value(self):
+        output = step_through_form(self, estimated_value=1, lt_page=False)
+
+        for ta in agreements:
+            self.assertNotIn(ta.upper(), output)
+    
+    #Entity none apply
+    @unittest.skip('none')
+    def test_org_none_apply(self):
+        org = Organization.objects.filter(tc=False).\
+            filter(goods_rule=False).filter(cusma=False).\
+            filter(ccfta=False).filter(ccofta=False).\
+            filter(chfta=False).filter(cpafta=False).\
+            filter(cpfta=False).filter(ckfta=False).\
+            filter(cufta=False).filter(wto_agp=False).\
+            filter(ceta=False).filter(cptpp=False).\
+            filter(cfta=False).values_list('name')[0]
+
+        output = step_through_form(self, organization=org, lt_page=False)
+        for ta in agreements:
+            self.assertNotIn(ta.upper(), output)
+    @unittest.skip('none')
+    def test_goods_rule(self):
+        org = Organization.objects.filter(goods_rule=True).values_list('name')[0]
+
+        output = step_through_form(self, organization=org)
+        agmt = agreements
+        agmt.remove('cfta')
+
+        self.assertIn('CFTA', output)
+        for ta in agmt:
+            self.assertNotIn(ta.upper(), output)
+    @unittest.skip('none')
+    def test_tc_rule(self):
+        org = Organization.objects.filter(tc=True).values_list('name')[0]
+        output = step_through_form(self, organization=org, commodity_type='Construction')
+
+        agmt = agreements
+        agmt.remove('cfta')
+
+        self.assertIn('CFTA', output)
+        for ta in agmt:
+            self.assertNotIn(ta.upper(), output)
+    @unittest.skip('none')
+    def test_general_exception_cfta_applies(self):
+        ge = GeneralException.objects.filter(cusma=True).\
+            filter(ccfta=True).filter(ccofta=True).\
+            filter(chfta=True).filter(cpafta=True).\
+            filter(cpfta=True).filter(ckfta=True).\
+            filter(cufta=True).filter(wto_agp=True).\
+            filter(ceta=True).filter(cptpp=True).\
+            filter(cfta=False).values_list('name')[0]
+        output = step_through_form(self, general_exception=ge)
+
+        agmt = agreements
+        agmt.remove('cfta')
+
+        self.assertIn('CFTA', output)
+        for ta in agmt:
+            self.assertNotIn(ta.upper(), output)
+
+    def test_general_exception_none_applies(self):
+        ge = GeneralException.objects.filter(cusma=True).\
+            filter(ccfta=True).filter(ccofta=True).\
+            filter(chfta=True).filter(cpafta=True).\
+            filter(cpfta=True).filter(ckfta=True).\
+            filter(cufta=True).filter(wto_agp=True).\
+            filter(ceta=True).filter(cptpp=True).\
+            filter(cfta=True).values_list('name')[0]
+        output = step_through_form(self, general_exception=ge, lt_page=False)
+
+        for ta in agreements:
+            self.assertNotIn(ta.upper(), output)
