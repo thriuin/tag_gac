@@ -20,15 +20,17 @@ from django.urls import path, include
 from django.conf.urls import url
 from django.conf.urls.i18n import i18n_patterns
 from django.utils.translation import gettext_lazy as _
+from django.shortcuts import redirect
+from guide.views import ajax_type, ajax_code
 
-urlpatterns=[
+urlpatterns = [
     path('tag/admin/doc/', include('django.contrib.admindocs.urls')),
-    path('tag/admin/', admin.site.urls)
+    path('tag/admin/', admin.site.urls),
+    path('ajax/type/', ajax_type, name = 'ajax_type'),
+	path('ajax/code/', ajax_code, name = 'ajax_code'),
 ]
-site_patterns = ([
-	url(r"", include(("guide.urls", "guide"), namespace = "guide"))
-], 'tag')
 
 urlpatterns += i18n_patterns(
-    path(_('tag/'), include(site_patterns, namespace='tag'))
+    url(r"tag/", include(("guide.urls", "guide"), namespace = "guide")),
+    url('^.*$', lambda request: redirect(r'tag/0/', permanent=False))
 )
