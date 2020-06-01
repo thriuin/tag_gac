@@ -12,8 +12,10 @@
                 {{ error }}
             {% endfor %}
         {% endif %}
-        <h2>{% trans "Step 4. Limited Tendering Reasons" %}</h2> 
-        <p>{% trans "Select all exceptions, if any, which apply." %}</p>
+        <h2>{% trans "Step 4. Limited Tendering Reasons" %}</h2>
+        <p>{% trans "If a procurement is considered as covered by the applicable trade agreements, procurement officers must follow the open or selective tendering procurement obligations prescribed by the applicable trade agreements. If there are any deviations from the tendering obligations of the applicable trade agreements, procurement officers must consider the following applicable limited tendering rationale in order to determine whether a limited tendering approach can be used." %}</p> 
+        <br>
+        <p>{% trans "Select all limited tendering reasons, if any, which apply." %}</p>
             {% for lt in form.limited_tendering %}
                 <div class="checkbox">
                     {{ lt }}

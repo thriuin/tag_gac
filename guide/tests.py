@@ -113,42 +113,52 @@ commodity_type_list = {'Goods', 'Services', 'Construction'}
 commodity_code_default = Code.objects.filter(type='Goods').values_list('code')[1]
 
 def step_through_form(self, estimated_value=1000000000, entities='default', commodity_type='Goods', 
-                            general_exception=False, cfta_exception=False, limited_tendering_reason = False):
-    self.selenium.get(self.live_server_url + '/guide/en/0/')
+                            general_exception=None, cfta_exception=None, lt_page=True, limited_tendering_reason=None):
+    self.selenium.get(self.live_server_url + '/en/tag/0/')
+
     # Mandatory elements page
-    estimated_value_input = self.selenium.find_element_by_name("0-estimated_value")
+    try:
+        estimated_value_input = self.selenium.find_element_by_name("0-estimated_value")
+        entities_input = Select(self.selenium.find_element_by_name("0-entities"))
+        type_input = Select(self.selenium.find_element_by_name("0-type"))
+        code_input = Select(self.selenium.find_element_by_name("0-code"))
+    except:
+        raise Exception('Cannot find elements in mandatory elements page')
+
     estimated_value_input.send_keys(estimated_value)
     
-    entities_input = Select(self.selenium.find_element_by_name("0-entities"))
-    value = Organization.objects.filter(tc=False).values_list('name')[0]
-    entities_input.select_by_visible_text(value)
+    org = Organization.objects.filter(tc=False).values_list('name')[0]
+    entities_input.select_by_visible_text(org)
 
-    type_input = Select(self.selenium.find_element_by_name("0-type"))
     type_input.select_by_visible_text(commodity_type)
 
-    code_input = Select(self.selenium.find_element_by_name("0-code"))
     value = Code.objects.filter(type=commodity_type).values_list('code')[1]
     code_input.select_by_visible_text(value)
-    time.sleep(3)
+    
+    time.sleep(1)
     self.selenium.find_element_by_xpath('//input[@value="Next"]').click()
 
-    # General Exceptions
-    time.sleep(1)
-    check = self.selenium.find_element_by_id('id_1-exceptions_0')
-    check.click()
-    self.selenium.find_element_by_xpath('//input[@value="Next"]').click()
+    def checklist(element):
+        time.sleep(1)
+        if element:
+            try: 
+                check = self.selenium.find_element_by_id(element)
+                check.click()
+            except:
+                raise Exception('Cannot find ' + element)
 
-    # Cfta exceptions
-    time.sleep(1)
-    check2 = self.selenium.find_element_by_id('id_2-cfta_exceptions_1')
-    check2.click()
-    time.sleep(5)
-    submit = self.selenium.find_element_by_id('submit-form-button')
-    submit.submit()
-    time.sleep(10)
+        self.selenium.find_element_by_xpath('//input[@value="Next"]').click()
+
+    checklist(general_exception)
+    checklist(cfta_exception)
+    
+    if lt_page:
+        checklist(limited_tendering_reason)
+
+    
 
 class SeleniumTests(StaticLiveServerTestCase):
-    port = 8001
+    port = 8000
     fixtures = ["guide/fixtures/db.json"]
 
     wizard_urlname = url_name
