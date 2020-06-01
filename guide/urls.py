@@ -11,18 +11,8 @@ trade_wizard = TradeForm.as_view(
     done_step_name=done_step_name
 )
 
-
 urlpatterns = [
-    url(r'^en/(?P<step>.+)/$', trade_wizard, name='form_step'),
-    url('/en/done/', trade_wizard, name=done_step_name),
-    path("ajax/type/", ajax_type, name = 'ajax_type'),
-	path("ajax/code/", ajax_code, name = 'ajax_code'),
-    path('', lambda request: redirect(r'en/0/', permanent=False)),
-    url('^.*$', lambda request: redirect(r'en/0/', permanent=False))
+    path('<step>/', trade_wizard, name='form_step'),
+    path('done/', trade_wizard, name='done_step'),
+    path('', lambda request: redirect('0/', permanent=False))
 ]
-
-
-    # url('^.*$', redirect('en/0/', permanent=False))
-    #     path('', lambda request: redirect('hola/', permanent=False)),
-    # path('hola/', include("hola.urls")),
-    # path('admin/', admin.site.urls),
