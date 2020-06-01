@@ -92,6 +92,21 @@ class TradeForm(NamedUrlSessionWizardView):
         context_dict = exceptions_rule(context_dict, 'cfta_exceptions', CftaException)
         context_dict = determine_final_coverage(context_dict)
 
+        num_true = sum(context_dict['bool'].values())
+        
+        if num_true == 0:
+            output = 'No trade agreements apply.  '
+        else:
+            output = ''
+            for k, v in context_dict['bool'].items():
+                if num_true == 1:
+                    if v is True:
+                        output = k.upper() + ', '
+                else:
+                    if v is True:
+                        output = output + k.upper() + ', '
+        context_dict['output'] = output[:-2]
+
         return render(self.request, 'done.html', context_dict)
 
 

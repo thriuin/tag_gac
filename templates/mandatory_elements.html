@@ -5,7 +5,7 @@
 {% load markdown_filter %}
 
 {% block intro %}
-<p>{% trans "his tool is developed as a reference tool to help users determine which trade agreements would likely apply to a government procurement based on input of basic procurement information relevant to determine trade agreement coverage.  This tool is designed for procurement officers, or users who are generally familiar with the Government of Canada's government procurement tendering obligations under Canada's domestic and international trade agreements and it is expected that users would have this knowledge when using this tool." %}</p>
+<p>{% trans "This tool is developed as a reference tool to help users determine which trade agreements would likely apply to a government procurement based on input of basic procurement information relevant to determine trade agreement coverage.  This tool is designed for procurement officers, or users who are generally familiar with the Government of Canada's government procurement tendering obligations under Canada's domestic and international trade agreements and it is expected that users would have this knowledge when using this tool." %}</p>
 <p><b>{% trans "Important: " %}</b>{% trans "The results provided by this tool is a suggestion only.  It is still the responsibility of the procurement officer to identify actual trade agreement coverage based on the full considerations of the procurement including exceptions and exclusions that would apply to the entire procurement. " %}</p>
 <h2>{% trans "Step 1. Mandatory Elements" %}</h2>
 <p>{% trans "Determine which of Canada's trade agreements apply to your procurement by responding to the following questions and clicking the next button below.  Refer to the instructions section of this website for more information on completing each of the questions." %}</p>
@@ -13,13 +13,13 @@
 {% block form %}
     {% for ffield in form %}
         <div class="form-group" role="form">
-        <label for="{{ ffield.id_for_label }}" class="required">
-            {{ ffield.field.label }}	        
-            <strong class="required">
-                ({% trans 'Required' %})
-            </strong>
-            <sup id="table1-fn{{ forloop.counter }}-rf"><a class="fn-lnk" href="#table1-fn{{ forloop.counter }}"><span class="wb-inv">table 1 note </span>{{ forloop.counter }}</a></sup>
-        </label>
+            <label for="{{ ffield.id_for_label }}" class="required">
+                {{ ffield.field.label }}	        
+                <strong class="required">
+                    ({% trans 'Required' %})
+                </strong>
+                <sup id="table1-fn{{ forloop.counter }}-rf"><a class="fn-lnk" href="#table1-fn{{ forloop.counter }}"><span class="wb-inv">table 1 note </span>{{ forloop.counter }}</a></sup>
+            </label>
         {% if ffield.name == 'estimated_value' %}
             {{ form.estimated_value.errors }}
             {{ form.estimated_value }}
@@ -39,7 +39,7 @@
             </select>
             <hr>
         {% endif %}
-    </div>
+        </div>
     <br>
     {% endfor %}
 {% endblock %}
