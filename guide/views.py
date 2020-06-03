@@ -8,7 +8,6 @@ from guide.logic import FORMS, TEMPLATES, agreements, url_name, done_step_name, 
 def lt_condition(wizard):
     form_list = [f[0] for f in FORMS[:3]]
     context_dict = build_context_dict()
-
     for form in form_list:
         val = wizard.get_cleaned_data_for_step(form)
         if not val:

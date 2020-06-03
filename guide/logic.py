@@ -31,13 +31,12 @@ def process_form(cxt, form_data):
             cxt['ta'][k2][k] = True
     return cxt
 
-def check_if_trade_agreement_applies(cxt, data, name):
-    for ta in cxt['ta']:
-        check = data.values_list(ta).get()[0]
-        if check is False:
-            cxt['ta'][ta][name] = False
-        else:
-            cxt['ta'][ta][name] = True
+def check_if_trade_agreement_applies(ta, cxt, data, name):
+    check = data.values_list(ta).get()[0]
+    if check is False:
+        cxt['ta'][ta][name] = False
+    else:
+        cxt['ta'][ta][name] = True
     return cxt
     
 def determine_final_coverage(cxt):
@@ -66,7 +65,8 @@ def organization_rule(cxt, org_name):
     org = cxt[org_name]
     try:
         data = Organization.objects.filter(name=org)
-        cxt = check_if_trade_agreement_applies(cxt, data, org_name)
+        for ta in cxt['ta']:
+            cxt = check_if_trade_agreement_applies(ta, cxt, data, org_name)
     except:
         raise ValueError
     return cxt
@@ -117,23 +117,21 @@ def code_rule(cxt, code_name, type_name, org_name):
     value = cxt[code_name]
     type = cxt[type_name]
     org = cxt[org_name]
-
     try:
         defence_rule = Organization.objects.filter(name=org).values_list('goods_rule').get()[0]
         tc_rule = Organization.objects.filter(name=org).values_list('tc').get()[0]
         if type == 'Goods' and defence_rule is False:
-            for ta in cxt['ta']:
-                cxt['ta'][ta][code_name] = True
             return cxt
         if type == 'Construction' and tc_rule is True:
             for ta in cxt['ta']:
                 if ta == 'cfta':
-                    pass
+                    cxt['ta'][ta][code_name] = True
                 else:
                     cxt['ta'][ta][code_name] = False
             return cxt
         data = Code.objects.filter(code=value)
-        cxt = check_if_trade_agreement_applies(cxt, data, code_name)
+        for ta in cxt['ta']:
+            cxt = check_if_trade_agreement_applies(ta, cxt, data, code_name)
         return cxt
     except:
         raise ValueError       
