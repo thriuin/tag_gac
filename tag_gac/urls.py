@@ -27,5 +27,5 @@ urlpatterns = [
     path('ajax/type/', ajax_type, name = 'ajax_type'),
 	path('ajax/code/', ajax_code, name = 'ajax_code'),
     url(r"tag/", include(("guide.urls", "guide"), namespace = "guide")),
-    url('^.*$', lambda request: redirect(r'tag/0/', permanent=False))
+    url('^.*$', lambda request: redirect('/tag/0/', permanent=True))
 ]
