@@ -24,8 +24,8 @@ from guide.views import ajax_type, ajax_code
 urlpatterns = [
     path('tag/admin/doc/', include('django.contrib.admindocs.urls')),
     path('tag/admin/', admin.site.urls),
-    path('ajax/type/', ajax_type, name = 'ajax_type'),
-	path('ajax/code/', ajax_code, name = 'ajax_code'),
+    path('tag/ajax/type/', ajax_type, name = 'ajax_type'),
+	path('tag/ajax/code/', ajax_code, name = 'ajax_code'),
     url(r"tag/", include(("guide.urls", "guide"), namespace = "guide")),
     url('^.*$', lambda request: redirect('/tag/0/', permanent=True))
 ]
