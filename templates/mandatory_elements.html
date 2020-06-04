@@ -5,10 +5,9 @@
 {% load markdown_filter %}
 
 {% block intro %}
-<p>{% trans "This tool is developed as a reference tool to help users determine which trade agreements would likely apply to a government procurement based on input of basic procurement information relevant to determine trade agreement coverage.  This tool is designed for procurement officers, or users who are generally familiar with the Government of Canada's government procurement tendering obligations under Canada's domestic and international trade agreements and it is expected that users would have this knowledge when using this tool." %}</p>
-<p><b>{% trans "Important: " %}</b>{% trans "The results provided by this tool is a suggestion only.  It is still the responsibility of the procurement officer to identify actual trade agreement coverage based on the full considerations of the procurement including exceptions and exclusions that would apply to the entire procurement. " %}</p>
-<h2>{% trans "Step 1. Mandatory Elements" %}</h2>
-<p>{% trans "Determine which of Canada's trade agreements apply to your procurement by responding to the following questions and clicking the next button below.  Refer to the instructions section of this website for more information on completing each of the questions." %}</p>
+    <p>{% trans "Canada is a Party to several trade agreements which include obligations between the Parties regarding government procurement.  Determine which of these agreements apply by answering the questions below and clicking the ‘Next’ button.  Refer to the footnotes for instructions." %}</p>
+    <p><b>{% trans "Important: " %}</b>{% trans "This tool is for users who are familiar with Canada's procurement obligations under domestic and international trade agreements.  This tool will suggest which trade agreements apply but it remains the responsibility of the user to determine the final trade agreement coverage." %}</p>
+    <h2>{% trans "Step 1. Mandatory Elements" %}</h2>
 {% endblock %}
 {% block form %}
     {% for ffield in form %}
