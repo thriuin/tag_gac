@@ -29,11 +29,11 @@
         {% endif %}
         {% if ffield.name == 'type' %}
             {{ form.type.errors }}
-            <select class="form-control" id="type" name="0-type" url = "/ajax/type/"></select>
+            <select class="form-control" id="type" name="0-type" url = "/tag/ajax/type/"></select>
         {% endif %}
         {% if ffield.name == 'code' %}
             {{ form.code.errors }}
-            <select class="form-control" id="code" name="0-code" url = "/ajax/code/">
+            <select class="form-control" id="code" name="0-code" url = "/tag/ajax/code/">
                 <option value='all' selected>{% trans "Select Commodity Code" %}</option>
             </select>
             <hr>
