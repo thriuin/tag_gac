@@ -12,12 +12,12 @@
                 {{ error }}
             {% endfor %}
         {% endif %}
-        <h2>{% trans "Step 3. CFTA Exceptions" %}</h2>
-        <p>{% trans "Select all exceptions, if any, which apply." %}</p>
+        <h2>{% trans "Step 3: Canadian Free Trade Agreement Specific Exclusions" %}</h2>
+        <p><b>{% trans "Important: " %}</b>{% trans "Provide a response to the following question. " %}</p>
+        <p>{% trans "Is the procurement excluded from the CFTA per the list of CFTA specific exclusions below?" %}</p>
+        <p>{% trans "Answer the question by reviewing the following list of CFTA specific trade agreement exclusions. If a procurement falls under one or more of the following exceptions, select “Excluded”. If none of the following exclusions apply, select “Covered”." %}</p>
             {% for ce in form.cfta_exceptions %}
-                <div class="checkbox">
-                    {{ ce }}
-                </div>
+                {{ ce }}
             {% endfor %}
         <hr>
     </div>

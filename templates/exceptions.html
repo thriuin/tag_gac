@@ -12,8 +12,10 @@
                 {{ error }}
             {% endfor %}
         {% endif %}
-        <h2>{% trans "Step 2. Trade Agreement Exceptions" %}</h2>      
-        <p>{% trans "Instructions: Select the trade agreement exceptions, if any, that apply. If an exception only applies to part of a procurement, it should not be selected. Some of the exceptions only apply to some of Canada's trade agreements. The tool will take this into account when returning the suggested results.  Refer to the footnotes for information on which exceptions apply to which agreements." %}</p>
+        <h2>{% trans "Step 2. General Trade Agreement Exceptions and Exclusions" %}</h2>      
+        <p><b>{% trans "Important: " %}</b>{% trans "Provide a response to the following questions below and click the ‘Next’ button." %}</p>
+        <p>{% trans "Are there any general trade agreement exceptions or exclusions applicable to the procurement?" %}</p>
+        <p>{% trans "Answer the question by reviewing the list of general trade agreement exceptions and exclusions below and selecting the ones that apply to the procurement. If an exception or exclusion only applies to part of the procurement, it should not be selected. Some of the exceptions or exclusions only apply to some of Canada's trade agreements and the tool will determine which exceptions apply when returning the suggested results. Refer to the footnotes at the bottom for more information on which trade agreements include the specific exception or exclusion." %}</p>   
             {% for ex in form.exceptions %}
                 <div class="checkbox">
                     <span>
@@ -27,14 +29,6 @@
     {% endfor %}
 {% endblock %}
 {% block footnotes %}
-<h3>{% trans "Important Caveat:" %}</h3>
-<p>{% trans "The following trade agreement exceptions/exclusions have not been factored into this tool.  Procurement officers will need to consult the text of Canada's trade agreements on the application of trade agreement coverage for these procurements:" %}</p>
-<ul>
-    <li>{% trans "Procurement of goods or services from non-for-profit institutions." %}</li>
-    <li>{% trans "Procurement related to an international crossing between Canada and another country." %}</li>
-    <li>{% trans "Procurement related to space projects for the Canadian Space Agency." %}</li>
-    <li>{% trans "Procurement of satellite communications, earth observations and global navigation systems for the Canadian Space Agency." %}</li>
-</ul>
 <table>
     <tfoot>
         <section class="wb-fnote">

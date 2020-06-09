@@ -3,10 +3,10 @@ from django.forms.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from guide.models import Organization, Code, GeneralException, TenderingReason, CftaException
 
-estimated_value_label = _('What is the total estimated value of the procurement?')
+estimated_value_label = _('What is the total estimated value of the procurement? ')
 entities_label = _('Who is the procuring entity?')
 type_label = _('What is the procurement commodity type?')
-code_label = _('What is the trade agreement commodity code most closely associated with the procurement?')
+code_label = _('What is the Goods and Services Identification Number commodity (GSIN) code most closely associated with the procurement?')
 general_exceptions_label = _("Exceptions")
 limited_tendering_label = _("Limited Tendering Reasons")
 cfta_exceptions_label = _("CFTA Exceptions")

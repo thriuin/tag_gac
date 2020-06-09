@@ -13,48 +13,20 @@
             {% endfor %}
         {% endif %}
         <h2>{% trans "Step 4. Limited Tendering Reasons" %}</h2>
-        <p>{% trans "If a procurement is considered as covered by the applicable trade agreements, procurement officers must follow the open or selective tendering procurement obligations prescribed by the applicable trade agreements. If there are any deviations from the tendering obligations of the applicable trade agreements, procurement officers must consider the following applicable limited tendering rationale in order to determine whether a limited tendering approach can be used." %}</p> 
+        <p>{% trans "Based on the responses provided in prior steps, the procurement appears to be covered by one or more of the applicable trade agreements. " %}</p> 
+        <p>{% trans "If a procurement is covered by the trade agreement(s), the contracting authority is to follow the open or selective tendering procurement obligations prescribed by the covered trade agreement(s). If there are any deviations from the open or selective tendering obligations of the covered trade agreement(s), the contracting authority must consider whether one or more limited tendering reason is applicable to the procurement in order to determine whether a limited tendering approach can be used. The tool has pre-determined which limited tendering reasons exists within the applicable trade agreements based on the inputs already provided." %}</p>
         <br>
-        <p>{% trans "Select all limited tendering reasons, if any, which apply." %}</p>
+        <p><b>{% trans "Instructions: " %}</b>{% trans "If the procurement strategy is open tendering or selective tendering, click the “Next” button and leave the fields below blank. " %}</p>
+        <p>{% trans "If a limited tendering strategy is being considered, review the summary list of limited tendering reasons found in the applicable trade agreements and select the reason(s) that apply and click the “Next” button. If none of the limited tendering reasons apply, leave the fields blank. " %}</p>
             {% for lt in form.limited_tendering %}
                 <div class="checkbox">
                     {{ lt }}
-                    {% if forloop.counter == 8 %}
-                        <sup id="table-fn1-rf"><a class="fn-lnk" href="#table1-fn1"><span class="wb-inv">table 1 note</span>1</a></sup>
-                    {% endif %}
-                    {% if forloop.counter == 15 %}
-                        <sup id="table1-fn2-rf"><a class="fn-lnk" href="#table1-fn2"><span class="wb-inv">table 1 note </span>2</a></sup>
-                    {% endif %}
-                    {% if forloop.counter == 16 %}
-                        <sup id="table1-fn3-rf"><a class="fn-lnk" href="#table1-fn3"><span class="wb-inv">table 1 note </span>3</a></sup>
-                    {% endif %}
                 </div>
             {% endfor %}
+        <p><b>{% trans "Reminder: " %}</b>{% trans "In order to proceed with a limited tendering procurement strategy, a valid limited tendering reason must exist in each of the covered trade agreement(s). The applicable limited tendering rationale used to justify the procurement strategy must be documented on the procurement file." %}</p>
+        <p>{% trans "If there is any discrepancy between the list of limited tendering reasons and the text of the trade agreement(s), refer to the text of the trade agreement(s)." %}</p>
         <hr>
     </div>
     {% endfor %}
 {% endblock %}
-{% block footnotes %}
-<table>
-    <tfoot>
-        <section class="wb-fnote">
-            <h2 id="table1-fn" class="wb-inv">Table 1 Notes</h2>
-            <dl>
-                <dt>Table 1 Note 1</dt>
-                <dd id="table1-fn1">
-                    <p>{% trans "Only applies to CFTA" %}</p>
-                    <p class="fn-rtn"><a href="table1-fn1-rf"><span class="wb-inv">Return to table 1 note</span>1<span class="wb-inv"> referrer</span></a></p>
-                </dd>
-                <dd id="table1-fn2">
-                    <p>{% trans "Does not apply to CPTPP, CETA, WTO-GAP, CKFTA, CUFTA." %}</p>
-                    <p class="fn-rtn"> <a href="#table1-fn2-rf"><span class="wb-inv">Return to table 1 note </span>2<span class="wb-inv"> referrer</span></a> </p>
-                </dd>
-                <dd id="table1-fn3">
-                    <p>{% trans "Only applies to CPaFTA, CPTPP, CCFTA." %}</p>
-                    <p class="fn-rtn"> <a href="#table1-fn3-rf"><span class="wb-inv">Return to table 1 note </span>3<span class="wb-inv"> referrer</span></a> </p>
-                </dd>
-            </dl>
-        </section>
-    </tfoot>
-</table>
-{% endblock %}
+
