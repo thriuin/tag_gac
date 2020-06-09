@@ -39,11 +39,6 @@ class BooleanTradeAgreement(Language):
     :model:`guide.CftaException`
     """
     id = models.AutoField(primary_key=True)
-    cusma = models.BooleanField(
-        default=False,
-        verbose_name=_('CUSMA'),
-        blank=False
-    )
     ccfta = models.BooleanField(
         default=False,
         verbose_name=_('CCFTA'),
@@ -110,11 +105,6 @@ class NumericTradeAgreement(models.Model):
     This is inherited by :model:`guide.ValueThreshold`
     """
     id = models.AutoField(primary_key=True)
-    cusma = models.IntegerField(
-        default=0,
-        verbose_name=_('CUSMA'),
-        blank=False
-    )
     ccfta = models.PositiveIntegerField(
         default=0,
         verbose_name=_('CCFTA'),
