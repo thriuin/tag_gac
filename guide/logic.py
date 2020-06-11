@@ -12,7 +12,7 @@ TEMPLATES = {"0": "mandatory_elements.html",
              "3": "limited_tendering.html"}
 
 agreements = [
-    'cusma', 'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 
+    'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 
     'ckfta', 'cufta', 'wto_agp', 'ceta', 'cptpp', 'cfta'
 ]
 
