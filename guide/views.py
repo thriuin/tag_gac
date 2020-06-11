@@ -89,21 +89,21 @@ class TradeForm(NamedUrlSessionWizardView):
             context_dict = exceptions_rule(context_dict, 'cfta_exceptions', CftaException)
             context_dict = determine_final_coverage(context_dict)
             
-            ta_does_not_apply = []
+            ta_applies = []
             for k, v in context_dict['bool'].items():
-                if v is False:
-                    ta_does_not_apply.append(k)
+                if v is True:
+                    ta_applies.append(k)
             
             query_list = []
-            if ta_does_not_apply:
-                for ta in ta_does_not_apply:
+            if ta_applies:
+                for ta in ta_applies:
                     field_name = ta
-                    qs = TenderingReason.objects.filter(lang='EN').filter(**{field_name: False}).values_list('name')
+                    qs = TenderingReason.objects.filter(lang='EN').filter(**{field_name: True}).values_list('name')
                     qs = [q[0] for q in qs]
                     for q in qs:
                         query_list.append(q)
             
-            form.fields['limited_tendering'].queryset = TenderingReason.objects.filter(lang='EN').exclude(name__in=query_list).only('name')
+            form.fields['limited_tendering'].queryset = TenderingReason.objects.filter(lang='EN').filter(name__in=query_list).only('name')
             
         return form
 
