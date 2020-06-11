@@ -5,26 +5,44 @@
 {% load markdown_filter %}
 
 {% block form %}
-    {% for ffield in form %}
-    <div class="form-group" role="form">
-        {% if ffield.errors %}
-            {% for error in ffield.errors %}
-                {{ error }}
-            {% endfor %}
-        {% endif %}
-        <h2>{% trans "Step 3: Canadian Free Trade Agreement Specific Exclusions" %}</h2>
-        <p><b>{% trans "Important: " %}</b>{% trans "Provide a response to the following question. " %}</p>
-        <p>{% trans "Is the procurement excluded from the CFTA per the list of CFTA specific exclusions below?" %}</p>
-        <p>{% trans "Answer the question by reviewing the following list of CFTA specific trade agreement exclusions. If a procurement falls under one or more of the following exceptions, select “Excluded”. If none of the following exclusions apply, select “Covered”." %}</p>
-            {% for ce in form.cfta_exceptions %}
-                <div class="checkbox">
-                    <span>
-                        {{ ce }}	
-                    </span> 
-                </div>
-            {% endfor %}
-        <hr>
-    </div>
-    {% endfor %}
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {{ wizard.management_form }}
+        {% for ffield in form %}
+            <div class="form-group" role="form">
+                {% if ffield.errors %}
+                    {% for error in ffield.errors %}
+                        {{ error }}
+                    {% endfor %}
+                {% endif %}
+                <h2>{% trans "Step 3: Canadian Free Trade Agreement Specific Exclusions" %}</h2>
+                <p><b>{% trans "Important: " %}</b>{% trans "Provide a response to the following question. " %}</p>
+                <p>{% trans "Is the procurement excluded from the CFTA per the list of CFTA specific exclusions below?" %}</p>
+                <p>{% trans "Answer the question by reviewing the following list of CFTA specific trade agreement exclusions. If a procurement falls under one or more of the following exceptions, select “Excluded”. If none of the following exclusions apply, select “Covered”." %}</p>
+                    {% for ce in form.cfta_exceptions %}
+                        <div class="checkbox">
+                            <span>
+                                {{ ce }}	
+                            </span> 
+                        </div>
+                    {% endfor %}
+                <hr>
+            </div>
+        {% endfor %}
+        <div class="mwspagination section">
+            <nav class="mrgn-bttm-lg">
+                <h3 class="wb-inv">{% trans "Document navigation" %}</h3>
+                <ul class="pager">
+                    <div align="right">
+                        <li class="next">
+                            <input type="submit" class="btn btn-primary" rel="next" id="submit-form-button" value="Next"/>
+                            <span class="wb-inv">{% trans "Go to next step." %}</span>
+                        </li>
+                    </div>
+                </ul>
+            </nav>
+        </div>
+    </form>    
 {% endblock %}
 

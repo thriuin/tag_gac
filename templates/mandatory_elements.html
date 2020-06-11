@@ -3,7 +3,9 @@
 {% load static %}
 {% load humanize %}
 {% load markdown_filter %}
-
+<head>
+    <script src="{% static 'js/me.js' %}" type="text/javascript"></script>
+</head>
 {% block intro %}
     <p>{% trans "The Government of Canada is a party to free trade agreements some of which sets out obligations for government procurement. This tool is developed to assist users in determining which free trade agreements would likely apply to a government procurement by responding to a series of questions about the procurement information that are relevant to determine trade agreement coverage.  It is expected that the user of this tool is familiar with federal government procurement obligations under Canada’s domestic and international trade agreements." %}</p>
     <section class="alert alert-info">
@@ -11,44 +13,62 @@
     </section>
 {% endblock %}
 {% block form %}
-    <h2>{% trans "Step 1. Basic Procurement Information" %}</h2>
-    <p>{% trans "Provide a response to the following questions below and click the ‘Next’ button. Refer to the footnotes at the bottom for helpful hints in answering the questions." %}</p>
-    {% for ffield in form %}
-        <div class="form-group" role="form">
-            <label for="{{ ffield.id_for_label }}" class="required">
-                {{ ffield.field.label }}	        
-                <strong class="required">
-                    ({% trans 'Required' %})
-                </strong>
-                <sup id="table1-fn{{ forloop.counter }}-rf"><a class="fn-lnk" href="#table1-fn{{ forloop.counter }}"><span class="wb-inv">table 1 note </span>{{ forloop.counter }}</a></sup>
-            </label>
-        {% if ffield.errors %}
-            {% for error in ffield.errors %}
-                {{ error }}
-            {% endfor %}
-        {% endif %}
-        {% if ffield.name == 'estimated_value' %}
-            {{ form.estimated_value.errors }}
-            {{ form.estimated_value }}
-        {% endif %}
-        {% if ffield.name == 'entities' %}
-            {{ form.entities.errors }}
-            {{ form.entities }}
-        {% endif %}
-        {% if ffield.name == 'type' %}
-            {{ form.type.errors }}
-            <select class="form-control" id="type" name="0-type" url = "/tag/ajax/type/"></select>
-        {% endif %}
-        {% if ffield.name == 'code' %}
-            {{ form.code.errors }}
-            <select class="form-control" id="code" name="0-code" url = "/tag/ajax/code/">
-                <option value='all' selected>{% trans "Select Commodity Code" %}</option>
-            </select>
-            <hr>
-        {% endif %}
+<form action="" id="mandatoryElementsForm" method="POST">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {{ wizard.management_form }}
+        <h2>{% trans "Step 1. Basic Procurement Information" %}</h2>
+        <p>{% trans "Provide a response to the following questions below and click the ‘Next’ button. Refer to the footnotes at the bottom for helpful hints in answering the questions." %}</p>
+        {% for ffield in form %}
+            <div class="form-group" role="form">
+                <label for="{{ ffield.id_for_label }}" class="required">
+                    {{ ffield.field.label }}	        
+                    <strong class="required">
+                        ({% trans 'Required' %})
+                    </strong>
+                    <sup id="table1-fn{{ forloop.counter }}-rf"><a class="fn-lnk" href="#table1-fn{{ forloop.counter }}"><span class="wb-inv">table 1 note </span>{{ forloop.counter }}</a></sup>
+                </label>
+            {% if ffield.errors %}
+                {% for error in ffield.errors %}
+                    {{ error }}
+                {% endfor %}
+            {% endif %}
+            {% if ffield.name == 'estimated_value' %}
+                {{ form.estimated_value.errors }}
+                {{ form.estimated_value }}
+            {% endif %}
+            {% if ffield.name == 'entities' %}
+                {{ form.entities.errors }}
+                {{ form.entities }}
+            {% endif %}
+            {% if ffield.name == 'type' %}
+                {{ form.type.errors }}
+                <select class="form-control" id="type" name="0-type" url = "/tag/ajax/type/"></select>
+            {% endif %}
+            {% if ffield.name == 'code' %}
+                {{ form.code.errors }}
+                <select class="form-control" id="code" name="0-code" url = "/tag/ajax/code/">
+                    <option value='all' selected>{% trans "Select Commodity Code" %}</option>
+                </select>
+                <hr>
+            {% endif %}
+            </div>
+        <br>
+        {% endfor %}
+        <div class="mwspagination section">
+            <nav class="mrgn-bttm-lg">
+                <h3 class="wb-inv">{% trans "Document navigation" %}</h3>
+                <ul class="pager">
+                    <div align="right">
+                        <li class="next">
+                            <input type="submit" class="btn btn-primary" rel="next" id="submit-form-button" value="Next"/>
+                            <span class="wb-inv">{% trans "Go to next step." %}</span>
+                        </li>
+                    </div>
+                </ul>
+            </nav>
         </div>
-    <br>
-    {% endfor %}
+</form>
 {% endblock %}
 
 {% block footnotes %}
@@ -96,4 +116,5 @@
 {% endblock %}
 {% block custom-jquery %}
     <script src="{% static 'js/guide.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/me.js' %}" type="text/javascript"></script>
 {% endblock %}
