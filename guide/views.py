@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from guide.models import Code, GeneralException,CftaException
+from guide.models import Code, GeneralException, CftaException, TenderingReason
 from guide.forms import RequiredFieldsFormEN, GeneralExceptionFormEN, LimitedTenderingFormEN, CftaExceptionFormEN
 from formtools.wizard.views import NamedUrlSessionWizardView
 from django.http import JsonResponse
@@ -67,6 +67,44 @@ class TradeForm(NamedUrlSessionWizardView):
             html file -- Returns html file for form with right template
         """
         form = [TEMPLATES[self.steps.current]]
+        return form
+
+    def get_form(self, step=None, data=None, files=None):
+        form = super(TradeForm, self).get_form(step, data, files)
+        
+        if 'limited_tendering' in form.fields:
+            form_list = [f[0] for f in FORMS[:3]]
+            context_dict = build_context_dict()
+            for f in form_list:
+                val = self.get_cleaned_data_for_step(f)
+                if not val:
+                    return False
+                else:
+                    context_dict = process_form(context_dict, val)
+            
+            context_dict = value_threshold_rule(context_dict, 'estimated_value', 'type')
+            context_dict = organization_rule(context_dict, 'entities')
+            context_dict = code_rule(context_dict, 'code', 'type', 'entities')
+            context_dict = exceptions_rule(context_dict, 'exceptions', GeneralException)
+            context_dict = exceptions_rule(context_dict, 'cfta_exceptions', CftaException)
+            context_dict = determine_final_coverage(context_dict)
+            
+            ta_does_not_apply = []
+            for k, v in context_dict['bool'].items():
+                if v is False:
+                    ta_does_not_apply.append(k)
+            
+            query_list = []
+            if ta_does_not_apply:
+                for ta in ta_does_not_apply:
+                    field_name = ta
+                    qs = TenderingReason.objects.filter(lang='EN').filter(**{field_name: False}).values_list('name')
+                    qs = [q[0] for q in qs]
+                    for q in qs:
+                        query_list.append(q)
+            
+            form.fields['limited_tendering'].queryset = TenderingReason.objects.filter(lang='EN').exclude(name__in=query_list).only('name')
+            
         return form
 
     def done(self, form_list, form_dict, **kwargs):
