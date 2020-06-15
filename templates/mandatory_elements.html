@@ -13,7 +13,7 @@
     </section>
 {% endblock %}
 {% block form %}
-<form action="" id="mandatoryElementsForm" method="POST">
+<form action="" id="mandatoryElementsForm" method="POST" novalidate>
     {% csrf_token %}
     {{ form.non_field_errors }}
     {{ wizard.management_form }}
@@ -21,36 +21,34 @@
         <p>{% trans "Provide a response to the following questions below and click the ‘Next’ button. Refer to the footnotes at the bottom for helpful hints in answering the questions." %}</p>
         {% for ffield in form %}
             <div class="form-group" role="form">
-                <label for="{{ ffield.id_for_label }}" class="required">
+                <label for="{{ ffield.id_for_label }}">
                     {{ ffield.field.label }}	        
-                    <strong class="required">
+                    <strong style="color:#d3080c">
                         ({% trans 'Required' %})
                     </strong>
                     <sup id="table1-fn{{ forloop.counter }}-rf"><a class="fn-lnk" href="#table1-fn{{ forloop.counter }}"><span class="wb-inv">table 1 note </span>{{ forloop.counter }}</a></sup>
                 </label>
-            {% if ffield.errors %}
-                {% for error in ffield.errors %}
-                    {{ error }}
-                {% endfor %}
-            {% endif %}
-            {% if ffield.name == 'estimated_value' %}
-                {{ form.estimated_value.errors }}
-                {{ form.estimated_value }}
-            {% endif %}
-            {% if ffield.name == 'entities' %}
-                {{ form.entities.errors }}
-                {{ form.entities }}
-            {% endif %}
-            {% if ffield.name == 'type' %}
-                {{ form.type.errors }}
-                <select class="form-control" id="type" name="0-type" url = "/tag/ajax/type/"></select>
-            {% endif %}
-            {% if ffield.name == 'code' %}
-                {{ form.code.errors }}
-                <select class="form-control" id="code" name="0-code" url = "/tag/ajax/code/">
-                    <option value='all' selected>{% trans "Select Commodity Code" %}</option>
-                </select>
-                <hr>
+                {% if ffield.errors %}
+                    <section class="alert alert-danger">
+                        <p><b>{% trans "Error: " %}{{ ffield.errors }}</b></p>
+                    </section>
+                {% endif %}
+                {% if ffield.name == 'estimated_value' %}
+                    {{ form.estimated_value }}
+                {% endif %}
+                {% if ffield.name == 'entities' %}
+                    {{ form.entities }}
+                {% endif %}
+                {% if ffield.name == 'type' %}
+                    <select class="form-control" id="type" name="0-type" url = "/tag/ajax/type/">
+                        <option value='all' selected>{% trans "Select Commodity Type" %}</option>
+                    </select>
+                {% endif %}
+                {% if ffield.name == 'code' %}
+                    <select class="form-control" id="code" name="0-code" url = "/tag/ajax/code/">
+                        <option value='all' selected>{% trans "Select Commodity Code" %}</option>
+                    </select>
+                    <hr>
             {% endif %}
             </div>
         <br>
@@ -61,7 +59,7 @@
                 <ul class="pager">
                     <div align="right">
                         <li class="next">
-                            <input type="submit" class="btn btn-primary" rel="next" id="submit-form-button" value="Next"/>
+                            <input type="submit" class="btn btn-primary" rel="next" id="submit-form-button" value="Next" formnovalidate/>
                             <span class="wb-inv">{% trans "Go to next step." %}</span>
                         </li>
                     </div>
@@ -80,41 +78,39 @@
     <li>{% trans "Procurement related to space projects for the Canadian Space Agency." %}</li>
     <li>{% trans "Procurement of satellite communications, earth observations and global navigation systems for the Canadian Space Agency." %}</li>
 </ul>
-<table>
-    <tfoot>
-        <section class="wb-fnote">
-            <h2 id="table1-fn" class="wb-inv">Table 1 Notes</h2>
-            <h3>{% trans "Footnotes" %}</h3>
-            <dl>
-                <dt>Table 1 Note 1</dt>
-                <dd id="table1-fn1">
-                    <p>{% trans "(1)	Enter the maximum total value of the procurement considering all forms of remuneration over the entire duration of the contract, including the total value of any options, fees and applicable taxes. For supply arrangement tenders, input the total estimated value of all potential procurements (contracts) under the supply arrangement. For standing offer tenders, input the total estimated value of all potential call-ups (contracts) against the standing offer." %}</p>
-                    <p class="fn-rtn"> <a href="#table1-fn1-rf"><span class="wb-inv">Return to table 1 note </span>1<span class="wb-inv"> referrer</span></a> </p>
-                </dd>
-                <dd id="table1-fn2">
-                    <p>{% trans "S(2)	Select the name of the federal department or departmental agency that is the procuring entity. Note: This tool cannot be used for procurements on behalf of federal Crown Corporations or other procuring entitles not listed in Schedules I, I.1 or II of the  "%}<i>{% trans "Financial Administration Act." %}</i></p>
-                    <p class="fn-rtn"> <a href="#table1-fn2-rf"><span class="wb-inv">Return to table 1 note </span>2<span class="wb-inv"> referrer</span></a> </p>
-                </dd>
-                <dd id="table1-fn3">
-                    <p>{% trans "(3)	Select the commodity type. If a procurement includes more than one commodity type (e.g. a combination of goods and services), select the one that makes up the largest portion of the estimated contract value." %}</p>
-                    <p class="fn-rtn"> <a href="#table1-fn3-rf"><span class="wb-inv">Return to table 1 note </span>3<span class="wb-inv"> referrer</span></a> </p>
-                </dd>
-                <dd id="table1-fn4">
-                    <p>{% trans "(4)	Select the applicable commodity code. If multiple commodity codes apply to a procurement, select the commodity code that represents the largest portion of the requirement by dollar value or alternatively, best represent the entire procurement.  " %}</p>
-                    <p>{% trans "Note: The Goods and Services Identification Number commodity codes are based on the following applicable trade agreement commodity codes used to determine trade agreement commodity coverage:" %}</p>
-                    <ul>
-                        <li>{% trans "For goods, the Federal Supply Classification (FSC) is used. " %}</li>
-                        <li>{% trans "For services, the Common Classification System (CCS) and the United Nations Provisional Central Product Classification (CPC) system are used.  " %}</li>
-                        <li>{% trans "For construction services, the United Nations Provisional Central Product Classification (CPC) is used." %}</li>
-                    </ul>
-                    <p class="fn-rtn"> <a href="#table1-fn4-rf"><span class="wb-inv">Return to table 1 note </span>4<span class="wb-inv"> referrer</span></a> </p>
-                </dd>
-            </dl>
-        </section>
-    </tfoot>
-</table>
+<section class="wb-fnote">
+    <h2 id="table1-fn" class="wb-inv">Table 1 Notes</h2>
+    <h3>{% trans "Footnotes" %}</h3>
+    <dl>
+        <dt>Table 1 Note 1</dt>
+        <dd id="table1-fn1">
+            <p>{% trans "Enter the maximum total value of the procurement considering all forms of remuneration over the entire duration of the contract, including the total value of any options, fees and applicable taxes. For supply arrangement tenders, input the total estimated value of all potential procurements (contracts) under the supply arrangement. For standing offer tenders, input the total estimated value of all potential call-ups (contracts) against the standing offer." %}</p>
+            <p class="fn-rtn"> <a href="#table1-fn1-rf"><span class="wb-inv">Return to table 1 note </span>1<span class="wb-inv"> referrer</span></a> </p>
+        </dd>
+        <dt>Table 1 Note 2</dt>
+        <dd id="table1-fn2">
+            <p>{% trans "Select the name of the federal department or departmental agency that is the procuring entity. Note: This tool cannot be used for procurements on behalf of federal Crown Corporations or other procuring entitles not listed in Schedules I, I.1 or II of the  "%}<i>{% trans "Financial Administration Act." %}</i></p>
+            <p class="fn-rtn"> <a href="#table1-fn2-rf"><span class="wb-inv">Return to table 1 note </span>2<span class="wb-inv"> referrer</span></a> </p>
+        </dd>
+        <dt>Table 1 Note 3</dt>
+        <dd id="table1-fn3">
+            <p>{% trans "Select the commodity type. If a procurement includes more than one commodity type (e.g. a combination of goods and services), select the one that makes up the largest portion of the estimated contract value." %}</p>
+            <p class="fn-rtn"> <a href="#table1-fn3-rf"><span class="wb-inv">Return to table 1 note </span>3<span class="wb-inv"> referrer</span></a> </p>
+        </dd>
+        <dt>Table 1 Note 4</dt>
+        <dd id="table1-fn4">
+            <p>{% trans "Select the applicable commodity code. If multiple commodity codes apply to a procurement, select the commodity code that represents the largest portion of the requirement by dollar value or alternatively, best represent the entire procurement.  " %}</p>
+            <p>{% trans "Note: The Goods and Services Identification Number commodity codes are based on the following applicable trade agreement commodity codes used to determine trade agreement commodity coverage:" %}</p>
+            <ul>
+                <li>{% trans "For goods, the Federal Supply Classification (FSC) is used. " %}</li>
+                <li>{% trans "For services, the Common Classification System (CCS) and the United Nations Provisional Central Product Classification (CPC) system are used.  " %}</li>
+                <li>{% trans "For construction services, the United Nations Provisional Central Product Classification (CPC) is used." %}</li>
+            </ul>
+            <p class="fn-rtn"> <a href="#table1-fn4-rf"><span class="wb-inv">Return to table 1 note </span>4<span class="wb-inv"> referrer</span></a> </p>
+        </dd>
+    </dl>
+</section>
 {% endblock %}
 {% block custom-jquery %}
     <script src="{% static 'js/guide.js' %}" type="text/javascript"></script>
-    <script src="{% static 'js/me.js' %}" type="text/javascript"></script>
 {% endblock %}

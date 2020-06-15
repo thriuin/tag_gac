@@ -15,7 +15,7 @@ class RequiredFieldsFormEN(forms.Form):
 
     estimated_value = forms.IntegerField(
         label=estimated_value_label,
-        required=True,
+        required=False,
         min_value=0
     )
     estimated_value.widget.attrs['class'] = 'form-control'
@@ -23,22 +23,38 @@ class RequiredFieldsFormEN(forms.Form):
     entities = forms.ModelChoiceField(
         Organization.objects.filter(lang='EN').only('name'),
         label=entities_label,
-        required=True
+        required=False
     )
     entities.widget.attrs['class'] = 'form-control'
 
     type = forms.CharField(
         label=type_label,
-        required=True,
-        widget = forms.Select()
+        required=False,
     )
     type.widget.attrs['class'] = 'form-control'
+    
     code = forms.CharField(
-        widget = forms.Select(),
         label=code_label,
-        required=True
+        required=False
     )
     code.widget.attrs['class'] = 'form-control'
+
+    def clean_estimated_value(self):
+        val = self.cleaned_data.get('estimated_value')
+        if val is None:
+            raise ValidationError('Please enter a valid number greater than zero.')
+
+        if int(val) <= 0:
+            raise ValidationError('Please enter a valid number greater than zero.')
+        else:
+            return int(val)
+
+    def clean_entities(self):
+        org = self.cleaned_data.get('entities')
+        if Organization.objects.filter(name=org).exists():
+            return org
+        else:
+            raise ValidationError('Select a valid choice. That choice is not one of the available choices.')
 
     def clean_type(self):
         type = self.cleaned_data.get('type')
@@ -49,6 +65,8 @@ class RequiredFieldsFormEN(forms.Form):
 
     def clean_code(self):
         code = self.cleaned_data.get('code')
+        print(code)
+        print(Code.objects.filter(code=code).exists())
         if Code.objects.filter(code=code).exists():
             return code
         else:
