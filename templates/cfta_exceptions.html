@@ -23,7 +23,7 @@
                     {% for ce in form.cfta_exceptions %}
                         <div class="checkbox">
                             <span>
-                                {{ ce }}	
+                                {{ ce|linebreaksbr }}	
                             </span> 
                         </div>
                     {% endfor %}
@@ -35,10 +35,9 @@
                 <h3 class="wb-inv">{% trans "Document navigation" %}</h3>
                 <ul class="pager">
                     <div align="right">
-                        <li class="next">
-                            <input type="submit" class="btn btn-primary" rel="next" id="submit-form-button" value="Next"/>
-                            <span class="wb-inv">{% trans "Go to next step." %}</span>
-                        </li>
+                        <button class="btn btn-default" type="submit" value = "{{ wizard.steps.first }}" name="wizard_goto_step"><span class="wb-inv">{% trans "Go to first step." %}{% trans "Go to First Step" %}</button>
+                        <button class="btn btn-default" type="submit" value = "{{ wizard.steps.prev }}" name="wizard_goto_step"><span class="wb-inv">{% trans "Go to previous step." %}</span>{% trans "Previous" %}</button>
+                        <button class="btn btn-default" type="submit" value="Next" name="submit-form-button"><span class="wb-inv">{% trans "Go to next step." %}</span>{% trans "Next" %}</button>
                     </div>
                 </ul>
             </nav>

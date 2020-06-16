@@ -48,7 +48,6 @@
                     <select class="form-control" id="code" name="0-code" url = "/tag/ajax/code/">
                         <option value='all' selected>{% trans "Select Commodity Code" %}</option>
                     </select>
-                    <hr>
             {% endif %}
             </div>
         <br>
@@ -59,8 +58,7 @@
                 <ul class="pager">
                     <div align="right">
                         <li class="next">
-                            <input type="submit" class="btn btn-primary" rel="next" id="submit-form-button" value="Next" formnovalidate/>
-                            <span class="wb-inv">{% trans "Go to next step." %}</span>
+                            <button class="btn btn-default" type="submit" value="Next" name="submit-form-button" formnovalidate><span class="wb-inv">{% trans "Go to next step." %}</span>{% trans "Next" %}</button>
                         </li>
                     </div>
                 </ul>

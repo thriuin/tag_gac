@@ -23,7 +23,7 @@
                     {% for ex in form.exceptions %}
                         <div class="checkbox">
                             <span>
-                                {{ ex }}	
+                                {{ ex|linebreaksbr }}	
                             </span> 
                             <sup id="table1-fn{% cycle 1 2 3 5 6 7 8 9 10 11 12 13 14 15 %}-rf"><a class="fn-lnk" href="#table1-fn{% cycle 1 2 3 5 6 7 8 9 10 11 12 13 14 15 %}"><span class="wb-inv">table 1 note </span>{% cycle 1 2 3 5 6 7 8 9 10 11 12 13 14 15 %}</a></sup>
                         </div>
@@ -34,12 +34,9 @@
         <div class="mwspagination section">
             <nav class="mrgn-bttm-lg">
                 <h3 class="wb-inv">{% trans "Document navigation" %}</h3>
-                <ul class="pager">
                     <div align="right">
-                        <li class="next">
-                            <input type="submit" class="btn btn-primary" rel="next" id="submit-form-button" value="Next"/>
-                            <span class="wb-inv">{% trans "Go to next step." %}</span>
-                        </li>
+                        <button class="btn btn-default" type="submit" value = "{{ wizard.steps.prev }}" name="wizard_goto_step"><span class="wb-inv">{% trans "Go to previous step." %}</span>{% trans "Previous" %}</button>
+                        <button class="btn btn-default" type="submit" value="Next" name="submit-form-button"><span class="wb-inv">{% trans "Go to next step." %}</span>{% trans "Next" %}</button>
                     </div>
                 </ul>
             </nav>
