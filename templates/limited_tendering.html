@@ -22,6 +22,8 @@
                 <br>
                 <p><b>{% trans "Instructions: " %}</b>{% trans "If the procurement strategy is open tendering or selective tendering, click the “Next” button and leave the fields below blank. " %}</p>
                 <p>{% trans "If a limited tendering strategy is being considered, review the summary list of limited tendering reasons found in the applicable trade agreements and select the reason(s) that apply and click the “Next” button. If none of the limited tendering reasons apply, leave the fields blank. " %}</p>
+                <p>{% trans "If there is any discrepancy between the list of limited tendering reasons and the text of the trade agreement(s), refer to the trade agreement(s)." %}</p>
+                <p>{% trans "The numbers in front of each limited tendering reason corresponds to the data values used for proactive disclosure of contract reporting.  For more information, refer to the " %}<a href="https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=14676"></a><i>{% trans "Guidelines on the Proactive Disclosure of Contracts." %}</i></p>
                     {% for lt in form.limited_tendering %}
                         <div class="checkbox">
                             {{ lt|linebreaksbr }}

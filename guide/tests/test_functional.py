@@ -9,7 +9,7 @@ import unittest
 
 def step_through_form(self, estimated_value=1000000000, organization=None, commodity_type='Goods', 
                             general_exception=None, cfta_exception=None, lt_page=True, limited_tendering_reason=None):
-    self.selenium.get(self.live_server_url + '/en/tag/0/')
+    self.selenium.get(self.live_server_url + '/tag/0/')
 
     if estimated_value < 0:
         raise ValueError('Estimated value cannot be less than zero')
@@ -32,7 +32,7 @@ def step_through_form(self, estimated_value=1000000000, organization=None, commo
         org = organization
     else:
         org = Organization.objects.filter(tc=False).\
-                filter(goods_rule=False).filter(cusma=True).\
+                filter(goods_rule=False).\
                 filter(ccfta=True).filter(ccofta=True).\
                 filter(chfta=True).filter(cpafta=True).\
                 filter(cpfta=True).filter(ckfta=True).\
@@ -48,7 +48,7 @@ def step_through_form(self, estimated_value=1000000000, organization=None, commo
     code_input.select_by_visible_text(value)
     
     time.sleep(1)
-    self.selenium.find_element_by_xpath('//input[@value="Next"]').click()
+    self.selenium.find_element_by_xpath('//button[@value="Next"]').click()
 
     def checklist(element):
         time.sleep(1)
@@ -60,7 +60,7 @@ def step_through_form(self, estimated_value=1000000000, organization=None, commo
             except:
                 raise Exception('Cannot find ' + element)
 
-        self.selenium.find_element_by_xpath('//input[@value="Next"]').click()
+        self.selenium.find_element_by_xpath('//button[@value="Next"]').click()
 
     checklist(general_exception)
     checklist(cfta_exception)
@@ -104,7 +104,7 @@ class SeleniumTests(StaticLiveServerTestCase):
     #Entity none apply
     def test_org_none_apply(self):
         org = Organization.objects.filter(tc=False).\
-            filter(goods_rule=False).filter(cusma=False).\
+            filter(goods_rule=False).\
             filter(ccfta=False).filter(ccofta=False).\
             filter(chfta=False).filter(cpafta=False).\
             filter(cpfta=False).filter(ckfta=False).\
@@ -135,7 +135,7 @@ class SeleniumTests(StaticLiveServerTestCase):
             self.assertNotIn(ta.upper(), output)
 
     def test_general_exception_cfta_applies(self):
-        ge = GeneralException.objects.filter(cusma=True).\
+        ge = GeneralException.objects.\
             filter(ccfta=True).filter(ccofta=True).\
             filter(chfta=True).filter(cpafta=True).\
             filter(cpfta=True).filter(ckfta=True).\
@@ -149,7 +149,7 @@ class SeleniumTests(StaticLiveServerTestCase):
             self.assertNotIn(ta.upper(), output)
 
     def test_general_exception_none_applies(self):
-        ge = GeneralException.objects.filter(cusma=True).\
+        ge = GeneralException.objects.\
             filter(ccfta=True).filter(ccofta=True).\
             filter(chfta=True).filter(cpafta=True).\
             filter(cpfta=True).filter(ckfta=True).\
