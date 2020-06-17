@@ -37,7 +37,7 @@
                 <h3 class="wb-inv">{% trans "Document navigation" %}</h3>
                 <ul class="pager">
                     <div align="right">
-                        <button class="btn btn-default" type="submit" value = "{{ wizard.steps.first }}" name="wizard_goto_step"><span class="wb-inv">{% trans "Go to first step." %}{% trans "Go to First Step" %}</button>
+                        <button class="btn btn-default" type="submit" value = "{{ wizard.steps.first }}" name="wizard_goto_step"><span class="wb-inv">{% trans "Go to first step." %}</span>{% trans "Go to First Step" %}</button>
                         <button class="btn btn-default" type="submit" value = "{{ wizard.steps.prev }}" name="wizard_goto_step"><span class="wb-inv">{% trans "Go to previous step." %}</span>{% trans "Previous" %}</button>
                         <button class="btn btn-default" type="submit" value="Next" name="submit-form-button"><span class="wb-inv">{% trans "Go to next step." %}</span>{% trans "Next" %}</button>
                     </div>

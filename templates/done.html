@@ -90,7 +90,7 @@
                         <tr>
                             <td>{% trans "Limited Tendering Reasons:" %}</td>
                             <td class="text-left">
-                                {% for lt in form.limited_tendering %}
+                                {% for lt in limited_tendering %}
                                     <li>{{ lt }}</li>
                                 {% empty %}
                                     <li>{% trans "None" %}</li>
@@ -104,33 +104,50 @@
             </div> 
         <hr>
         <h3>{% trans "Details" %}</h3>
-        <p>{% trans "The tables below provide details on the series of conditions used to determine coverage for each trade agreement. The result will show the following values if the procurement is covered for the specific trade agreement. " %}</p>
-        {% for k1, v1 in ta.items %}
-            <ul class="list-unstyled">
-                <li>
-                    <details>
-                        <summary>
-                            {{ k1.upper }}
-                        </summary>
-                        <table class="table table-bordered table-condensed">
-                            <thead>
-                                <tr class="active">
-                                    <th scope="col">{% trans "Form Field" %}</th>
-                                    <th scope="col">{% trans "Result" %}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for k2, v2 in v1.items %}
-                                    <tr>
-                                        <td class="text-left">{{ k2|title }}</td>
-                                        <td class="text-left">{{ v2 }}</td>
+        <p>{% trans "The tables below provide details on the following series of conditions used to determine coverage for each trade agreement. " %}</p>
+        <ul>
+            <li>{% trans "Estimated Value - 'True' indicates that the estimated value is equal to or greater than the dollar threshold for the trade agreement.  'False' indicates the estimated value is less than the dollar threshold for the trade agreement." %}</li>
+            <li>{% trans "Entities - 'True' indicates the entity is covered under the trade agreement.  'False' indicates the entity is not covered under the specific trade agreement." %}</li>
+            <li>{% trans "Commodity Code - 'True' indicates the commodity code is covered under the trade agreement.  'False' indicates the commodity code is not covered under the trade agreement." %}</li>
+            <li>{% trans "General Exceptions - 'True' indicates no applicable trade agreement exceptions apply. 'False' indicates one or more trade agreement exception(s) apply." %}</li>
+            <li>{% trans "CFTA Exceptions - 'True' indicates no CFTA exceptions apply.  'False' indicates one or more CFTA exceptions apply.  This only appears for CFTA." %}</li>
+        </ul>
+        {% for k1, v1 in tables.items %}
+                <ul class="list-unstyled">
+                    <li>
+                        <details>
+                            <summary>
+                                {{ k1 }}
+                            </summary>
+                            <table class="table table-bordered table-condensed">
+                                <thead>
+                                    <tr class="active">
+                                        <th scope="col">{% trans "Category" %}</th>
+                                        <th scope="col">{% trans "Result" %}</th>
                                     </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </details>
-                </li>
-            </ul>   
-        {% endfor %} 
+                                </thead>
+                                <tbody>
+                                    {% for k2, v2 in v1.items %}   
+                                        <tr>
+                                            <td class="text-left">{{ k2 }}</td>
+                                            <td class="text-left">{{ v2 }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </details>
+                    </li>
+                </ul>
+        {% endfor %}
+        <div class="mwspagination section">
+            <nav class="mrgn-bttm-lg">
+                <h3 class="wb-inv">{% trans "Document navigation" %}</h3>
+                <ul class="pager">
+                    <div align="right">
+                        <a class="btn btn-default" href = "/tag/0/">{% trans "Go to First Step" %}</a>
+                    </div>
+                </ul>
+            </nav>
+        </div>
     {% endblock %}
 {% endblock main-content %}

@@ -144,6 +144,27 @@ class TradeForm(NamedUrlSessionWizardView):
                         output = output + k.upper() + ', '
         context_dict['output'] = output[:-2]
 
+        context_dict['tables'] = {}
+        for k1, v1 in context_dict['ta'].items():
+            k1 = k1.upper()
+            context_dict['tables'][k1] = {}
+            for k2, v2 in v1.items():
+                if k1 == 'CFTA':
+                    if k2 == 'type' or k2 == 'limited_tendering':
+                        pass
+                    else:
+                        k2 = k2.replace('_', ' ')
+                        k2 = k2.title()
+                        k2 = k2.replace('Cfta Exceptions', 'CFTA Exceptions')
+                        context_dict['tables'][k1][k2] = v2
+                else:
+                    if k2 == 'type' or k2 == 'limited_tendering' or k2 == 'cfta_exceptions':
+                        pass
+                    else:
+                        k2 = k2.replace('_', ' ')
+                        k2 = k2.title()
+                        context_dict['tables'][k1][k2] = v2
+
         return render(self.request, 'done.html', context_dict)
 
 
