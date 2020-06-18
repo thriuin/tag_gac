@@ -1,5 +1,5 @@
 from django.test import TestCase
-from guide.models import Organization, CommodityType, Code, ValueThreshold, TenderingReason, GeneralException, CftaException, BooleanTradeAgreement, NumericTradeAgreement, Language
+from guide.models import Organization, CommodityType, Code, ValueThreshold, LimitedTenderingReason, GeneralException, CftaException, BooleanTradeAgreement, NumericTradeAgreement, Language
 from guide.logic import FORMS, TEMPLATES, agreements, url_name, done_step_name, determine_final_coverage, organization_rule, value_threshold_rule, code_rule, exceptions_rule, build_context_dict, process_form
 import unittest
 from guide.forms import RequiredFieldsFormEN, GeneralExceptionFormEN, CftaExceptionFormEN, LimitedTenderingFormEN, estimated_value_label, entities_label, type_label, code_label, general_exceptions_label, cfta_exceptions_label, limited_tendering_label
@@ -22,7 +22,7 @@ class FormsTest(TestCase):
         CommodityType.objects.create(commodity_type='Model Commodity Type', lang='EN')
         Code.objects.create(code='ZZZ Model Commodity Code', type=CommodityType.objects.get(id=1), lang='EN')
         ValueThreshold.objects.create(type_value=CommodityType.objects.get(id=1))
-        TenderingReason.objects.create(name='Model Limited Tendering Reason', lang='EN')
+        LimitedTenderingReason.objects.create(name='Model Limited Tendering Reason', lang='EN')
         GeneralException.objects.create(name='Model General Exception', lang='EN')
         CftaException.objects.create(name='Model CFTA Exception', lang='EN')
 
@@ -103,5 +103,5 @@ class FormsTest(TestCase):
         self.assertFalse(form.is_valid())
     
     def test_limited_tendering_valid(self):
-        form = LimitedTenderingFormEN(data={'limited_tendering': [TenderingReason.objects.get(id=1)]})
+        form = LimitedTenderingFormEN(data={'limited_tendering': [LimitedTenderingReason.objects.get(id=1)]})
         self.assertTrue(form.is_valid())

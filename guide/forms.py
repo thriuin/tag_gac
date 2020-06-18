@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from guide.models import Organization, Code, GeneralException, TenderingReason, CftaException
+from guide.models import Organization, Code, GeneralException, LimitedTenderingReason, CftaException
 
 estimated_value_label = _('What is the total estimated value of the procurement? ')
 entities_label = _('Who is the procuring entity?')
@@ -11,31 +11,32 @@ general_exceptions_label = _("Exceptions")
 limited_tendering_label = _("Limited Tendering Reasons")
 cfta_exceptions_label = _("CFTA Exceptions")
 
+
 class RequiredFieldsFormEN(forms.Form):
 
     estimated_value = forms.IntegerField(
-        label=estimated_value_label,
-        required=False,
-        min_value=0
+        label = estimated_value_label,
+        required = False,
+        min_value = 0
     )
     estimated_value.widget.attrs['class'] = 'form-control'
 
     entities = forms.ModelChoiceField(
         Organization.objects.filter(lang='EN').only('name'),
-        label=entities_label,
-        required=False
+        label = entities_label,
+        required = False
     )
     entities.widget.attrs['class'] = 'form-control'
 
     type = forms.CharField(
-        label=type_label,
-        required=False,
+        label = type_label,
+        required = False,
     )
     type.widget.attrs['class'] = 'form-control'
     
     code = forms.CharField(
-        label=code_label,
-        required=False
+        label = code_label,
+        required = False
     )
     code.widget.attrs['class'] = 'form-control'
 
@@ -84,7 +85,7 @@ class GeneralExceptionFormEN(forms.Form):
 class LimitedTenderingFormEN(forms.Form):
 
     limited_tendering = forms.ModelMultipleChoiceField(
-        TenderingReason.objects.filter(lang='EN').only('name'),
+        LimitedTenderingReason.objects.filter(lang='EN').only('name'),
         widget=forms.CheckboxSelectMultiple,
         label=limited_tendering_label,
         required=False

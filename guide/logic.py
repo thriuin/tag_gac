@@ -1,5 +1,5 @@
 from guide.forms import RequiredFieldsFormEN, GeneralExceptionFormEN, LimitedTenderingFormEN, CftaExceptionFormEN
-from guide.models import Code, ValueThreshold, Organization, GeneralException, TenderingReason, CftaException
+from guide.models import Code, ValueThreshold, Organization, GeneralException, LimitedTenderingReason, CftaException
 
 FORMS = [("0", RequiredFieldsFormEN),
          ("1", GeneralExceptionFormEN),

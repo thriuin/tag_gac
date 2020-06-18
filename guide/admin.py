@@ -1,7 +1,19 @@
 from django.contrib import admin
-from guide.models import CommodityType, Code, GeneralException, TenderingReason, CftaException, ValueThreshold, Organization
+from guide.models import CommodityType, Code, GeneralException, LimitedTenderingReason, CftaException, ValueThreshold, Organization, OrganizationWithCommodityCodeRules, OrganizationWithCommodityTypeRules
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
+
+# Model resources
+class OrganizationWithCommodityTypeRulesResource(resources.ModelResource):
+
+    class Meta:
+        model = OrganizationWithCommodityTypeRules
+
+
+class OrganizationWithCommodityCodeRulesResource(resources.ModelResource):
+
+    class Meta:
+        model = OrganizationWithCommodityCodeRules
 
 
 class CommodityTypeResource(resources.ModelResource):
@@ -25,7 +37,7 @@ class GeneralExceptionResource(resources.ModelResource):
 class TenderingReasonResource(resources.ModelResource):
 
     class Meta:
-        model = TenderingReason
+        model = LimitedTenderingReason
 
 
 class CftaExceptionResource(resources.ModelResource):
@@ -45,13 +57,21 @@ class OrganizationResource(resources.ModelResource):
     class Meta:
         model = Organization
 
-# class TradeAgreementResource(resources.ModelResource):
 
-#     class Meta:
-#         model = TradeAgreement
+# ImportExportModelAdmins
+class OrganizationWithCommodityCodeRulesAdmin(ImportExportModelAdmin):
+    resource_class = OrganizationWithCommodityTypeRulesResource
+    list_display = [f.name for f in CommodityType._meta.get_fields()][::-1]
+    list_editable = [f.name for f in CommodityType._meta.get_fields() if f.name != 'id']
+    list_display_links = ['id']
+    
 
-# class TradeAgreementAdmin(ImportExportModelAdmin):
-#     resource_class = TradeAgreementResource
+class OrganizationWithCommodityTypeRulesAdmin(ImportExportModelAdmin):
+    resource_class = OrganizationWithCommodityTypeRulesResource
+    list_display = [f.name for f in CommodityType._meta.get_fields()][::-1]
+    list_editable = [f.name for f in CommodityType._meta.get_fields() if f.name != 'id']
+    list_display_links = ['id']
+
 
 class CommodityTypeAdmin(ImportExportModelAdmin):
     resource_class = CommodityTypeResource
@@ -76,8 +96,8 @@ class GeneralExceptionAdmin(ImportExportModelAdmin):
 
 class TenderingReasonAdmin(ImportExportModelAdmin):
     resource_class = TenderingReasonResource
-    list_display = [f.name for f in TenderingReason._meta.get_fields()][::-1]
-    list_editable = [f.name for f in TenderingReason._meta.get_fields() if f.name != 'id']
+    list_display = [f.name for f in LimitedTenderingReason._meta.get_fields()][::-1]
+    list_editable = [f.name for f in LimitedTenderingReason._meta.get_fields() if f.name != 'id']
     list_display_links = ['id']
 
 
@@ -105,8 +125,9 @@ class OrganizationAdmin(ImportExportModelAdmin):
 admin.site.register(CommodityType, CommodityTypeAdmin)
 admin.site.register(Code, CodeAdmin)
 admin.site.register(GeneralException, GeneralExceptionAdmin)
-admin.site.register(TenderingReason, TenderingReasonAdmin)
+admin.site.register(LimitedTenderingReason, TenderingReasonAdmin)
 admin.site.register(CftaException, CftaExceptionAdmin),
 admin.site.register(ValueThreshold, ValueThresholdAdmin)
 admin.site.register(Organization, OrganizationAdmin)
-# admin.site.register(TradeAgreement, TradeAgreementAdmin)
+admin.site.register(OrganizationWithCommodityTypeRules, OrganizationWithCommodityTypeRulesAdmin)
+admin.site.register(OrganizationWithCommodityCodeRules, OrganizationWithCommodityCodeRulesAdmin)

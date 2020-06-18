@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from guide.models import Code, GeneralException, CftaException, TenderingReason
+from guide.models import Code, GeneralException, CftaException, LimitedTenderingReason
 from guide.forms import RequiredFieldsFormEN, GeneralExceptionFormEN, LimitedTenderingFormEN, CftaExceptionFormEN
 from formtools.wizard.views import NamedUrlSessionWizardView
 from django.http import JsonResponse
@@ -98,12 +98,12 @@ class TradeForm(NamedUrlSessionWizardView):
             if ta_applies:
                 for ta in ta_applies:
                     field_name = ta
-                    qs = TenderingReason.objects.filter(lang='EN').filter(**{field_name: True}).values_list('name')
+                    qs = LimitedTenderingReason.objects.filter(lang='EN').filter(**{field_name: True}).values_list('name')
                     qs = [q[0] for q in qs]
                     for q in qs:
                         query_list.append(q)
             
-            form.fields['limited_tendering'].queryset = TenderingReason.objects.filter(lang='EN').filter(name__in=query_list).only('name')
+            form.fields['limited_tendering'].queryset = LimitedTenderingReason.objects.filter(lang='EN').filter(name__in=query_list).only('name')
             
         return form
 

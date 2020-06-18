@@ -1,5 +1,5 @@
 from guide.logic import FORMS, agreements, build_context_dict, process_form, check_if_trade_agreement_applies, determine_final_coverage, organization_rule, value_threshold_rule, code_rule, exceptions_rule
-from guide.models import Organization, CommodityType, Code, ValueThreshold, TenderingReason, GeneralException, CftaException, BooleanTradeAgreement, NumericTradeAgreement, Language
+from guide.models import Organization, CommodityType, Code, ValueThreshold, LimitedTenderingReason, GeneralException, CftaException, BooleanTradeAgreement, NumericTradeAgreement, Language
 from guide.forms import RequiredFieldsFormEN, GeneralExceptionFormEN, CftaExceptionFormEN, LimitedTenderingFormEN
 from django.test import TestCase
 import unittest
@@ -19,7 +19,7 @@ class LogicTests(TestCase):
         rf_data = {'estimated_value': 1000, 'entities': Organization.objects.get(id=1).pk, 'type': CommodityType.objects.get(id=1), 'code': Code.objects.get(id=1)}
         ge_data = {'exceptions': [GeneralException.objects.get(id=1)]}
         ce_data = {'cfta_exceptions': [CftaException.objects.get(id=1)]}
-        lt_data = {'limited_tendering': [TenderingReason.objects.get(id=1)]}
+        lt_data = {'limited_tendering': [LimitedTenderingReason.objects.get(id=1)]}
 
         rf = RequiredFieldsFormEN(data=rf_data)
         ge = GeneralExceptionFormEN(data=ge_data)
@@ -64,7 +64,7 @@ class LogicTests(TestCase):
         rf_data = {'estimated_value': 1000, 'entities': Organization.objects.get(id=1).pk, 'type': CommodityType.objects.get(id=1), 'code': Code.objects.get(id=1)}
         ge_data = {'exceptions': [GeneralException.objects.get(id=1)]}
         ce_data = {'cfta_exceptions': [CftaException.objects.get(id=1)]}
-        lt_data = {'limited_tendering': [TenderingReason.objects.get(id=1)]}
+        lt_data = {'limited_tendering': [LimitedTenderingReason.objects.get(id=1)]}
 
         rf = RequiredFieldsFormEN(data=rf_data)
         ge = GeneralExceptionFormEN(data=ge_data)
