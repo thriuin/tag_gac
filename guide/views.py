@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from guide.models import Code, GeneralException, CftaException, LimitedTenderingReason
-from guide.forms import RequiredFieldsFormEN, GeneralExceptionFormEN, LimitedTenderingFormEN, CftaExceptionFormEN
+from guide.forms import RequiredFieldsForm, GeneralExceptionForm, LimitedTenderingForm, CftaExceptionForm
 from formtools.wizard.views import NamedUrlSessionWizardView
 from django.http import JsonResponse
 from guide.logic import FORMS, TEMPLATES, agreements, url_name, done_step_name, determine_final_coverage, organization_rule, value_threshold_rule, code_rule, exceptions_rule, build_context_dict, process_form
+from django.db.models import Q
 
 def lt_condition(wizard):
     form_list = [f[0] for f in FORMS[:3]]
@@ -98,12 +99,12 @@ class TradeForm(NamedUrlSessionWizardView):
             if ta_applies:
                 for ta in ta_applies:
                     field_name = ta
-                    qs = LimitedTenderingReason.objects.filter(lang='EN').filter(**{field_name: True}).values_list('name')
+                    qs = LimitedTenderingReason.objects.filter(**{field_name: True}).values_list('name')
                     qs = [q[0] for q in qs]
                     for q in qs:
                         query_list.append(q)
             
-            form.fields['limited_tendering'].queryset = LimitedTenderingReason.objects.filter(lang='EN').filter(name__in=query_list).only('name')
+            form.fields['limited_tendering'].queryset = LimitedTenderingReason.objects.filter(name__in=query_list).only('name')
             
         return form
 
@@ -182,17 +183,30 @@ def ajax_type(request):
         :template:`guide.mandatory_elements.html`
     """
     if request.method == "GET" and request.is_ajax():
-        type = Code.objects.\
-            exclude(type__isnull=True).\
-            exclude(type__exact='').\
-            order_by('type').\
-            values_list('type').\
-            distinct()
-        type = [i[0] for i in list(type)]
-        data = {
-            "type": type,
-        }
-        return JsonResponse(data, status = 200)
+        if request.LANGUAGE_CODE == 'en-ca':
+            type_en_ca = Code.objects.\
+                exclude(type_en_ca__isnull=True).\
+                exclude(type_en_ca__exact='').\
+                order_by('type_en_ca').\
+                values_list('type_en_ca').\
+                distinct()
+            type_en_ca = [i[0] for i in list(type_en_ca)]
+            data = {
+                "type": type_en_ca,
+            }
+            return JsonResponse(data, status = 200)
+        else:
+            type_fr_ca = Code.objects.\
+                exclude(type_fr_ca__isnull=True).\
+                exclude(type_fr_ca__exact='').\
+                order_by('type_fr_ca').\
+                values_list('type_fr_ca').\
+                distinct()
+            type_fr_ca = [i[0] for i in list(type_fr_ca)]
+            data = {
+                "type": type_fr_ca,
+            }
+            return JsonResponse(data, status = 200)
 
 
 def ajax_code(request):
@@ -210,15 +224,16 @@ def ajax_code(request):
     """
     if request.method == "GET" and request.is_ajax():
         type = request.GET.get('type')
-        code = Code.objects.\
-            filter(type = type).\
-            exclude(code__isnull=True).\
-            exclude(code__exact='').\
-            values_list('code').\
-            distinct()
-        code = [i[0] for i in list(code)]
-        data = {
-            "code": code,
-        }
-        return JsonResponse(data, status = 200)
+        if request.LANGUAGE_CODE == 'en-ca':
+            code = Code.objects.\
+                filter(type_en_ca = type).\
+                exclude(code__isnull=True).\
+                exclude(code__exact='').\
+                values_list('code').\
+                distinct()
+            code = [i[0] for i in list(code)]
+            data = {
+                "code": code,
+            }
+            return JsonResponse(data, status = 200)
 

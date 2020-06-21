@@ -1,10 +1,10 @@
-from guide.forms import RequiredFieldsFormEN, GeneralExceptionFormEN, LimitedTenderingFormEN, CftaExceptionFormEN
-from guide.models import Code, ValueThreshold, Organization, GeneralException, LimitedTenderingReason, CftaException
+from guide.forms import RequiredFieldsForm, GeneralExceptionForm, LimitedTenderingForm, CftaExceptionForm
+from guide.models import Code, ValueThreshold, Organization, GeneralException, LimitedTenderingReason, CftaException, OrganizationWithCommodityCodeRules, OrganizationWithCommodityTypeRules
 
-FORMS = [("0", RequiredFieldsFormEN),
-         ("1", GeneralExceptionFormEN),
-         ("2", CftaExceptionFormEN),
-         ("3", LimitedTenderingFormEN)]
+FORMS = [("0", RequiredFieldsForm),
+         ("1", GeneralExceptionForm),
+         ("2", CftaExceptionForm),
+         ("3", LimitedTenderingForm)]
 
 TEMPLATES = {"0": "mandatory_elements.html",
              "1": "exceptions.html",
@@ -35,8 +35,7 @@ def check_if_trade_agreement_applies(ta, cxt, data, name):
     check = data.values_list(ta).get()[0]
     if check is False:
         cxt['ta'][ta][name] = False
-    else:
-        cxt['ta'][ta][name] = True
+
     return cxt
     
 def determine_final_coverage(cxt):
@@ -117,24 +116,36 @@ def code_rule(cxt, code_name, type_name, org_name):
     value = cxt[code_name]
     type = cxt[type_name]
     org = cxt[org_name]
-    try:
-        defence_rule = Organization.objects.filter(name=org).values_list('goods_rule').get()[0]
-        tc_rule = Organization.objects.filter(name=org).values_list('tc').get()[0]
-        if type == 'Goods' and defence_rule is False:
-            return cxt
-        if type == 'Construction' and tc_rule is True:
+
+    if OrganizationWithCommodityTypeRules.objects.filter(org_fk_en_ca=org).exists():
+        print('org com type exists')
+        defence_rule = OrganizationWithCommodityTypeRules.objects.filter(org_fk_en_ca=org).values_list('goods_rule').get()[0]
+        tc_rule = OrganizationWithCommodityTypeRules.objects.filter(org_fk_en_ca=org).values_list('tc').get()[0]
+        if type == 'Goods' and defence_rule:
+            data = Code.objects.filter(code=value)
+            for ta in cxt['ta']:
+                cxt = check_if_trade_agreement_applies(ta, cxt, data, code_name)
+        if type == 'Construction' and tc_rule:
             for ta in cxt['ta']:
                 if ta == 'cfta':
-                    cxt['ta'][ta][code_name] = True
+                    pass
                 else:
                     cxt['ta'][ta][code_name] = False
-            return cxt
+
+
+    if OrganizationWithCommodityCodeRules.objects.filter(org_fk_en_ca=org).filter(code_fk_en_ca=value).exists():
+        data = OrganizationWithCommodityCodeRules.objects.filter(org_fk_en_ca=org).filter(code_fk_en_ca=value)
+        for ta in cxt['ta']:
+            cxt = check_if_trade_agreement_applies(ta, cxt, data, code_name)
+
+    if type == 'Goods':
+        pass
+    else:
         data = Code.objects.filter(code=value)
         for ta in cxt['ta']:
             cxt = check_if_trade_agreement_applies(ta, cxt, data, code_name)
-        return cxt
-    except:
-        raise ValueError       
+
+    return cxt     
 
 def exceptions_rule(cxt, exception_name, model):
     """This function goes through the exceptions that the user selected and checks which trade agreements

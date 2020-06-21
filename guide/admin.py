@@ -2,6 +2,7 @@ from django.contrib import admin
 from guide.models import CommodityType, Code, GeneralException, LimitedTenderingReason, CftaException, ValueThreshold, Organization, OrganizationWithCommodityCodeRules, OrganizationWithCommodityTypeRules
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
+from modeltranslation.admin import TranslationAdmin
 
 # Model resources
 class OrganizationWithCommodityTypeRulesResource(resources.ModelResource):
@@ -60,48 +61,39 @@ class OrganizationResource(resources.ModelResource):
 
 # ImportExportModelAdmins
 class OrganizationWithCommodityCodeRulesAdmin(ImportExportModelAdmin):
-    resource_class = OrganizationWithCommodityTypeRulesResource
-    list_display = [f.name for f in CommodityType._meta.get_fields()][::-1]
-    list_editable = [f.name for f in CommodityType._meta.get_fields() if f.name != 'id']
-    list_display_links = ['id']
+    resource_class = OrganizationWithCommodityCodeRulesResource
     
 
 class OrganizationWithCommodityTypeRulesAdmin(ImportExportModelAdmin):
     resource_class = OrganizationWithCommodityTypeRulesResource
-    list_display = [f.name for f in CommodityType._meta.get_fields()][::-1]
-    list_editable = [f.name for f in CommodityType._meta.get_fields() if f.name != 'id']
-    list_display_links = ['id']
 
 
-class CommodityTypeAdmin(ImportExportModelAdmin):
+class CommodityTypeAdmin(ImportExportModelAdmin, TranslationAdmin):
     resource_class = CommodityTypeResource
     list_display = [f.name for f in CommodityType._meta.get_fields()][::-1]
     list_editable = [f.name for f in CommodityType._meta.get_fields() if f.name != 'id']
     list_display_links = ['id']
 
 
-class CodeAdmin(ImportExportModelAdmin):
+class CodeAdmin(ImportExportModelAdmin, TranslationAdmin):
     resource_class = CodeResource
-    list_display = [f.name for f in Code._meta.get_fields()][::-1]
-    list_editable = [f.name for f in Code._meta.get_fields() if f.name != 'id']
-    list_display_links = ['id']
 
 
-class GeneralExceptionAdmin(ImportExportModelAdmin):
+class GeneralExceptionAdmin(ImportExportModelAdmin, TranslationAdmin):
     resource_class = GeneralExceptionResource
     list_display = [f.name for f in GeneralException._meta.get_fields()][::-1]
     list_editable = [f.name for f in GeneralException._meta.get_fields() if f.name != 'id']
     list_display_links = ['id']
 
 
-class TenderingReasonAdmin(ImportExportModelAdmin):
+class TenderingReasonAdmin(ImportExportModelAdmin, TranslationAdmin):
     resource_class = TenderingReasonResource
     list_display = [f.name for f in LimitedTenderingReason._meta.get_fields()][::-1]
     list_editable = [f.name for f in LimitedTenderingReason._meta.get_fields() if f.name != 'id']
     list_display_links = ['id']
 
 
-class CftaExceptionAdmin(ImportExportModelAdmin):
+class CftaExceptionAdmin(ImportExportModelAdmin, TranslationAdmin):
     resource_class = CftaExceptionResource
     list_display = [f.name for f in CftaException._meta.get_fields()][::-1]
     list_editable = [f.name for f in CftaException._meta.get_fields() if f.name != 'id']
@@ -115,11 +107,8 @@ class ValueThresholdAdmin(ImportExportModelAdmin):
     list_display_links = ['id']
 
 
-class OrganizationAdmin(ImportExportModelAdmin):
+class OrganizationAdmin(ImportExportModelAdmin, TranslationAdmin):
     resource_class = OrganizationResource
-    list_display = [f.name for f in Organization._meta.get_fields()][::-1]
-    list_editable = [f.name for f in Organization._meta.get_fields() if f.name != 'id']
-    list_display_links = ['id']
 
 # Register your models here
 admin.site.register(CommodityType, CommodityTypeAdmin)

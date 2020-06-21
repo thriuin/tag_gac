@@ -1,6 +1,6 @@
 from guide.logic import FORMS, agreements, build_context_dict, process_form, check_if_trade_agreement_applies, determine_final_coverage, organization_rule, value_threshold_rule, code_rule, exceptions_rule
 from guide.models import Organization, CommodityType, Code, ValueThreshold, LimitedTenderingReason, GeneralException, CftaException, BooleanTradeAgreement, NumericTradeAgreement, Language
-from guide.forms import RequiredFieldsFormEN, GeneralExceptionFormEN, CftaExceptionFormEN, LimitedTenderingFormEN
+from guide.forms import RequiredFieldsForm, GeneralExceptionForm, CftaExceptionForm, LimitedTenderingForm
 from django.test import TestCase
 import unittest
 
@@ -21,10 +21,10 @@ class LogicTests(TestCase):
         ce_data = {'cfta_exceptions': [CftaException.objects.get(id=1)]}
         lt_data = {'limited_tendering': [LimitedTenderingReason.objects.get(id=1)]}
 
-        rf = RequiredFieldsFormEN(data=rf_data)
-        ge = GeneralExceptionFormEN(data=ge_data)
-        ce = CftaExceptionFormEN(data=ce_data)
-        lt = LimitedTenderingFormEN(data=lt_data)
+        rf = RequiredFieldsForm(data=rf_data)
+        ge = GeneralExceptionForm(data=ge_data)
+        ce = CftaExceptionForm(data=ce_data)
+        lt = LimitedTenderingForm(data=lt_data)
 
         rf.is_valid()
         ge.is_valid()
@@ -66,10 +66,10 @@ class LogicTests(TestCase):
         ce_data = {'cfta_exceptions': [CftaException.objects.get(id=1)]}
         lt_data = {'limited_tendering': [LimitedTenderingReason.objects.get(id=1)]}
 
-        rf = RequiredFieldsFormEN(data=rf_data)
-        ge = GeneralExceptionFormEN(data=ge_data)
-        ce = CftaExceptionFormEN(data=ce_data)
-        lt = LimitedTenderingFormEN(data=lt_data)
+        rf = RequiredFieldsForm(data=rf_data)
+        ge = GeneralExceptionForm(data=ge_data)
+        ce = CftaExceptionForm(data=ce_data)
+        lt = LimitedTenderingForm(data=lt_data)
 
         rf.is_valid()
         ge.is_valid()

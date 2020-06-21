@@ -101,6 +101,7 @@ class CommodityType(models.Model):
     Inherits from :model:`guide.Language`
     This is for Goods, Services, Construction
     '''
+    id = models.AutoField(primary_key=True)
     commodity_type = models.CharField(
         max_length = 128,
         default = '',
@@ -122,21 +123,27 @@ class Code(BooleanTradeAgreement):
     Foreign key from :model:`guide.CommodityType`
     This combines commodity types with specific commodity codes.
     '''
-    type = models.ForeignKey(
+    type_en_ca = models.ForeignKey(
         CommodityType,
-        to_field = 'commodity_type',
+        to_field = 'commodity_type_en_ca',
         related_name = '+',
-        max_length = 128,
-        default = '',
-        verbose_name = _('Commodity Type'),
+        verbose_name = _('Commodity Type en'),
+        on_delete = models.CASCADE
+    )
+
+    type_fr_ca = models.ForeignKey(
+        CommodityType,
+        to_field = 'commodity_type_fr_ca',
+        related_name = '+',
+        verbose_name = _('Commodity Type fr'),
         on_delete = models.CASCADE
     )
 
     code = models.CharField(
         max_length = 128,
         default = '',
-        verbose_name = _('Code List'),
-        db_column = 'code_list'
+        unique = True,
+        verbose_name = _('Code')
     )
 
     def __str__(self):
@@ -144,13 +151,19 @@ class Code(BooleanTradeAgreement):
 
 
 class OrganizationWithCommodityTypeRules(models.Model):
-    com_type = models.ForeignKey(
-        CommodityType,
-        to_field = 'commodity_type',
+
+    org_fk_en_ca = models.ForeignKey(
+        Organization,
+        to_field = 'name_en_ca',
         related_name = '+',
-        max_length = 128,
-        default = '',
-        verbose_name = _('Commodity Type'),
+        verbose_name = _('Org fk en ca'),
+        on_delete = models.CASCADE
+    )
+    org_fk_fr_ca = models.ForeignKey(
+        Organization,
+        to_field = 'name_fr_ca',
+        related_name = '+',
+        verbose_name = _('org fk fr ca'),
         on_delete = models.CASCADE
     )
     tc = models.BooleanField(
@@ -164,27 +177,34 @@ class OrganizationWithCommodityTypeRules(models.Model):
         blank = False
     )
 
-    def __str__(self):
-        return str(self.com_type)
 
-
-class OrganizationWithCommodityCodeRules(models.Model):
-    code_fk = models.ForeignKey(
+class OrganizationWithCommodityCodeRules(BooleanTradeAgreement):
+    code_fk_en_ca = models.ForeignKey(
         Code,
-        to_field = 'code',
+        to_field = 'code_en_ca',
         related_name = '+',
-        max_length = 250,
-        default = '',
-        verbose_name = _('Code FK'),
+        verbose_name = _('Code FK en ca'),
         on_delete = models.CASCADE
     )
-    org_fk = models.ForeignKey(
-        Organization,
-        to_field = 'name',
+    code_fk_fr_ca = models.ForeignKey(
+        Code,
+        to_field = 'code_fr_ca',
         related_name = '+',
-        max_length = 250,
-        default = '',
-        verbose_name = _('Org FK'),
+        verbose_name = _('Code fk fr ca'),
+        on_delete = models.CASCADE
+    )
+    org_fk_en_ca = models.ForeignKey(
+        Organization,
+        to_field = 'name_en_ca',
+        related_name = '+',
+        verbose_name = _('Org fk en ca'),
+        on_delete = models.CASCADE
+    )
+    org_fk_fr_ca = models.ForeignKey(
+        Organization,
+        to_field = 'name_fr_ca',
+        related_name = '+',
+        verbose_name = _('org fk fr ca'),
         on_delete = models.CASCADE
     )
 
