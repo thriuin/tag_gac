@@ -118,7 +118,6 @@ def code_rule(cxt, code_name, type_name, org_name):
     org = cxt[org_name]
 
     if OrganizationWithCommodityTypeRules.objects.filter(org_fk_en_ca=org).exists():
-        print('org com type exists')
         defence_rule = OrganizationWithCommodityTypeRules.objects.filter(org_fk_en_ca=org).values_list('goods_rule').get()[0]
         tc_rule = OrganizationWithCommodityTypeRules.objects.filter(org_fk_en_ca=org).values_list('tc').get()[0]
         if type == 'Goods' and defence_rule:
