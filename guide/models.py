@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
+from markdownx.models import MarkdownxField
 
 class BooleanTradeAgreement(models.Model):
     """
@@ -122,26 +122,12 @@ class Code(BooleanTradeAgreement):
     Foreign key from :model:`guide.CommodityType`
     This combines commodity types with specific commodity codes.
     '''
-    # type_en_ca = models.ForeignKey(
-    #     CommodityType,
-    #     to_field = 'commodity_type_en_ca',
-    #     related_name = '+',
-    #     verbose_name = _('Commodity Type en'),
-    #     on_delete = models.CASCADE
-    # )
 
-    # type_fr_ca = models.ForeignKey(
-    #     CommodityType,
-    #     to_field = 'commodity_type_fr_ca',
-    #     related_name = '+',
-    #     verbose_name = _('Commodity Type fr'),
-    #     on_delete = models.CASCADE
-    # )
     type = models.ForeignKey(
         CommodityType,
         to_field = 'commodity_type',
         related_name = '+',
-        verbose_name = _('Commodity Type fr'),
+        verbose_name = _('Commodity Type'),
         on_delete = models.CASCADE
     )
     code = models.CharField(
@@ -157,20 +143,13 @@ class Code(BooleanTradeAgreement):
 
 class OrganizationWithCommodityTypeRules(models.Model):
 
-    # org_fk_en_ca = models.ForeignKey(
-    #     Organization,
-    #     to_field = 'name_en_ca',
-    #     related_name = '+',
-    #     verbose_name = _('Org fk en ca'),
-    #     on_delete = models.CASCADE
-    # )
-    # org_fk_fr_ca = models.ForeignKey(
-    #     Organization,
-    #     to_field = 'name_fr_ca',
-    #     related_name = '+',
-    #     verbose_name = _('org fk fr ca'),
-    #     on_delete = models.CASCADE
-    # )
+    org_fk = models.ForeignKey(
+        Organization,
+        to_field = 'name',
+        related_name = '+',
+        verbose_name = _('Org fk en ca'),
+        on_delete = models.CASCADE
+    )
     tc = models.BooleanField(
         default = False,
         verbose_name = _('Department of Transport has a specific commodity coverage for Construction Services'),
@@ -182,36 +161,27 @@ class OrganizationWithCommodityTypeRules(models.Model):
         blank = False
     )
 
+    def __str__(self):
+        return f"{self.org_fk} - Goods Rule: {self.goods_rule} Transport Rule: {self.tc}"
 
-# class OrganizationWithCommodityCodeRules(BooleanTradeAgreement):
-#     code_fk_en_ca = models.ForeignKey(
-#         Code,
-#         to_field = 'code_en_ca',
-#         related_name = '+',
-#         verbose_name = _('Code FK en ca'),
-#         on_delete = models.CASCADE
-#     )
-#     code_fk_fr_ca = models.ForeignKey(
-#         Code,
-#         to_field = 'code_fr_ca',
-#         related_name = '+',
-#         verbose_name = _('Code fk fr ca'),
-#         on_delete = models.CASCADE
-#     )
-#     org_fk_en_ca = models.ForeignKey(
-#         Organization,
-#         to_field = 'name_en_ca',
-#         related_name = '+',
-#         verbose_name = _('Org fk en ca'),
-#         on_delete = models.CASCADE
-#     )
-#     org_fk_fr_ca = models.ForeignKey(
-#         Organization,
-#         to_field = 'name_fr_ca',
-#         related_name = '+',
-#         verbose_name = _('org fk fr ca'),
-#         on_delete = models.CASCADE
-#     )
+class OrganizationWithCommodityCodeRules(BooleanTradeAgreement):
+    code_fk = models.ForeignKey(
+        Code,
+        to_field = 'code',
+        related_name = '+',
+        verbose_name = _('Code FK en ca'),
+        on_delete = models.CASCADE
+    )
+    org_fk = models.ForeignKey(
+        Organization,
+        to_field = 'name',
+        related_name = '+',
+        verbose_name = _('Org fk en ca'),
+        on_delete = models.CASCADE
+    )
+
+    def __str__(self):
+        return f"{self.org_fk} - {self.code_fk}"
 
 
 class ValueThreshold(models.Model):
@@ -324,7 +294,7 @@ class CftaException(BooleanTradeAgreement):
     Subclass of :model:`guide.BooleanTradeAgreement`
     This class has Canada Free Trade Agreement exceptions
     """
-    name = models.TextField(
+    name = MarkdownxField(
         default = '',
         unique = True,
         verbose_name = _('Description')

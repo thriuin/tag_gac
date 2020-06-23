@@ -22,15 +22,25 @@
                 <br>
                 <p><b>{% trans "Instructions: " %}</b>{% trans "If the procurement strategy is open tendering or selective tendering, click the “Next” button and leave the fields below blank. " %}</p>
                 <p>{% trans "If a limited tendering strategy is being considered, review the summary list of limited tendering reasons found in the applicable trade agreements and select the reason(s) that apply and click the “Next” button. If none of the limited tendering reasons apply, leave the fields blank. " %}</p>
-                <p>{% trans "If there is any discrepancy between the list of limited tendering reasons and the text of the trade agreement(s), refer to the trade agreement(s)." %}</p>
-                <p>{% trans "The numbers in front of each limited tendering reason corresponds to the data values used for proactive disclosure of contract reporting.  For more information, refer to the " %}<a href="https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=14676"></a>{% trans "Guidelines on the Proactive Disclosure of Contracts." %}</p>
-                    {% for lt in form.limited_tendering %}
-                        <div class="checkbox">
-                            {{ lt|linebreaksbr }}
-                        </div>
-                    {% endfor %}
                 <p><b>{% trans "Reminder: " %}</b>{% trans "In order to proceed with a limited tendering procurement strategy, a valid limited tendering reason must exist in each of the covered trade agreement(s). The applicable limited tendering rationale used to justify the procurement strategy must be documented on the procurement file." %}</p>
-                <p>{% trans "If there is any discrepancy between the list of limited tendering reasons and the text of the trade agreement(s), refer to the text of the trade agreement(s)." %}</p>
+                <p>{% trans "If there is any discrepancy between the list of limited tendering reasons and the text of the trade agreement(s), refer to the trade agreement(s)." %}</p>
+                <p>{% trans "The numbers in front of each limited tendering reason corresponds to the data values used for proactive disclosure of contract reporting.  For more information, refer to the " %}<a href="https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=14676">{% trans "Guidelines on the Proactive Disclosure of Contracts" %}</a></p>
+                <div class="checkbox">
+                    <table class="table table-condensed table-hover">
+                        {% for choice in ffield.field.queryset %}
+                            <tr>
+                                <td>
+                                    <input type="checkbox" name="3-limited_tendering" value="{{ forloop.counter }}" id="id_3-limited_tendering_{{ forloop.counter0 }}">
+                                </td>
+                                <td>
+                                    <label for="id_3-limited_tendering_{{ forloop.counter0 }}">
+                                        {{ choice|linebreaks|safe }}
+                                    </label>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
                 <hr>
             </div>
         {% endfor %}

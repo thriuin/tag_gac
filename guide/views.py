@@ -11,11 +11,14 @@ from django.views.generic.edit import FormView
 
 class CodeAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
-        qs = Code.objects.all()
         type = self.forwarded.get('type', None)
         if type:
             value = CommodityType.objects.filter(id=type).get()
             qs = Code.objects.filter(type=value).all()
+            if self.q:
+                qs = Code.objects.filter(type=value).filter(code__icontains=self.q)
+        else:
+            qs = None
         return qs
         
 class EntitiesAutocomplete(autocomplete.Select2QuerySetView):
@@ -50,7 +53,7 @@ def lt_condition(wizard):
 
     context_dict = value_threshold_rule(context_dict, 'estimated_value', 'type')
     context_dict = organization_rule(context_dict, 'entities')
-    # context_dict = code_rule(context_dict, 'code', 'type', 'entities')
+    context_dict = code_rule(context_dict, 'code', 'type', 'entities')
     context_dict = exceptions_rule(context_dict, 'exceptions', GeneralException)
     context_dict = exceptions_rule(context_dict, 'cfta_exceptions', CftaException)
     context_dict = determine_final_coverage(context_dict)
@@ -129,13 +132,14 @@ class TradeForm(NamedUrlSessionWizardView):
             
             query_list = []
             if ta_applies:
+                qs = LimitedTenderingReason.objects.all()
                 for ta in ta_applies:
                     field_name = ta
-                    qs = LimitedTenderingReason.objects.filter(**{field_name: True}).values_list('name')
-                    qs = [q[0] for q in qs]
-                    for q in qs:
-                        query_list.append(q)
-            
+                    qs = qs.filter(**{field_name: True}).values_list('name')
+                qs = [q[0] for q in qs]
+                for q in qs:
+                    query_list.append(q)
+            print(query_list)
             form.fields['limited_tendering'].queryset = LimitedTenderingReason.objects.filter(name__in=query_list).only('name')
             
         return form
@@ -197,86 +201,4 @@ class TradeForm(NamedUrlSessionWizardView):
                         k2 = k2.replace('_', ' ')
                         k2 = k2.title()
                         context_dict['tables'][k1][k2] = v2
-
         return render(self.request, 'done.html', context_dict)
-
-
-def ajax_type(request):
-    """
-    This view is triggered by changing Commodity Type in the MandatoryElementsEn form.
-    get all the types from the database
-    null and blank values
-    
-    **Context**
-
-    Uses this model
-        :model:`guide.Code`
-    Uses this template
-        :template:`guide.mandatory_elements.html`
-    """
-    # if request.method == "GET" and request.is_ajax():
-    #     type = Code.objects.\
-    #         exclude(type__isnull=True).\
-    #         exclude(type__exact='').\
-    #         order_by('type').\
-    #         values_list('type').\
-    #         distinct()
-    #     type = [i[0] for i in list(type)]
-    #     data = {
-    #         "type": type,
-    #     }
-    #     return JsonResponse(data, status = 200)
-    # if request.method == "GET" and request.is_ajax():
-    #     if request.LANGUAGE_CODE == 'en-ca':
-    #         type_en_ca = Code.objects.\
-    #             exclude(type_en_ca__isnull=True).\
-    #             exclude(type_en_ca__exact='').\
-    #             order_by('type_en_ca').\
-    #             values_list('type_en_ca').\
-    #             distinct()
-    #         type_en_ca = [i[0] for i in list(type_en_ca)]
-    #         data = {
-    #             "type": type_en_ca,
-    #         }
-    #         return JsonResponse(data, status = 200)
-    #     else:
-    #         type_fr_ca = Code.objects.\
-    #             exclude(type_fr_ca__isnull=True).\
-    #             exclude(type_fr_ca__exact='').\
-    #             order_by('type_fr_ca').\
-    #             values_list('type_fr_ca').\
-    #             distinct()
-    #         type_fr_ca = [i[0] for i in list(type_fr_ca)]
-    #         data = {
-    #             "type": type_fr_ca,
-    #         }
-    #         return JsonResponse(data, status = 200)
-
-
-def ajax_code(request):
-    """
-    This view is triggered by changing Commodity Type in the MandatoryElementsEn form.
-    get the type and filter to get code
-    database excluding null and blank values
-    
-    **Context**
-
-    Uses this models
-        :model:`guide.Code`
-    Uses this template
-        :template:`guide.mandatory_elements.html`
-    """
-    if request.method == "GET" and request.is_ajax():
-        type = request.GET.get('type')
-        code = Code.objects.\
-            filter(type = type).\
-            exclude(code__isnull=True).\
-            exclude(code__exact='').\
-            values_list('code').\
-            distinct()
-        code = [i[0] for i in list(code)]
-        data = {
-            "code": code,
-        }
-        return JsonResponse(data, status = 200)
-

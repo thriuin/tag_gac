@@ -4,6 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from guide.models import Organization, Code, GeneralException, LimitedTenderingReason, CftaException, CommodityType
 from django.db.models import Q
 from dal import autocomplete
+from markdownx.fields import MarkdownxFormField
 
 estimated_value_label = _('What is the total estimated value of the procurement? ')
 entities_label = _('Who is the procuring entity?')
@@ -13,13 +14,9 @@ general_exceptions_label = _("Exceptions")
 limited_tendering_label = _("Limited Tendering Reasons")
 cfta_exceptions_label = _("CFTA Exceptions")
 
-# class TForm(forms.ModelForm):
-#     class Meta:
-#         model = TModel
-#         fields = ('name', 'test')
-#         widgets = {
-#             'test': autocomplete.ModelSelect2(url='select2_fk')
-#         }
+class MyModelChoiceField(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, obj):
+        return obj
 
 class RequiredFieldsForm(forms.Form):
 
@@ -117,13 +114,12 @@ class LimitedTenderingForm(forms.Form):
 
 class CftaExceptionForm(forms.Form):
 
-    cfta_exceptions = forms.ModelMultipleChoiceField(
+    cfta_exceptions = MyModelChoiceField(
         CftaException.objects.only('name'),
         to_field_name = 'id',
         widget = forms.CheckboxSelectMultiple,
-        label = cfta_exceptions_label,
         required = False
     )
-    cfta_exceptions.widget.attrs['class'] = 'form-control'
+
 
 

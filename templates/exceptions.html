@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load static %}
 {% load humanize %}
-{% load markdown_filter %}
+{% load markdown %}
 
 {% block form %}
     <form action="" method="POST">
@@ -20,14 +20,25 @@
                 <p><b>{% trans "Important: " %}</b>{% trans "Provide a response to the following questions below and click the ‘Next’ button." %}</p>
                 <p>{% trans "Are there any general trade agreement exceptions or exclusions applicable to the procurement?" %}</p>
                 <p>{% trans "Answer the question by reviewing the list of general trade agreement exceptions and exclusions below and selecting the ones that apply to the procurement. If an exception or exclusion only applies to part of the procurement, it should not be selected. Some of the exceptions or exclusions only apply to some of Canada's trade agreements and the tool will determine which exceptions apply when returning the suggested results. Refer to the footnotes at the bottom for more information on which trade agreements include the specific exception or exclusion." %}</p>   
-                    {% for ex in form.exceptions %}
-                        <div class="checkbox">
-                            <span>
-                                {{ ex|linebreaksbr }}	
-                            </span> 
-                            <sup id="table1-fn{% cycle 1 2 3 5 6 7 8 9 10 11 12 13 14 15 %}-rf"><a class="fn-lnk" href="#table1-fn{% cycle 1 2 3 5 6 7 8 9 10 11 12 13 14 15 %}"><span class="wb-inv">table 1 note </span>{% cycle 1 2 3 5 6 7 8 9 10 11 12 13 14 15 %}</a></sup>
-                        </div>
+                <div class="checkbox">
+                    {% for ffield in form %}
+                        <table class="table table-condensed table-hover">
+                            {% for choice in ffield.field.queryset %}
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="1-exceptions" value="{{ forloop.counter }}" id="id_1-exceptions_{{ forloop.counter0 }}">
+                                    </td>
+                                    <td>
+                                        <label for="id_1-exceptions_{{ forloop.counter0 }}">
+                                            {{ choice|safe }}
+                                            <sup><a class="fn-lnk" href="#table1-fn{% cycle 1 2 3 5 6 7 8 9 10 11 12 13 14 15 %}"><span class="wb-inv">table 1 note </span>{% cycle 1 2 3 5 6 7 8 9 10 11 12 13 14 15 %}</a></sup>
+                                        </label>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
                     {% endfor %}
+                </div>
                 <hr>
             </div>
         {% endfor %}
@@ -47,67 +58,70 @@
 <section class="wb-fnote">
     <h2 id="table1-fn" class="wb-inv">Table 1 Notes</h2>
     <h3>{% trans "Footnotes" %}</h3>
-    <p>{% trans "The applicable exception and exclusions are found under the following trade agreements:" %}</p>
-    <p>{% trans "If there is any discrepancy between this list of exemptions and the text of the trade agreements, the text of the trade agreements takes precedence." %}</p>
-    <p>{% trans "The numbers in front of each general trade agreement exceptions and exclusions corresponds to the data values used for proactive disclosure of contract reporting.  For more information refer to the " %}<a href="https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=14676">{% trans "Guidelines on the Proactive Disclosure of Contracts" %}</a></p>
-    <dl>
-        <dt>Table 1 Note 1</dt>
-        <dd id="table1-fn1">
-            <p>{% trans "Applies to all agreements except CFTA" %}</p> 
-            <p class="fn-rtn"> <a href="#table1-fn1-rf"><span class="wb-inv">Return to table 1 note </span>1<span class="wb-inv"> referrer</span></a> </p>
-        </dd>
-        <dd id="table1-fn2">
-            <p>{% trans "Applies to all agreements except CFTA, CETA, and CPTPP" %}</p>
-            <p class="fn-rtn"> <a href="#table1-fn2-rf"><span class="wb-inv">Return to table 1 note </span>2<span class="wb-inv"> referrer</span></a> </p>
-        </dd>
-        <dd id="table1-fn3">
-            <p>{% trans "Applies to all agreements except CFTA, CETA, and CPTPP" %}</p>
-            <p class="fn-rtn"> <a href="#table1-fn3-rf"><span class="wb-inv">Return to table 1 note </span>3<span class="wb-inv"> referrer</span></a> </p>
-        </dd>
-        <dd id="table1-fn5">
-            <p>{% trans "Applies to all agreements except CFTA" %}</p>
-            <p class="fn-rtn"> <a href="#table1-fn5-rf"><span class="wb-inv">Return to table 1 note </span>5<span class="wb-inv"> referrer</span></a> </p>
-        </dd>
-        <dd id="table1-fn6">
-            <p>{% trans "Applies to all agreements except CFTA, CUFTA, CKFTA, WTO-AGP, CETA, and CPTPP" %}</p>
-            <p class="fn-rtn"> <a href="#table1-fn6-rf"><span class="wb-inv">Return to table 1 note </span>6<span class="wb-inv"> referrer</span></a> </p>
-        </dd>
-        <dd id="table1-fn7">
-            <p>{% trans "Applies to all agreements" %}</p>
-            <p class="fn-rtn"> <a href="#table1-fn7-rf"><span class="wb-inv">Return to table 1 note </span>7<span class="wb-inv"> referrer</span></a> </p>
-        </dd>
-        <dd id="table1-fn8">
-            <p>{% trans "Applies to all agreements except CETA" %}</p>
-            <p class="fn-rtn"> <a href="#table1-fn8-rf"><span class="wb-inv">Return to table 1 note </span>8<span class="wb-inv"> referrer</span></a> </p>
-        </dd>
-        <dd id="table1-fn9">
-            <p>{% trans "Applies to all agreements" %}</p>
-            <p class="fn-rtn"> <a href="#table1-fn9-rf"><span class="wb-inv">Return to table 1 note </span>9<span class="wb-inv"> referrer</span></a> </p>
-        </dd>
-        <dd id="table1-fn10">
-            <p>{% trans "Applies to all agreements" %}</p>
-            <p class="fn-rtn"> <a href="#table1-fn10-rf"><span class="wb-inv">Return to table 1 note </span>10<span class="wb-inv"> referrer</span></a> </p>
-        </dd>
-        <dd id="table1-fn11">
-            <p>{% trans "Applies to all agreements" %}</p>
-            <p class="fn-rtn"> <a href="#table1-fn11-rf"><span class="wb-inv">Return to table 1 note </span>11<span class="wb-inv"> referrer</span></a> </p>
-        </dd>
-        <dd id="table1-fn12">
-            <p>{% trans "Applies to all agreements" %}</p>
-            <p class="fn-rtn"> <a href="#table1-fn12-rf"><span class="wb-inv">Return to table 1 note </span>12<span class="wb-inv"> referrer</span></a> </p>
-        </dd>
-        <dd id="table1-fn13">
-            <p>{% trans "Applies to all agreements" %}</p>
-            <p class="fn-rtn"> <a href="#table1-fn13-rf"><span class="wb-inv">Return to table 1 note </span>13<span class="wb-inv"> referrer</span></a> </p>
-        </dd>
-        <dd id="table1-fn14">
-            <p>{% trans "Applies to all agreements except CFTA" %}</p>
-            <p class="fn-rtn"> <a href="#table1-fn14-rf"><span class="wb-inv">Return to table 1 note </span>14<span class="wb-inv"> referrer</span></a> </p>
-        </dd>
-        <dd id="table1-fn15">
-            <p>{% trans "Applies to all trade agreements" %}</p>
-            <p class="fn-rtn"> <a href="#table1-fn15-rf"><span class="wb-inv">Return to table 1 note </span>15<span class="wb-inv"> referrer</span></a> </p>
-        </dd>
-    </dl>
+    <ul>
+        <li>{% trans "If there is any discrepancy between this list of exemptions and the text of the trade agreements, the text of the trade agreements takes precedence." %}</li>
+        <li>{% trans "The numbers in front of each general trade agreement exceptions and exclusions corresponds to the data values used for proactive disclosure of contract reporting.  For more information refer to the " %}<a href="https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=14676">{% trans "Guidelines on the Proactive Disclosure of Contracts" %}</a></li>
+        <li>{% trans "The applicable exception and exclusions are found under the following trade agreements:" %}
+            <dl>
+                <dt>Table 1 Note 1</dt>
+                <dd id="table1-fn1">
+                    <p>{% trans "Applies to all agreements except CFTA" %}</p> 
+                    <p class="fn-rtn"> <a href="#table1-fn1-rf"><span class="wb-inv">Return to table 1 note </span>1<span class="wb-inv"> referrer</span></a> </p>
+                </dd>
+                <dd id="table1-fn2">
+                    <p>{% trans "Applies to all agreements except CFTA, CETA, and CPTPP" %}</p>
+                    <p class="fn-rtn"> <a href="#table1-fn2-rf"><span class="wb-inv">Return to table 1 note </span>2<span class="wb-inv"> referrer</span></a> </p>
+                </dd>
+                <dd id="table1-fn3">
+                    <p>{% trans "Applies to all agreements except CFTA, CETA, and CPTPP" %}</p>
+                    <p class="fn-rtn"> <a href="#table1-fn3-rf"><span class="wb-inv">Return to table 1 note </span>3<span class="wb-inv"> referrer</span></a> </p>
+                </dd>
+                <dd id="table1-fn5">
+                    <p>{% trans "Applies to all agreements except CFTA" %}</p>
+                    <p class="fn-rtn"> <a href="#table1-fn5-rf"><span class="wb-inv">Return to table 1 note </span>5<span class="wb-inv"> referrer</span></a> </p>
+                </dd>
+                <dd id="table1-fn6">
+                    <p>{% trans "Applies to all agreements except CFTA, CUFTA, CKFTA, WTO-AGP, CETA, and CPTPP" %}</p>
+                    <p class="fn-rtn"> <a href="#table1-fn6-rf"><span class="wb-inv">Return to table 1 note </span>6<span class="wb-inv"> referrer</span></a> </p>
+                </dd>
+                <dd id="table1-fn7">
+                    <p>{% trans "Applies to all agreements" %}</p>
+                    <p class="fn-rtn"> <a href="#table1-fn7-rf"><span class="wb-inv">Return to table 1 note </span>7<span class="wb-inv"> referrer</span></a> </p>
+                </dd>
+                <dd id="table1-fn8">
+                    <p>{% trans "Applies to all agreements except CETA" %}</p>
+                    <p class="fn-rtn"> <a href="#table1-fn8-rf"><span class="wb-inv">Return to table 1 note </span>8<span class="wb-inv"> referrer</span></a> </p>
+                </dd>
+                <dd id="table1-fn9">
+                    <p>{% trans "Applies to all agreements" %}</p>
+                    <p class="fn-rtn"> <a href="#table1-fn9-rf"><span class="wb-inv">Return to table 1 note </span>9<span class="wb-inv"> referrer</span></a> </p>
+                </dd>
+                <dd id="table1-fn10">
+                    <p>{% trans "Applies to all agreements" %}</p>
+                    <p class="fn-rtn"> <a href="#table1-fn10-rf"><span class="wb-inv">Return to table 1 note </span>10<span class="wb-inv"> referrer</span></a> </p>
+                </dd>
+                <dd id="table1-fn11">
+                    <p>{% trans "Applies to all agreements" %}</p>
+                    <p class="fn-rtn"> <a href="#table1-fn11-rf"><span class="wb-inv">Return to table 1 note </span>11<span class="wb-inv"> referrer</span></a> </p>
+                </dd>
+                <dd id="table1-fn12">
+                    <p>{% trans "Applies to all agreements" %}</p>
+                    <p class="fn-rtn"> <a href="#table1-fn12-rf"><span class="wb-inv">Return to table 1 note </span>12<span class="wb-inv"> referrer</span></a> </p>
+                </dd>
+                <dd id="table1-fn13">
+                    <p>{% trans "Applies to all agreements" %}</p>
+                    <p class="fn-rtn"> <a href="#table1-fn13-rf"><span class="wb-inv">Return to table 1 note </span>13<span class="wb-inv"> referrer</span></a> </p>
+                </dd>
+                <dd id="table1-fn14">
+                    <p>{% trans "Applies to all agreements except CFTA" %}</p>
+                    <p class="fn-rtn"> <a href="#table1-fn14-rf"><span class="wb-inv">Return to table 1 note </span>14<span class="wb-inv"> referrer</span></a> </p>
+                </dd>
+                <dd id="table1-fn15">
+                    <p>{% trans "Applies to all trade agreements" %}</p>
+                    <p class="fn-rtn"> <a href="#table1-fn15-rf"><span class="wb-inv">Return to table 1 note </span>15<span class="wb-inv"> referrer</span></a> </p>
+                </dd>
+            </dl>
+        </li>
+    </ul>
 </section>
 {% endblock %}

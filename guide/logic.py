@@ -1,6 +1,6 @@
 from guide.forms import RequiredFieldsForm, GeneralExceptionForm, LimitedTenderingForm, CftaExceptionForm
-from guide.models import Code, ValueThreshold, Organization, GeneralException, LimitedTenderingReason, CftaException
-# from guide.models import OrganizationWithCommodityCodeRules, OrganizationWithCommodityTypeRules
+from guide.models import Code, ValueThreshold, Organization, GeneralException, LimitedTenderingReason, CftaException, OrganizationWithCommodityCodeRules, OrganizationWithCommodityTypeRules
+
 FORMS = [("0", RequiredFieldsForm),
          ("1", GeneralExceptionForm),
          ("2", CftaExceptionForm),
@@ -15,6 +15,7 @@ agreements = [
     'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 
     'ckfta', 'cufta', 'wto_agp', 'ceta', 'cptpp', 'cfta'
 ]
+
 
 url_name='guide:form_step'
 done_step_name='done_step'
@@ -117,9 +118,9 @@ def code_rule(cxt, code_name, type_name, org_name):
     type = cxt[type_name]
     org = cxt[org_name]
 
-    if OrganizationWithCommodityTypeRules.objects.filter(org_fk_en_ca=org).exists():
-        defence_rule = OrganizationWithCommodityTypeRules.objects.filter(org_fk_en_ca=org).values_list('goods_rule').get()[0]
-        tc_rule = OrganizationWithCommodityTypeRules.objects.filter(org_fk_en_ca=org).values_list('tc').get()[0]
+    if OrganizationWithCommodityTypeRules.objects.filter(org_fk=org).exists():
+        defence_rule = OrganizationWithCommodityTypeRules.objects.filter(org_fk=org).values_list('goods_rule').get()[0]
+        tc_rule = OrganizationWithCommodityTypeRules.objects.filter(org_fk=org).values_list('tc').get()[0]
         if type == 'Goods' and defence_rule:
             data = Code.objects.filter(code=value)
             for ta in cxt['ta']:
@@ -131,13 +132,12 @@ def code_rule(cxt, code_name, type_name, org_name):
                 else:
                     cxt['ta'][ta][code_name] = False
 
-
-    if OrganizationWithCommodityCodeRules.objects.filter(org_fk_en_ca=org).filter(code_fk_en_ca=value).exists():
-        data = OrganizationWithCommodityCodeRules.objects.filter(org_fk_en_ca=org).filter(code_fk_en_ca=value)
+    if OrganizationWithCommodityCodeRules.objects.filter(org_fk=org).filter(code_fk=value).exists():
+        data = OrganizationWithCommodityCodeRules.objects.filter(org_fk=org).filter(code_fk=value)
         for ta in cxt['ta']:
             cxt = check_if_trade_agreement_applies(ta, cxt, data, code_name)
 
-    if type == 'Goods':
+    if str(type) == 'Goods':
         pass
     else:
         data = Code.objects.filter(code=value)
