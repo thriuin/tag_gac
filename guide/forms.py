@@ -3,6 +3,7 @@ from django.forms.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from guide.models import Organization, Code, GeneralException, LimitedTenderingReason, CftaException
 from django.db.models import Q
+from dal import autocomplete
 
 estimated_value_label = _('What is the total estimated value of the procurement? ')
 entities_label = _('Who is the procuring entity?')
@@ -23,11 +24,11 @@ class RequiredFieldsForm(forms.Form):
     estimated_value.widget.attrs['class'] = 'form-control'
 
     entities = forms.ModelChoiceField(
-        Organization.objects.only('name'),
+        Organization.objects.all(),
         label = entities_label,
-        required = False
+        required = False,
+        widget=autocomplete.ModelSelect2(url='entities-autocomplete')
     )
-    entities.widget.attrs['class'] = 'form-control'
 
     type = forms.CharField(
         label = type_label,
@@ -53,30 +54,41 @@ class RequiredFieldsForm(forms.Form):
 
     def clean_entities(self):
         org = self.cleaned_data.get('entities')
+        print('org')
+        print(org)
         if Organization.objects.filter(name = org).exists():
             return org
         else:
             raise ValidationError('Select a valid choice. That choice is not one of the available choices.')
 
-    def clean_type(self):
-        type = self.cleaned_data.get('type')
-        try:
-            if Code.objects.filter(type_en_ca = type).exists():
-                return type
-            else:
-                raise ValidationError('Select a valid choice. That choice is not one of the available choices.')
-        except:
-            if Code.objects.filter(type_fr_ca = type).exists():
-                return type
-            else:
-                raise ValidationError('Select a valid choice. That choice is not one of the available choices.')
+    # def clean_type(self):
+    #     type = self.cleaned_data.get('type')
+    #     print('type')
+    #     print(type)
+    #     if Code.objects.filter(type = type).exists():
+    #         return type
+    #     else:
+    #         raise ValidationError('Select a valid choice. That choice is not one of the available choices.')
+        # type = self.cleaned_data.get('type')
+        # try:
+        #     if Code.objects.filter(type_en_ca = type).exists():
+        #         return type
+        #     else:
+        #         raise ValidationError('Select a valid choice. That choice is not one of the available choices.')
+        # except:
+        #     if Code.objects.filter(type_fr_ca = type).exists():
+        #         return type
+        #     else:
+        #         raise ValidationError('Select a valid choice. That choice is not one of the available choices.')
 
-    def clean_code(self):
-        code = self.cleaned_data.get('code')
-        if Code.objects.filter(code = code).exists():
-            return code
-        else:
-            raise ValidationError('Select a valid choice. That choice is not one of the available choices.')
+    # def clean_code(self):
+    #     code = self.cleaned_data.get('code')
+    #     print('code')
+    #     print(code)
+    #     if Code.objects.filter(code = code).exists():
+    #         return code
+    #     else:
+    #         raise ValidationError('Select a valid choice. That choice is not one of the available choices.')
 
 class GeneralExceptionForm(forms.Form):
 

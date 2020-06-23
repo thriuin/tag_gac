@@ -1,6 +1,6 @@
 from guide.forms import RequiredFieldsForm, GeneralExceptionForm, LimitedTenderingForm, CftaExceptionForm
-from guide.models import Code, ValueThreshold, Organization, GeneralException, LimitedTenderingReason, CftaException, OrganizationWithCommodityCodeRules, OrganizationWithCommodityTypeRules
-
+from guide.models import Code, ValueThreshold, Organization, GeneralException, LimitedTenderingReason, CftaException
+# from guide.models import OrganizationWithCommodityCodeRules, OrganizationWithCommodityTypeRules
 FORMS = [("0", RequiredFieldsForm),
          ("1", GeneralExceptionForm),
          ("2", CftaExceptionForm),

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url
-from guide.views import ajax_type, ajax_code, TradeForm, lt_condition
+from guide.views import ajax_type, ajax_code, TradeForm, lt_condition, EntitiesAutocomplete
 from django.shortcuts import redirect
 from guide.logic import FORMS, url_name, done_step_name
 

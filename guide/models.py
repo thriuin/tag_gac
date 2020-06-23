@@ -123,22 +123,28 @@ class Code(BooleanTradeAgreement):
     Foreign key from :model:`guide.CommodityType`
     This combines commodity types with specific commodity codes.
     '''
-    type_en_ca = models.ForeignKey(
-        CommodityType,
-        to_field = 'commodity_type_en_ca',
-        related_name = '+',
-        verbose_name = _('Commodity Type en'),
-        on_delete = models.CASCADE
-    )
+    # type_en_ca = models.ForeignKey(
+    #     CommodityType,
+    #     to_field = 'commodity_type_en_ca',
+    #     related_name = '+',
+    #     verbose_name = _('Commodity Type en'),
+    #     on_delete = models.CASCADE
+    # )
 
-    type_fr_ca = models.ForeignKey(
+    # type_fr_ca = models.ForeignKey(
+    #     CommodityType,
+    #     to_field = 'commodity_type_fr_ca',
+    #     related_name = '+',
+    #     verbose_name = _('Commodity Type fr'),
+    #     on_delete = models.CASCADE
+    # )
+    type = models.ForeignKey(
         CommodityType,
-        to_field = 'commodity_type_fr_ca',
+        to_field = 'commodity_type',
         related_name = '+',
         verbose_name = _('Commodity Type fr'),
         on_delete = models.CASCADE
     )
-
     code = models.CharField(
         max_length = 128,
         default = '',
@@ -152,20 +158,20 @@ class Code(BooleanTradeAgreement):
 
 class OrganizationWithCommodityTypeRules(models.Model):
 
-    org_fk_en_ca = models.ForeignKey(
-        Organization,
-        to_field = 'name_en_ca',
-        related_name = '+',
-        verbose_name = _('Org fk en ca'),
-        on_delete = models.CASCADE
-    )
-    org_fk_fr_ca = models.ForeignKey(
-        Organization,
-        to_field = 'name_fr_ca',
-        related_name = '+',
-        verbose_name = _('org fk fr ca'),
-        on_delete = models.CASCADE
-    )
+    # org_fk_en_ca = models.ForeignKey(
+    #     Organization,
+    #     to_field = 'name_en_ca',
+    #     related_name = '+',
+    #     verbose_name = _('Org fk en ca'),
+    #     on_delete = models.CASCADE
+    # )
+    # org_fk_fr_ca = models.ForeignKey(
+    #     Organization,
+    #     to_field = 'name_fr_ca',
+    #     related_name = '+',
+    #     verbose_name = _('org fk fr ca'),
+    #     on_delete = models.CASCADE
+    # )
     tc = models.BooleanField(
         default = False,
         verbose_name = _('Department of Transport has a specific commodity coverage for Construction Services'),
@@ -178,35 +184,35 @@ class OrganizationWithCommodityTypeRules(models.Model):
     )
 
 
-class OrganizationWithCommodityCodeRules(BooleanTradeAgreement):
-    code_fk_en_ca = models.ForeignKey(
-        Code,
-        to_field = 'code_en_ca',
-        related_name = '+',
-        verbose_name = _('Code FK en ca'),
-        on_delete = models.CASCADE
-    )
-    code_fk_fr_ca = models.ForeignKey(
-        Code,
-        to_field = 'code_fr_ca',
-        related_name = '+',
-        verbose_name = _('Code fk fr ca'),
-        on_delete = models.CASCADE
-    )
-    org_fk_en_ca = models.ForeignKey(
-        Organization,
-        to_field = 'name_en_ca',
-        related_name = '+',
-        verbose_name = _('Org fk en ca'),
-        on_delete = models.CASCADE
-    )
-    org_fk_fr_ca = models.ForeignKey(
-        Organization,
-        to_field = 'name_fr_ca',
-        related_name = '+',
-        verbose_name = _('org fk fr ca'),
-        on_delete = models.CASCADE
-    )
+# class OrganizationWithCommodityCodeRules(BooleanTradeAgreement):
+#     code_fk_en_ca = models.ForeignKey(
+#         Code,
+#         to_field = 'code_en_ca',
+#         related_name = '+',
+#         verbose_name = _('Code FK en ca'),
+#         on_delete = models.CASCADE
+#     )
+#     code_fk_fr_ca = models.ForeignKey(
+#         Code,
+#         to_field = 'code_fr_ca',
+#         related_name = '+',
+#         verbose_name = _('Code fk fr ca'),
+#         on_delete = models.CASCADE
+#     )
+#     org_fk_en_ca = models.ForeignKey(
+#         Organization,
+#         to_field = 'name_en_ca',
+#         related_name = '+',
+#         verbose_name = _('Org fk en ca'),
+#         on_delete = models.CASCADE
+#     )
+#     org_fk_fr_ca = models.ForeignKey(
+#         Organization,
+#         to_field = 'name_fr_ca',
+#         related_name = '+',
+#         verbose_name = _('org fk fr ca'),
+#         on_delete = models.CASCADE
+#     )
 
 
 class ValueThreshold(models.Model):

@@ -1,20 +1,20 @@
 from django.contrib import admin
-from guide.models import CommodityType, Code, GeneralException, LimitedTenderingReason, CftaException, ValueThreshold, Organization, OrganizationWithCommodityCodeRules, OrganizationWithCommodityTypeRules
+# from guide.models import CommodityType, Code, GeneralException, LimitedTenderingReason, CftaException, ValueThreshold, Organization, OrganizationWithCommodityCodeRules, OrganizationWithCommodityTypeRules
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from modeltranslation.admin import TranslationAdmin
-
+from guide.models import Organization, Code, CommodityType, ValueThreshold
 # Model resources
-class OrganizationWithCommodityTypeRulesResource(resources.ModelResource):
+# class OrganizationWithCommodityTypeRulesResource(resources.ModelResource):
 
-    class Meta:
-        model = OrganizationWithCommodityTypeRules
+#     class Meta:
+#         model = OrganizationWithCommodityTypeRules
 
 
-class OrganizationWithCommodityCodeRulesResource(resources.ModelResource):
+# class OrganizationWithCommodityCodeRulesResource(resources.ModelResource):
 
-    class Meta:
-        model = OrganizationWithCommodityCodeRules
+#     class Meta:
+#         model = OrganizationWithCommodityCodeRules
 
 
 class CommodityTypeResource(resources.ModelResource):
@@ -29,22 +29,22 @@ class CodeResource(resources.ModelResource):
         model = Code
 
 
-class GeneralExceptionResource(resources.ModelResource):
+# class GeneralExceptionResource(resources.ModelResource):
 
-    class Meta:
-        model = GeneralException
-
-
-class TenderingReasonResource(resources.ModelResource):
-
-    class Meta:
-        model = LimitedTenderingReason
+#     class Meta:
+#         model = GeneralException
 
 
-class CftaExceptionResource(resources.ModelResource):
+# class TenderingReasonResource(resources.ModelResource):
 
-    class Meta:
-        model = CftaException
+#     class Meta:
+#         model = LimitedTenderingReason
+
+
+# class CftaExceptionResource(resources.ModelResource):
+
+#     class Meta:
+#         model = CftaException
 
 
 class ValueThresholdResource(resources.ModelResource):
@@ -59,45 +59,45 @@ class OrganizationResource(resources.ModelResource):
         model = Organization
 
 
-# ImportExportModelAdmins
-class OrganizationWithCommodityCodeRulesAdmin(ImportExportModelAdmin):
-    resource_class = OrganizationWithCommodityCodeRulesResource
+# # ImportExportModelAdmins
+# class OrganizationWithCommodityCodeRulesAdmin(ImportExportModelAdmin):
+#     resource_class = OrganizationWithCommodityCodeRulesResource
     
 
-class OrganizationWithCommodityTypeRulesAdmin(ImportExportModelAdmin):
-    resource_class = OrganizationWithCommodityTypeRulesResource
+# class OrganizationWithCommodityTypeRulesAdmin(ImportExportModelAdmin):
+#     resource_class = OrganizationWithCommodityTypeRulesResource
 
 
-class CommodityTypeAdmin(ImportExportModelAdmin, TranslationAdmin):
+class CommodityTypeAdmin(ImportExportModelAdmin):
     resource_class = CommodityTypeResource
     list_display = [f.name for f in CommodityType._meta.get_fields()][::-1]
     list_editable = [f.name for f in CommodityType._meta.get_fields() if f.name != 'id']
     list_display_links = ['id']
 
 
-class CodeAdmin(ImportExportModelAdmin, TranslationAdmin):
+class CodeAdmin(ImportExportModelAdmin):
     resource_class = CodeResource
 
 
-class GeneralExceptionAdmin(ImportExportModelAdmin, TranslationAdmin):
-    resource_class = GeneralExceptionResource
-    list_display = [f.name for f in GeneralException._meta.get_fields()][::-1]
-    list_editable = [f.name for f in GeneralException._meta.get_fields() if f.name != 'id']
-    list_display_links = ['id']
+# class GeneralExceptionAdmin(ImportExportModelAdmin, TranslationAdmin):
+#     resource_class = GeneralExceptionResource
+#     list_display = [f.name for f in GeneralException._meta.get_fields()][::-1]
+#     list_editable = [f.name for f in GeneralException._meta.get_fields() if f.name != 'id']
+#     list_display_links = ['id']
 
 
-class TenderingReasonAdmin(ImportExportModelAdmin, TranslationAdmin):
-    resource_class = TenderingReasonResource
-    list_display = [f.name for f in LimitedTenderingReason._meta.get_fields()][::-1]
-    list_editable = [f.name for f in LimitedTenderingReason._meta.get_fields() if f.name != 'id']
-    list_display_links = ['id']
+# class TenderingReasonAdmin(ImportExportModelAdmin, TranslationAdmin):
+#     resource_class = TenderingReasonResource
+#     list_display = [f.name for f in LimitedTenderingReason._meta.get_fields()][::-1]
+#     list_editable = [f.name for f in LimitedTenderingReason._meta.get_fields() if f.name != 'id']
+#     list_display_links = ['id']
 
 
-class CftaExceptionAdmin(ImportExportModelAdmin, TranslationAdmin):
-    resource_class = CftaExceptionResource
-    list_display = [f.name for f in CftaException._meta.get_fields()][::-1]
-    list_editable = [f.name for f in CftaException._meta.get_fields() if f.name != 'id']
-    list_display_links = ['id']
+# class CftaExceptionAdmin(ImportExportModelAdmin, TranslationAdmin):
+#     resource_class = CftaExceptionResource
+#     list_display = [f.name for f in CftaException._meta.get_fields()][::-1]
+#     list_editable = [f.name for f in CftaException._meta.get_fields() if f.name != 'id']
+#     list_display_links = ['id']
 
 
 class ValueThresholdAdmin(ImportExportModelAdmin):
@@ -107,16 +107,18 @@ class ValueThresholdAdmin(ImportExportModelAdmin):
     list_display_links = ['id']
 
 
-class OrganizationAdmin(ImportExportModelAdmin, TranslationAdmin):
-    resource_class = OrganizationResource
+# class OrganizationAdmin(ImportExportModelAdmin, TranslationAdmin):
+#     resource_class = OrganizationResource
 
+class OrganizationAdmin(ImportExportModelAdmin):
+    resource_class = OrganizationResource
 # Register your models here
 admin.site.register(CommodityType, CommodityTypeAdmin)
 admin.site.register(Code, CodeAdmin)
-admin.site.register(GeneralException, GeneralExceptionAdmin)
-admin.site.register(LimitedTenderingReason, TenderingReasonAdmin)
-admin.site.register(CftaException, CftaExceptionAdmin),
+# admin.site.register(GeneralException, GeneralExceptionAdmin)
+# admin.site.register(LimitedTenderingReason, TenderingReasonAdmin)
+# admin.site.register(CftaException, CftaExceptionAdmin),
 admin.site.register(ValueThreshold, ValueThresholdAdmin)
 admin.site.register(Organization, OrganizationAdmin)
-admin.site.register(OrganizationWithCommodityTypeRules, OrganizationWithCommodityTypeRulesAdmin)
-admin.site.register(OrganizationWithCommodityCodeRules, OrganizationWithCommodityCodeRulesAdmin)
+# admin.site.register(OrganizationWithCommodityTypeRules, OrganizationWithCommodityTypeRulesAdmin)
+# admin.site.register(OrganizationWithCommodityCodeRules, OrganizationWithCommodityCodeRulesAdmin)

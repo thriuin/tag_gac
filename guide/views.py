@@ -1,10 +1,25 @@
 from django.shortcuts import render
-from guide.models import Code, GeneralException, CftaException, LimitedTenderingReason
+from guide.models import Code, GeneralException, CftaException, LimitedTenderingReason, Organization
 from guide.forms import RequiredFieldsForm, GeneralExceptionForm, LimitedTenderingForm, CftaExceptionForm
 from formtools.wizard.views import NamedUrlSessionWizardView
 from django.http import JsonResponse
 from guide.logic import FORMS, TEMPLATES, agreements, url_name, done_step_name, determine_final_coverage, organization_rule, value_threshold_rule, code_rule, exceptions_rule, build_context_dict, process_form
 from django.db.models import Q
+from dal import autocomplete
+from django.views.generic.edit import FormView
+
+
+class EntitiesAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        
+        qs = Organization.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
+
+        return qs
+
+
 
 def lt_condition(wizard):
     form_list = [f[0] for f in FORMS[:3]]
@@ -18,7 +33,7 @@ def lt_condition(wizard):
 
     context_dict = value_threshold_rule(context_dict, 'estimated_value', 'type')
     context_dict = organization_rule(context_dict, 'entities')
-    context_dict = code_rule(context_dict, 'code', 'type', 'entities')
+    # context_dict = code_rule(context_dict, 'code', 'type', 'entities')
     context_dict = exceptions_rule(context_dict, 'exceptions', GeneralException)
     context_dict = exceptions_rule(context_dict, 'cfta_exceptions', CftaException)
     context_dict = determine_final_coverage(context_dict)
@@ -183,30 +198,42 @@ def ajax_type(request):
         :template:`guide.mandatory_elements.html`
     """
     if request.method == "GET" and request.is_ajax():
-        if request.LANGUAGE_CODE == 'en-ca':
-            type_en_ca = Code.objects.\
-                exclude(type_en_ca__isnull=True).\
-                exclude(type_en_ca__exact='').\
-                order_by('type_en_ca').\
-                values_list('type_en_ca').\
-                distinct()
-            type_en_ca = [i[0] for i in list(type_en_ca)]
-            data = {
-                "type": type_en_ca,
-            }
-            return JsonResponse(data, status = 200)
-        else:
-            type_fr_ca = Code.objects.\
-                exclude(type_fr_ca__isnull=True).\
-                exclude(type_fr_ca__exact='').\
-                order_by('type_fr_ca').\
-                values_list('type_fr_ca').\
-                distinct()
-            type_fr_ca = [i[0] for i in list(type_fr_ca)]
-            data = {
-                "type": type_fr_ca,
-            }
-            return JsonResponse(data, status = 200)
+        type = Code.objects.\
+            exclude(type__isnull=True).\
+            exclude(type__exact='').\
+            order_by('type').\
+            values_list('type').\
+            distinct()
+        type = [i[0] for i in list(type)]
+        data = {
+            "type": type,
+        }
+        return JsonResponse(data, status = 200)
+    # if request.method == "GET" and request.is_ajax():
+    #     if request.LANGUAGE_CODE == 'en-ca':
+    #         type_en_ca = Code.objects.\
+    #             exclude(type_en_ca__isnull=True).\
+    #             exclude(type_en_ca__exact='').\
+    #             order_by('type_en_ca').\
+    #             values_list('type_en_ca').\
+    #             distinct()
+    #         type_en_ca = [i[0] for i in list(type_en_ca)]
+    #         data = {
+    #             "type": type_en_ca,
+    #         }
+    #         return JsonResponse(data, status = 200)
+    #     else:
+    #         type_fr_ca = Code.objects.\
+    #             exclude(type_fr_ca__isnull=True).\
+    #             exclude(type_fr_ca__exact='').\
+    #             order_by('type_fr_ca').\
+    #             values_list('type_fr_ca').\
+    #             distinct()
+    #         type_fr_ca = [i[0] for i in list(type_fr_ca)]
+    #         data = {
+    #             "type": type_fr_ca,
+    #         }
+    #         return JsonResponse(data, status = 200)
 
 
 def ajax_code(request):
@@ -224,16 +251,15 @@ def ajax_code(request):
     """
     if request.method == "GET" and request.is_ajax():
         type = request.GET.get('type')
-        if request.LANGUAGE_CODE == 'en-ca':
-            code = Code.objects.\
-                filter(type_en_ca = type).\
-                exclude(code__isnull=True).\
-                exclude(code__exact='').\
-                values_list('code').\
-                distinct()
-            code = [i[0] for i in list(code)]
-            data = {
-                "code": code,
-            }
-            return JsonResponse(data, status = 200)
+        code = Code.objects.\
+            filter(type = type).\
+            exclude(code__isnull=True).\
+            exclude(code__exact='').\
+            values_list('code').\
+            distinct()
+        code = [i[0] for i in list(code)]
+        data = {
+            "code": code,
+        }
+        return JsonResponse(data, status = 200)
 
