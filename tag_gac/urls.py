@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
 from django.shortcuts import redirect
-from guide.views import EntitiesAutocomplete, ajax_type, ajax_code
+from guide.views import EntitiesAutocomplete, ajax_type, ajax_code, TypeAutocomplete, CodeAutocomplete
 
 urlpatterns = [
     path('tag/admin/doc/', include('django.contrib.admindocs.urls')),
@@ -27,6 +27,8 @@ urlpatterns = [
     path('tag/ajax/type/', ajax_type, name = 'ajax_type'),
 	path('tag/ajax/code/', ajax_code, name = 'ajax_code'),
     url(r'entities-autocomplete/$', EntitiesAutocomplete.as_view(), name='entities-autocomplete'),
+    url(r'type-autocomplete/$', TypeAutocomplete.as_view(), name='type-autocomplete'),
+    url(r'code-autocomplete/$', CodeAutocomplete.as_view(), name='code-autocomplete'),
     url(r"tag/", include(("guide.urls", "guide"), namespace = "guide")),
     url('^.*$', lambda request: redirect('/tag/0/', permanent=True))
 ]

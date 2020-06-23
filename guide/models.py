@@ -101,7 +101,6 @@ class CommodityType(models.Model):
     Inherits from :model:`guide.Language`
     This is for Goods, Services, Construction
     '''
-    id = models.AutoField(primary_key=True)
     commodity_type = models.CharField(
         max_length = 128,
         default = '',

@@ -40,15 +40,10 @@
                     {{ form.entities }}
                 {% endif %}
                 {% if ffield.name == 'type' %}
-                    <select class="form-control" id="type" name="0-type" url = "/tag/ajax/type/">
-                        <option value='all' selected>{% trans "Select Commodity Type" %}</option>
-                    </select>
+                    {{ form.type }}
                 {% endif %}
                 {% if ffield.name == 'code' %}
-                    <select class="form-control" id="code" name="0-code" url = "/tag/ajax/code/">
-                        <option value='all' selected>{% trans "Select Commodity Code" %}</option>
-                    </select>
-                    <hr>
+                    {{ form.code }}
             {% endif %}
             </div>
         <br>

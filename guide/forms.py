@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from guide.models import Organization, Code, GeneralException, LimitedTenderingReason, CftaException
+from guide.models import Organization, Code, GeneralException, LimitedTenderingReason, CftaException, CommodityType
 from django.db.models import Q
 from dal import autocomplete
 
@@ -13,6 +13,13 @@ general_exceptions_label = _("Exceptions")
 limited_tendering_label = _("Limited Tendering Reasons")
 cfta_exceptions_label = _("CFTA Exceptions")
 
+# class TForm(forms.ModelForm):
+#     class Meta:
+#         model = TModel
+#         fields = ('name', 'test')
+#         widgets = {
+#             'test': autocomplete.ModelSelect2(url='select2_fk')
+#         }
 
 class RequiredFieldsForm(forms.Form):
 
@@ -30,17 +37,19 @@ class RequiredFieldsForm(forms.Form):
         widget=autocomplete.ModelSelect2(url='entities-autocomplete')
     )
 
-    type = forms.CharField(
+    type = forms.ModelChoiceField(
+        CommodityType.objects.all(),
         label = type_label,
         required = False,
+        widget = autocomplete.ModelSelect2(url='type-autocomplete')
     )
-    type.widget.attrs['class'] = 'form-control'
     
-    code = forms.CharField(
+    code = forms.ModelChoiceField(
+        Code.objects.only('code'),
         label = code_label,
-        required = False
+        required = False,
+        widget = autocomplete.ModelSelect2(url = 'code-autocomplete', forward=['type'])
     )
-    code.widget.attrs['class'] = 'form-control'
 
     def clean_estimated_value(self):
         val = self.cleaned_data.get('estimated_value')
@@ -54,21 +63,17 @@ class RequiredFieldsForm(forms.Form):
 
     def clean_entities(self):
         org = self.cleaned_data.get('entities')
-        print('org')
-        print(org)
         if Organization.objects.filter(name = org).exists():
             return org
         else:
             raise ValidationError('Select a valid choice. That choice is not one of the available choices.')
 
-    # def clean_type(self):
-    #     type = self.cleaned_data.get('type')
-    #     print('type')
-    #     print(type)
-    #     if Code.objects.filter(type = type).exists():
-    #         return type
-    #     else:
-    #         raise ValidationError('Select a valid choice. That choice is not one of the available choices.')
+    def clean_type(self):
+        type = self.cleaned_data.get('type')
+        if Code.objects.filter(type = type).exists():
+            return type
+        else:
+            raise ValidationError('Select a valid choice. That choice is not one of the available choices.')
         # type = self.cleaned_data.get('type')
         # try:
         #     if Code.objects.filter(type_en_ca = type).exists():
@@ -81,14 +86,12 @@ class RequiredFieldsForm(forms.Form):
         #     else:
         #         raise ValidationError('Select a valid choice. That choice is not one of the available choices.')
 
-    # def clean_code(self):
-    #     code = self.cleaned_data.get('code')
-    #     print('code')
-    #     print(code)
-    #     if Code.objects.filter(code = code).exists():
-    #         return code
-    #     else:
-    #         raise ValidationError('Select a valid choice. That choice is not one of the available choices.')
+    def clean_code(self):
+        code = self.cleaned_data.get('code')
+        if Code.objects.filter(code = code).exists():
+            return code
+        else:
+            raise ValidationError('Select a valid choice. That choice is not one of the available choices.')
 
 class GeneralExceptionForm(forms.Form):
 

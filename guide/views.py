@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from guide.models import Code, GeneralException, CftaException, LimitedTenderingReason, Organization
+from guide.models import Code, GeneralException, CftaException, LimitedTenderingReason, Organization, CommodityType
 from guide.forms import RequiredFieldsForm, GeneralExceptionForm, LimitedTenderingForm, CftaExceptionForm
 from formtools.wizard.views import NamedUrlSessionWizardView
 from django.http import JsonResponse
@@ -9,6 +9,15 @@ from dal import autocomplete
 from django.views.generic.edit import FormView
 
 
+class CodeAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Code.objects.all()
+        type = self.forwarded.get('type', None)
+        if type:
+            value = CommodityType.objects.filter(id=type).get()
+            qs = Code.objects.filter(type=value).all()
+        return qs
+        
 class EntitiesAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         
@@ -20,6 +29,14 @@ class EntitiesAutocomplete(autocomplete.Select2QuerySetView):
         return qs
 
 
+class TypeAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = CommodityType.objects.all()
+
+        if self.q:
+            qs = qs.filter(commodity_type__icontains=self.q)
+        
+        return qs
 
 def lt_condition(wizard):
     form_list = [f[0] for f in FORMS[:3]]
@@ -197,18 +214,18 @@ def ajax_type(request):
     Uses this template
         :template:`guide.mandatory_elements.html`
     """
-    if request.method == "GET" and request.is_ajax():
-        type = Code.objects.\
-            exclude(type__isnull=True).\
-            exclude(type__exact='').\
-            order_by('type').\
-            values_list('type').\
-            distinct()
-        type = [i[0] for i in list(type)]
-        data = {
-            "type": type,
-        }
-        return JsonResponse(data, status = 200)
+    # if request.method == "GET" and request.is_ajax():
+    #     type = Code.objects.\
+    #         exclude(type__isnull=True).\
+    #         exclude(type__exact='').\
+    #         order_by('type').\
+    #         values_list('type').\
+    #         distinct()
+    #     type = [i[0] for i in list(type)]
+    #     data = {
+    #         "type": type,
+    #     }
+    #     return JsonResponse(data, status = 200)
     # if request.method == "GET" and request.is_ajax():
     #     if request.LANGUAGE_CODE == 'en-ca':
     #         type_en_ca = Code.objects.\
