@@ -14,9 +14,9 @@ general_exceptions_label = _("Exceptions")
 limited_tendering_label = _("Limited Tendering Reasons")
 cfta_exceptions_label = _("CFTA Exceptions")
 
-class MyModelChoiceField(forms.ModelMultipleChoiceField):
-    def label_from_instance(self, obj):
-        return obj
+# class MyModelChoiceField(forms.ModelMultipleChoiceField):
+#     def label_from_instance(self, obj):
+#         return obj
 
 class RequiredFieldsForm(forms.Form):
 
@@ -83,6 +83,7 @@ class GeneralExceptionForm(forms.Form):
 
     exceptions = forms.ModelMultipleChoiceField(
         GeneralException.objects.only('name'),
+        to_field_name = 'id',
         widget = forms.CheckboxSelectMultiple,
         label = general_exceptions_label,
         required = False
@@ -94,6 +95,7 @@ class LimitedTenderingForm(forms.Form):
 
     limited_tendering = forms.ModelMultipleChoiceField(
         LimitedTenderingReason.objects.only('name'),
+        to_field_name = 'id',
         widget = forms.CheckboxSelectMultiple,
         label = limited_tendering_label,
         required = False
@@ -103,7 +105,7 @@ class LimitedTenderingForm(forms.Form):
 
 class CftaExceptionForm(forms.Form):
 
-    cfta_exceptions = MyModelChoiceField(
+    cfta_exceptions = forms.ModelMultipleChoiceField(
         CftaException.objects.only('name'),
         to_field_name = 'id',
         widget = forms.CheckboxSelectMultiple,

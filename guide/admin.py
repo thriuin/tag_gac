@@ -93,7 +93,7 @@ class TenderingReasonAdmin(ImportExportModelAdmin, TranslationAdmin):
     list_display_links = ['id']
 
 
-class CftaExceptionAdmin(ImportExportModelAdmin, TranslationAdmin, MarkdownxModelAdmin):
+class CftaExceptionAdmin(ImportExportModelAdmin, TranslationAdmin):
     resource_class = CftaExceptionResource
     list_display = [f.name for f in CftaException._meta.get_fields()][::-1]
     list_editable = [f.name for f in CftaException._meta.get_fields() if f.name != 'id']

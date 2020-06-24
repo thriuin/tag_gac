@@ -61,24 +61,24 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>{% trans "Total Estimated Value:" %}</td>
+                                <td>{% trans "Total Estimated Value" %}</td>
                                 <td class="text-left">{{ estimated_value|intcomma }}</td>
                             </tr>
                             <tr>
-                                <td>{% trans "Procuring Entity:" %}</td>
+                                <td>{% trans "Procuring Entity" %}</td>
                                 <td class="text-left">{{ entities }}</td>
                             </tr>
                             <tr>
-                                <td>{% trans "Commodity Type:" %}</td>
+                                <td>{% trans "Commodity Type" %}</td>
                                 <td class="text-left">{{ type }}</td>
                             </tr>
                             <tr>
-                                <td>{% trans "Commodity Code:" %}</td>
+                                <td>{% trans "Commodity Code" %}</td>
                                 <td class="text-left">{{ code }}</td>
                             </tr>
                             <br>
                             <tr>
-                                <td>{% trans "Exceptions and Exclusions:" %}</td>
+                                <td>{% trans "Exceptions and Exclusions" %}</td>
                                 <td class="text-left">
                                     {% for ex in exceptions %}
                                         <li>{{ ex }}</li>
@@ -88,7 +88,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>{% trans "CFTA Exceptions:" %}</td>
+                                <td>{% trans "CFTA Exceptions" %}</td>
                                 <td class="text-left">
                                     {% for ce in cfta_exceptions %}
                                         <li>{{ ce }}</li>
@@ -98,7 +98,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>{% trans "Limited Tendering Reasons:" %}</td>
+                                <td>{% trans "Limited Tendering Reasons" %}</td>
                                 <td class="text-left">
                                     {% for lt in limited_tendering %}
                                         <li>{{ lt }}</li>
