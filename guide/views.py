@@ -12,13 +12,14 @@ from django.views.generic.edit import FormView
 class CodeAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         type = self.forwarded.get('type', None)
+        qs = Code.objects.none()
         if type:
             value = CommodityType.objects.filter(id=type).get()
             qs = Code.objects.filter(type=value).all()
             if self.q:
                 qs = Code.objects.filter(type=value).filter(code__icontains=self.q)
-        else:
-            qs = None
+                print('code inner ifif')
+
         return qs
         
 class EntitiesAutocomplete(autocomplete.Select2QuerySetView):

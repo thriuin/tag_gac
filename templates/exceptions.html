@@ -4,63 +4,65 @@
 {% load humanize %}
 {% load markdown %}
 
+{% block intro %}
+<h2>{% trans "Step 2. General Trade Agreement Exceptions and Exclusions" %}</h2>      
+<p><b>{% trans "Important: " %}</b>{% trans "Provide a response to the following questions below and click the ‘Next’ button." %}</p>
+<p>{% trans "Are there any general trade agreement exceptions or exclusions applicable to the procurement?" %}</p>
+<p>{% trans "Answer the question by reviewing the list of general trade agreement exceptions and exclusions below and selecting the ones that apply to the procurement. If an exception or exclusion only applies to part of the procurement, it should not be selected. Some of the exceptions or exclusions only apply to some of Canada's trade agreements and the tool will determine which exceptions apply when returning the suggested results. Refer to the footnotes at the bottom for more information on which trade agreements include the specific exception or exclusion." %}</p> 
+{% endblock %}
 {% block form %}
-    <form action="" method="POST">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        {{ wizard.management_form }}
+<form action="" method="POST">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {{ wizard.management_form }}
+    <div class="form-group" role="form">
         {% for ffield in form %}
-            <div class="form-group" role="form">
-                {% if ffield.errors %}
-                    {% for error in ffield.errors %}
-                        {{ error }}
+            {% if ffield.errors %}
+                {% for error in ffield.errors %}
+                    {{ error }}
+                {% endfor %}
+            {% endif %}  
+            <div class="checkbox">
+                <table class="table table-condensed table-hover">
+                    {% for choice in ffield.field.queryset %}
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="1-exceptions" value="{{ forloop.counter }}" id="id_1-exceptions_{{ forloop.counter0 }}">
+                            </td>
+                            <td>
+                                <label for="id_1-exceptions_{{ forloop.counter0 }}">
+                                    {{ choice|safe }}
+                                    <sup><a class="fn-lnk" href="#table1-fn{% cycle 1 2 3 5 6 7 8 9 10 11 12 13 14 15 %}"><span class="wb-inv">table 1 note </span>{% cycle 1 2 3 5 6 7 8 9 10 11 12 13 14 15 %}</a></sup>
+                                </label>
+                            </td>
+                        </tr>
                     {% endfor %}
-                {% endif %}
-                <h2>{% trans "Step 2. General Trade Agreement Exceptions and Exclusions" %}</h2>      
-                <p><b>{% trans "Important: " %}</b>{% trans "Provide a response to the following questions below and click the ‘Next’ button." %}</p>
-                <p>{% trans "Are there any general trade agreement exceptions or exclusions applicable to the procurement?" %}</p>
-                <p>{% trans "Answer the question by reviewing the list of general trade agreement exceptions and exclusions below and selecting the ones that apply to the procurement. If an exception or exclusion only applies to part of the procurement, it should not be selected. Some of the exceptions or exclusions only apply to some of Canada's trade agreements and the tool will determine which exceptions apply when returning the suggested results. Refer to the footnotes at the bottom for more information on which trade agreements include the specific exception or exclusion." %}</p>   
-                <div class="checkbox">
-                    {% for ffield in form %}
-                        <table class="table table-condensed table-hover">
-                            {% for choice in ffield.field.queryset %}
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="1-exceptions" value="{{ forloop.counter }}" id="id_1-exceptions_{{ forloop.counter0 }}">
-                                    </td>
-                                    <td>
-                                        <label for="id_1-exceptions_{{ forloop.counter0 }}">
-                                            {{ choice|safe }}
-                                            <sup><a class="fn-lnk" href="#table1-fn{% cycle 1 2 3 5 6 7 8 9 10 11 12 13 14 15 %}"><span class="wb-inv">table 1 note </span>{% cycle 1 2 3 5 6 7 8 9 10 11 12 13 14 15 %}</a></sup>
-                                        </label>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </table>
-                    {% endfor %}
-                </div>
-                <hr>
+                </table>
             </div>
         {% endfor %}
-        <div class="mwspagination section">
-            <nav class="mrgn-bttm-lg">
-                <h3 class="wb-inv">{% trans "Document navigation" %}</h3>
-                    <div align="right">
-                        <button class="btn btn-default" type="submit" value = "{{ wizard.steps.prev }}" name="wizard_goto_step"><span class="wb-inv">{% trans "Go to previous step." %}</span>{% trans "Previous" %}</button>
-                        <button class="btn btn-default" type="submit" value="Next" name="submit-form-button"><span class="wb-inv">{% trans "Go to next step." %}</span>{% trans "Next" %}</button>
-                    </div>
-                </ul>
-            </nav>
-        </div>
-    </form>
+    </div>
+    <div class="mwspagination section">
+        <nav class="mrgn-bttm-lg">
+            <h3 class="wb-inv">{% trans "Document navigation" %}</h3>
+                <div align="right">
+                    <button class="btn btn-default" type="submit" value = "{{ wizard.steps.prev }}" name="wizard_goto_step"><span class="wb-inv">{% trans "Go to previous step." %}</span>{% trans "Previous" %}</button>
+                    <button class="btn btn-default" type="submit" value="Next" name="submit-form-button"><span class="wb-inv">{% trans "Go to next step." %}</span>{% trans "Next" %}</button>
+                </div>
+            </ul>
+        </nav>
+    </div>
+</form>
 {% endblock %}
 {% block footnotes %}
+<h3>{% trans "Caveat:" %}</h3>
+<ul>
+    <li>{% trans "If there is any discrepancy between this list of exemptions and the text of the trade agreements, the text of the trade agreements takes precedence." %}</li>
+    <li>{% trans "The numbers in front of each general trade agreement exceptions and exclusions corresponds to the data values used for proactive disclosure of contract reporting.  For more information refer to the " %}<a href="https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=14676">{% trans "Guidelines on the Proactive Disclosure of Contracts" %}</a></li>
+</ul>
 <section class="wb-fnote">
     <h2 id="table1-fn" class="wb-inv">Table 1 Notes</h2>
     <h3>{% trans "Footnotes" %}</h3>
     <ul>
-        <li>{% trans "If there is any discrepancy between this list of exemptions and the text of the trade agreements, the text of the trade agreements takes precedence." %}</li>
-        <li>{% trans "The numbers in front of each general trade agreement exceptions and exclusions corresponds to the data values used for proactive disclosure of contract reporting.  For more information refer to the " %}<a href="https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=14676">{% trans "Guidelines on the Proactive Disclosure of Contracts" %}</a></li>
         <li>{% trans "The applicable exception and exclusions are found under the following trade agreements:" %}
             <dl>
                 <dt>Table 1 Note 1</dt>

@@ -22,7 +22,7 @@ class RequiredFieldsForm(forms.Form):
 
     estimated_value = forms.IntegerField(
         label = estimated_value_label,
-        required = False,
+        required = True,
         min_value = 0
     )
     estimated_value.widget.attrs['class'] = 'form-control'
@@ -30,22 +30,22 @@ class RequiredFieldsForm(forms.Form):
     entities = forms.ModelChoiceField(
         Organization.objects.all(),
         label = entities_label,
-        required = False,
-        widget=autocomplete.ModelSelect2(url='entities-autocomplete')
+        required = True,
+        widget=autocomplete.ModelSelect2(url='entities-autocomplete', attrs={'class':'form-control'})
     )
 
     type = forms.ModelChoiceField(
         CommodityType.objects.all(),
         label = type_label,
-        required = False,
-        widget = autocomplete.ModelSelect2(url='type-autocomplete')
+        required = True,
+        widget = autocomplete.ModelSelect2(url='type-autocomplete', attrs={'class':'form-control'})
     )
     
     code = forms.ModelChoiceField(
         Code.objects.only('code'),
         label = code_label,
-        required = False,
-        widget = autocomplete.ModelSelect2(url = 'code-autocomplete', forward=['type'])
+        required = True,
+        widget = autocomplete.ModelSelect2(url = 'code-autocomplete', forward=['type'], attrs={'class':'form-control'})
     )
 
     def clean_estimated_value(self):
@@ -71,17 +71,6 @@ class RequiredFieldsForm(forms.Form):
             return type
         else:
             raise ValidationError('Select a valid choice. That choice is not one of the available choices.')
-        # type = self.cleaned_data.get('type')
-        # try:
-        #     if Code.objects.filter(type_en_ca = type).exists():
-        #         return type
-        #     else:
-        #         raise ValidationError('Select a valid choice. That choice is not one of the available choices.')
-        # except:
-        #     if Code.objects.filter(type_fr_ca = type).exists():
-        #         return type
-        #     else:
-        #         raise ValidationError('Select a valid choice. That choice is not one of the available choices.')
 
     def clean_code(self):
         code = self.cleaned_data.get('code')
