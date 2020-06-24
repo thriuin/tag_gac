@@ -3,7 +3,6 @@ from guide.models import CommodityType, Code, GeneralException, LimitedTendering
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from modeltranslation.admin import TranslationAdmin
-from markdownx.admin import MarkdownxModelAdmin
 
 # Model resources
 class OrganizationWithCommodityTypeRulesResource(resources.ModelResource):

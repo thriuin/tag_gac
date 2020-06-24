@@ -28,7 +28,7 @@
             <br>
             {% for error in ffield.errors %}
                 <section class="alert alert-danger">
-                    <p><b>{% trans "Error: " %}{{ ffield.errors }}</b></p>
+                    <p><b>{{ ffield.errors }}</b></p>
                 </section>
             {% endfor %}
             {{ ffield }}

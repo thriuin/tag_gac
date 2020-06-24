@@ -3,7 +3,7 @@ from guide.models import Code, GeneralException, CftaException, LimitedTendering
 from guide.forms import RequiredFieldsForm, GeneralExceptionForm, LimitedTenderingForm, CftaExceptionForm
 from formtools.wizard.views import NamedUrlSessionWizardView
 from django.http import JsonResponse
-from guide.logic import FORMS, TEMPLATES, agreements, url_name, done_step_name, determine_final_coverage, organization_rule, value_threshold_rule, code_rule, exceptions_rule, build_context_dict, process_form
+from guide.logic import FORMS, TEMPLATES, AGREEMENTS, url_name, done_step_name, determine_final_coverage, organization_rule, value_threshold_rule, code_rule, exceptions_rule, build_context_dict, process_form
 from django.db.models import Q
 from dal import autocomplete
 from django.views.generic.edit import FormView

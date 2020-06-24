@@ -11,7 +11,7 @@ TEMPLATES = {"0": "mandatory_elements.html",
              "2": "cfta_exceptions.html",
              "3": "limited_tendering.html"}
 
-agreements = [
+AGREEMENTS = [
     'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 
     'ckfta', 'cufta', 'wto_agp', 'ceta', 'cptpp', 'cfta'
 ]
@@ -22,7 +22,7 @@ done_step_name='done_step'
 
 def build_context_dict():
     cxt = {}
-    cxt['ta'] = {ta:{} for ta in agreements}
+    cxt['ta'] = {ta:{} for ta in AGREEMENTS}
     return cxt
         
 def process_form(cxt, form_data):
@@ -41,7 +41,7 @@ def check_if_trade_agreement_applies(ta, cxt, data, name):
     
 def determine_final_coverage(cxt):
     cxt['bool'] = {}
-    trade_agreements = {ta:{} for ta in agreements}
+    trade_agreements = {ta:{} for ta in AGREEMENTS}
     for ta in trade_agreements:
         cxt['bool'][ta] = True
         for v in cxt['ta'][ta].values():

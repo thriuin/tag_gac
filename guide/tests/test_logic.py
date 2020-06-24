@@ -1,4 +1,4 @@
-from guide.logic import FORMS, agreements, build_context_dict, process_form, check_if_trade_agreement_applies, determine_final_coverage, organization_rule, value_threshold_rule, code_rule, exceptions_rule
+from guide.logic import FORMS, AGREEMENTS, build_context_dict, process_form, check_if_trade_agreement_applies, determine_final_coverage, organization_rule, value_threshold_rule, code_rule, exceptions_rule
 from guide.models import Organization, CommodityType, Code, ValueThreshold, LimitedTenderingReason, GeneralException, CftaException, BooleanTradeAgreement, NumericTradeAgreement, Language
 from guide.forms import RequiredFieldsForm, GeneralExceptionForm, CftaExceptionForm, LimitedTenderingForm
 from django.test import TestCase
@@ -11,7 +11,7 @@ class LogicTests(TestCase):
     def test_build_context_dict(self):
         cxt = build_context_dict()
         self.assertIsInstance(cxt, dict)
-        for ta in agreements:
+        for ta in AGREEMENTS:
             self.assertIn(ta, cxt['ta'])
         
     def add_data(self):
@@ -50,7 +50,7 @@ class LogicTests(TestCase):
         self.assertIsInstance(cxt, dict)
         self.assertTrue(all_data.items() <= cxt.items())
 
-        for ta in agreements:
+        for ta in AGREEMENTS:
             self.assertTrue(all_data.keys() <= cxt['ta'][ta].keys())
             self.assertNotIn(False, cxt['ta'][ta].values())
             self.assertIn(True, cxt['ta'][ta].values())

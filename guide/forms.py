@@ -45,7 +45,7 @@ class RequiredFieldsForm(forms.Form):
         Code.objects.only('code'),
         label = code_label,
         required = False,
-        widget = autocomplete.ModelSelect2(url = 'code-autocomplete', forward=['type'], attrs={'class':'form-control'})
+        widget = autocomplete.ModelSelect2(url = 'code-autocomplete', forward=['type'], attrs={'class':'form-control', 'size': '1'})
     )
 
     def clean_estimated_value(self):
