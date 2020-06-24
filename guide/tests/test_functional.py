@@ -1,5 +1,5 @@
-from guide.models import Organization, CommodityType, Code, ValueThreshold, TenderingReason, GeneralException, CftaException, BooleanTradeAgreement, NumericTradeAgreement, Language
-from guide.logic import FORMS, TEMPLATES, agreements, url_name, done_step_name, determine_final_coverage, organization_rule, value_threshold_rule, code_rule, exceptions_rule, build_context_dict, process_form
+from guide.models import Organization, CommodityType, Code, ValueThreshold, LimitedTenderingReason, GeneralException, CftaException, BooleanTradeAgreement, NumericTradeAgreement, Language
+from guide.logic import FORMS, TEMPLATES, AGREEMENTS, url_name, done_step_name, determine_final_coverage, organization_rule, value_threshold_rule, code_rule, exceptions_rule, build_context_dict, process_form
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.firefox.webdriver import WebDriver
 import time
@@ -9,7 +9,7 @@ import unittest
 
 def step_through_form(self, estimated_value=1000000000, organization=None, commodity_type='Goods', 
                             general_exception=None, cfta_exception=None, lt_page=True, limited_tendering_reason=None):
-    self.selenium.get(self.live_server_url + '/en/tag/0/')
+    self.selenium.get(self.live_server_url + '/tag/0/')
 
     if estimated_value < 0:
         raise ValueError('Estimated value cannot be less than zero')
@@ -32,7 +32,7 @@ def step_through_form(self, estimated_value=1000000000, organization=None, commo
         org = organization
     else:
         org = Organization.objects.filter(tc=False).\
-                filter(goods_rule=False).filter(cusma=True).\
+                filter(goods_rule=False).\
                 filter(ccfta=True).filter(ccofta=True).\
                 filter(chfta=True).filter(cpafta=True).\
                 filter(cpfta=True).filter(ckfta=True).\
@@ -48,7 +48,7 @@ def step_through_form(self, estimated_value=1000000000, organization=None, commo
     code_input.select_by_visible_text(value)
     
     time.sleep(1)
-    self.selenium.find_element_by_xpath('//input[@value="Next"]').click()
+    self.selenium.find_element_by_xpath('//button[@value="Next"]').click()
 
     def checklist(element):
         time.sleep(1)
@@ -60,7 +60,7 @@ def step_through_form(self, estimated_value=1000000000, organization=None, commo
             except:
                 raise Exception('Cannot find ' + element)
 
-        self.selenium.find_element_by_xpath('//input[@value="Next"]').click()
+        self.selenium.find_element_by_xpath('//button[@value="Next"]').click()
 
     checklist(general_exception)
     checklist(cfta_exception)
@@ -92,19 +92,19 @@ class SeleniumTests(StaticLiveServerTestCase):
     def test_all_apply(self):
         output = step_through_form(self)
         
-        for ta in agreements:
+        for ta in AGREEMENTS:
             self.assertIn(ta.upper(), output)
 
     def test_low_estimated_value(self):
         output = step_through_form(self, estimated_value=1, lt_page=False)
 
-        for ta in agreements:
+        for ta in AGREEMENTS:
             self.assertNotIn(ta.upper(), output)
     
     #Entity none apply
     def test_org_none_apply(self):
         org = Organization.objects.filter(tc=False).\
-            filter(goods_rule=False).filter(cusma=False).\
+            filter(goods_rule=False).\
             filter(ccfta=False).filter(ccofta=False).\
             filter(chfta=False).filter(cpafta=False).\
             filter(cpfta=False).filter(ckfta=False).\
@@ -113,7 +113,7 @@ class SeleniumTests(StaticLiveServerTestCase):
             filter(cfta=False).values_list('name')[0]
 
         output = step_through_form(self, organization=org, lt_page=False)
-        for ta in agreements:
+        for ta in AGREEMENTS:
             self.assertNotIn(ta.upper(), output)
 
     def test_goods_rule(self):
@@ -121,8 +121,8 @@ class SeleniumTests(StaticLiveServerTestCase):
 
         output = step_through_form(self, organization=org)
 
-        self.assertIn(agreements[-1].upper(), output)
-        for ta in agreements[:-1]:
+        self.assertIn(AGREEMENTS[-1].upper(), output)
+        for ta in AGREEMENTS[:-1]:
             self.assertNotIn(ta.upper(), output)
 
     def test_tc_rule(self):
@@ -130,12 +130,12 @@ class SeleniumTests(StaticLiveServerTestCase):
         
         output = step_through_form(self, organization=org, commodity_type='Construction')
         
-        self.assertIn(agreements[-1].upper(), output)
-        for ta in agreements[:-1]:
+        self.assertIn(AGREEMENTS[-1].upper(), output)
+        for ta in AGREEMENTS[:-1]:
             self.assertNotIn(ta.upper(), output)
 
     def test_general_exception_cfta_applies(self):
-        ge = GeneralException.objects.filter(cusma=True).\
+        ge = GeneralException.objects.\
             filter(ccfta=True).filter(ccofta=True).\
             filter(chfta=True).filter(cpafta=True).\
             filter(cpfta=True).filter(ckfta=True).\
@@ -144,12 +144,12 @@ class SeleniumTests(StaticLiveServerTestCase):
             filter(cfta=False).values_list('name')[0]
         output = step_through_form(self, general_exception=ge)
   
-        self.assertIn(agreements[-1].upper(), output)
-        for ta in agreements[:-1]:
+        self.assertIn(AGREEMENTS[-1].upper(), output)
+        for ta in AGREEMENTS[:-1]:
             self.assertNotIn(ta.upper(), output)
 
     def test_general_exception_none_applies(self):
-        ge = GeneralException.objects.filter(cusma=True).\
+        ge = GeneralException.objects.\
             filter(ccfta=True).filter(ccofta=True).\
             filter(chfta=True).filter(cpafta=True).\
             filter(cpfta=True).filter(ckfta=True).\
@@ -158,5 +158,5 @@ class SeleniumTests(StaticLiveServerTestCase):
             filter(cfta=True).values_list('name')[0]
         output = step_through_form(self, general_exception=ge, lt_page=False)
 
-        for ta in agreements:
+        for ta in AGREEMENTS:
             self.assertNotIn(ta.upper(), output)

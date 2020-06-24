@@ -2,49 +2,64 @@
 {% load i18n %}
 {% load static %}
 {% load humanize %}
-{% load markdown_filter %}
 
+{% block intro %}
+<h2>{% trans "Step 4. Limited Tendering Reasons" %}</h2>
+<p>{% trans "Based on the responses provided in prior steps, the procurement appears to be covered by one or more of the applicable trade agreements. " %}</p> 
+<p>{% trans "If a procurement is covered by the trade agreement(s), the contracting authority is to follow the open or selective tendering procurement obligations prescribed by the covered trade agreement(s). If there are any deviations from the open or selective tendering obligations of the covered trade agreement(s), the contracting authority must consider whether one or more limited tendering reason is applicable to the procurement in order to determine whether a limited tendering approach can be used. The tool has pre-determined which limited tendering reasons exists within the applicable trade agreements based on the inputs already provided." %}</p>
+<br>
+<p><b>{% trans "Instructions: " %}</b>{% trans "If the procurement strategy is open tendering or selective tendering, click the “Next” button and leave the fields below blank. " %}</p>
+<p>{% trans "If a limited tendering strategy is being considered, review the summary list of limited tendering reasons found in the applicable trade agreements and select the reason(s) that apply and click the “Next” button. If none of the limited tendering reasons apply, leave the fields blank. " %}</p>
+{% endblock %}
 {% block form %}
-    <form action="" method="POST">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        {{ wizard.management_form }}
+<form action="" method="POST">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {{ wizard.management_form }}
+    <div class="form-group" role="form">
         {% for ffield in form %}
-            <div class="form-group" role="form">
-                {% if ffield.errors %}
-                    {% for error in ffield.errors %}
-                        {{ error }}
+            {% if ffield.errors %}
+                {% for error in ffield.errors %}
+                    {{ error }}
+                {% endfor %}
+            {% endif %}
+            <div class="checkbox">
+                <table class="table table-condensed table-hover">
+                    {% for choice in ffield.field.queryset %}
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="3-limited_tendering" value="{{ choice.id }}" id="id_3-limited_tendering_{{ forloop.counter0 }}">
+                            </td>
+                            <td>
+                                <label for="id_3-limited_tendering_{{ forloop.counter0 }}">
+                                    {{ choice|linebreaks|safe }}
+                                </label>
+                            </td>
+                        </tr>
                     {% endfor %}
-                {% endif %}
-                <h2>{% trans "Step 4. Limited Tendering Reasons" %}</h2>
-                <p>{% trans "Based on the responses provided in prior steps, the procurement appears to be covered by one or more of the applicable trade agreements. " %}</p> 
-                <p>{% trans "If a procurement is covered by the trade agreement(s), the contracting authority is to follow the open or selective tendering procurement obligations prescribed by the covered trade agreement(s). If there are any deviations from the open or selective tendering obligations of the covered trade agreement(s), the contracting authority must consider whether one or more limited tendering reason is applicable to the procurement in order to determine whether a limited tendering approach can be used. The tool has pre-determined which limited tendering reasons exists within the applicable trade agreements based on the inputs already provided." %}</p>
-                <br>
-                <p><b>{% trans "Instructions: " %}</b>{% trans "If the procurement strategy is open tendering or selective tendering, click the “Next” button and leave the fields below blank. " %}</p>
-                <p>{% trans "If a limited tendering strategy is being considered, review the summary list of limited tendering reasons found in the applicable trade agreements and select the reason(s) that apply and click the “Next” button. If none of the limited tendering reasons apply, leave the fields blank. " %}</p>
-                    {% for lt in form.limited_tendering %}
-                        <div class="checkbox">
-                            {{ lt }}
-                        </div>
-                    {% endfor %}
-                <p><b>{% trans "Reminder: " %}</b>{% trans "In order to proceed with a limited tendering procurement strategy, a valid limited tendering reason must exist in each of the covered trade agreement(s). The applicable limited tendering rationale used to justify the procurement strategy must be documented on the procurement file." %}</p>
-                <p>{% trans "If there is any discrepancy between the list of limited tendering reasons and the text of the trade agreement(s), refer to the text of the trade agreement(s)." %}</p>
-                <hr>
+                </table>
             </div>
         {% endfor %}
-        <div class="mwspagination section">
-            <nav class="mrgn-bttm-lg">
-                <h3 class="wb-inv">{% trans "Document navigation" %}</h3>
-                <ul class="pager">
-                    <div align="right">
-                        <li class="next">
-                            <input type="submit" class="btn btn-primary" rel="next" id="submit-form-button" value="Next"/>
-                            <span class="wb-inv">{% trans "Go to next step." %}</span>
-                        </li>
-                    </div>
-                </ul>
-            </nav>
-        </div>
-    </form>
+    </div>
+    <div class="mwspagination section">
+        <nav class="mrgn-bttm-lg">
+            <h3 class="wb-inv">{% trans "Document navigation" %}</h3>
+            <ul class="pager">
+                <div align="right">
+                    <button class="btn btn-default" type="submit" value = "{{ wizard.steps.first }}" name="wizard_goto_step"><span class="wb-inv">{% trans "Go to first step." %}</span>{% trans "Go to First Step" %}</button>
+                    <button class="btn btn-default" type="submit" value = "{{ wizard.steps.prev }}" name="wizard_goto_step"><span class="wb-inv">{% trans "Go to previous step." %}</span>{% trans "Previous" %}</button>
+                    <button class="btn btn-default" type="submit" value="Next" name="submit-form-button"><span class="wb-inv">{% trans "Go to next step." %}</span>{% trans "Next" %}</button>
+                </div>
+            </ul>
+        </nav>
+    </div>
+</form>
 {% endblock %}
-
+{% block footnotes %}
+<h3>{% trans "Caveat" %}</h3>
+<ul>
+    <li>{% trans "In order to proceed with a limited tendering procurement strategy, a valid limited tendering reason must exist in each of the covered trade agreement(s). The applicable limited tendering rationale used to justify the procurement strategy must be documented on the procurement file." %}</li>
+    <li>{% trans "If there is any discrepancy between the list of limited tendering reasons and the text of the trade agreement(s), refer to the trade agreement(s)." %}</li>
+    <li>{% trans "The numbers in front of each limited tendering reason corresponds to the data values used for proactive disclosure of contract reporting.  For more information, refer to the " %}<a href="https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=14676">{% trans "Guidelines on the Proactive Disclosure of Contracts" %}</a></li>
+</ul>
+{% endblock %}

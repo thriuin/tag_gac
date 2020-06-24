@@ -1,6 +1,6 @@
-from guide.logic import FORMS, agreements, build_context_dict, process_form, check_if_trade_agreement_applies, determine_final_coverage, organization_rule, value_threshold_rule, code_rule, exceptions_rule
-from guide.models import Organization, CommodityType, Code, ValueThreshold, TenderingReason, GeneralException, CftaException, BooleanTradeAgreement, NumericTradeAgreement, Language
-from guide.forms import RequiredFieldsFormEN, GeneralExceptionFormEN, CftaExceptionFormEN, LimitedTenderingFormEN
+from guide.logic import FORMS, AGREEMENTS, build_context_dict, process_form, check_if_trade_agreement_applies, determine_final_coverage, organization_rule, value_threshold_rule, code_rule, exceptions_rule
+from guide.models import Organization, CommodityType, Code, ValueThreshold, LimitedTenderingReason, GeneralException, CftaException, BooleanTradeAgreement, NumericTradeAgreement, Language
+from guide.forms import RequiredFieldsForm, GeneralExceptionForm, CftaExceptionForm, LimitedTenderingForm
 from django.test import TestCase
 import unittest
 
@@ -11,7 +11,7 @@ class LogicTests(TestCase):
     def test_build_context_dict(self):
         cxt = build_context_dict()
         self.assertIsInstance(cxt, dict)
-        for ta in agreements:
+        for ta in AGREEMENTS:
             self.assertIn(ta, cxt['ta'])
         
     def add_data(self):
@@ -19,12 +19,12 @@ class LogicTests(TestCase):
         rf_data = {'estimated_value': 1000, 'entities': Organization.objects.get(id=1).pk, 'type': CommodityType.objects.get(id=1), 'code': Code.objects.get(id=1)}
         ge_data = {'exceptions': [GeneralException.objects.get(id=1)]}
         ce_data = {'cfta_exceptions': [CftaException.objects.get(id=1)]}
-        lt_data = {'limited_tendering': [TenderingReason.objects.get(id=1)]}
+        lt_data = {'limited_tendering': [LimitedTenderingReason.objects.get(id=1)]}
 
-        rf = RequiredFieldsFormEN(data=rf_data)
-        ge = GeneralExceptionFormEN(data=ge_data)
-        ce = CftaExceptionFormEN(data=ce_data)
-        lt = LimitedTenderingFormEN(data=lt_data)
+        rf = RequiredFieldsForm(data=rf_data)
+        ge = GeneralExceptionForm(data=ge_data)
+        ce = CftaExceptionForm(data=ce_data)
+        lt = LimitedTenderingForm(data=lt_data)
 
         rf.is_valid()
         ge.is_valid()
@@ -50,7 +50,7 @@ class LogicTests(TestCase):
         self.assertIsInstance(cxt, dict)
         self.assertTrue(all_data.items() <= cxt.items())
 
-        for ta in agreements:
+        for ta in AGREEMENTS:
             self.assertTrue(all_data.keys() <= cxt['ta'][ta].keys())
             self.assertNotIn(False, cxt['ta'][ta].values())
             self.assertIn(True, cxt['ta'][ta].values())
@@ -64,12 +64,12 @@ class LogicTests(TestCase):
         rf_data = {'estimated_value': 1000, 'entities': Organization.objects.get(id=1).pk, 'type': CommodityType.objects.get(id=1), 'code': Code.objects.get(id=1)}
         ge_data = {'exceptions': [GeneralException.objects.get(id=1)]}
         ce_data = {'cfta_exceptions': [CftaException.objects.get(id=1)]}
-        lt_data = {'limited_tendering': [TenderingReason.objects.get(id=1)]}
+        lt_data = {'limited_tendering': [LimitedTenderingReason.objects.get(id=1)]}
 
-        rf = RequiredFieldsFormEN(data=rf_data)
-        ge = GeneralExceptionFormEN(data=ge_data)
-        ce = CftaExceptionFormEN(data=ce_data)
-        lt = LimitedTenderingFormEN(data=lt_data)
+        rf = RequiredFieldsForm(data=rf_data)
+        ge = GeneralExceptionForm(data=ge_data)
+        ce = CftaExceptionForm(data=ce_data)
+        lt = LimitedTenderingForm(data=lt_data)
 
         rf.is_valid()
         ge.is_valid()

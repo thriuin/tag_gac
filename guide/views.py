@@ -1,9 +1,46 @@
 from django.shortcuts import render
-from guide.models import Code, GeneralException, CftaException, TenderingReason
-from guide.forms import RequiredFieldsFormEN, GeneralExceptionFormEN, LimitedTenderingFormEN, CftaExceptionFormEN
+from guide.models import Code, GeneralException, CftaException, LimitedTenderingReason, Organization, CommodityType
+from guide.forms import RequiredFieldsForm, GeneralExceptionForm, LimitedTenderingForm, CftaExceptionForm
 from formtools.wizard.views import NamedUrlSessionWizardView
 from django.http import JsonResponse
-from guide.logic import FORMS, TEMPLATES, agreements, url_name, done_step_name, determine_final_coverage, organization_rule, value_threshold_rule, code_rule, exceptions_rule, build_context_dict, process_form
+from guide.logic import FORMS, TEMPLATES, AGREEMENTS, url_name, done_step_name, determine_final_coverage, organization_rule, value_threshold_rule, code_rule, exceptions_rule, build_context_dict, process_form
+from django.db.models import Q
+from dal import autocomplete
+from django.views.generic.edit import FormView
+
+
+class CodeAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        type = self.forwarded.get('type', None)
+        qs = Code.objects.none()
+        if type:
+            value = CommodityType.objects.filter(id=type).get()
+            qs = Code.objects.filter(type=value).all()
+            if self.q:
+                qs = Code.objects.filter(type=value).filter(code__icontains=self.q)
+                print('code inner ifif')
+
+        return qs
+        
+class EntitiesAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        
+        qs = Organization.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
+
+        return qs
+
+
+class TypeAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = CommodityType.objects.all()
+
+        if self.q:
+            qs = qs.filter(commodity_type__icontains=self.q)
+        
+        return qs
 
 def lt_condition(wizard):
     form_list = [f[0] for f in FORMS[:3]]
@@ -96,14 +133,15 @@ class TradeForm(NamedUrlSessionWizardView):
             
             query_list = []
             if ta_applies:
+                qs = LimitedTenderingReason.objects.all()
                 for ta in ta_applies:
                     field_name = ta
-                    qs = TenderingReason.objects.filter(lang='EN').filter(**{field_name: True}).values_list('name')
-                    qs = [q[0] for q in qs]
-                    for q in qs:
-                        query_list.append(q)
-            
-            form.fields['limited_tendering'].queryset = TenderingReason.objects.filter(lang='EN').filter(name__in=query_list).only('name')
+                    qs = qs.filter(**{field_name: True}).values_list('name')
+                qs = [q[0] for q in qs]
+                for q in qs:
+                    query_list.append(q)
+            print(query_list)
+            form.fields['limited_tendering'].queryset = LimitedTenderingReason.objects.filter(name__in=query_list).only('name')
             
         return form
 
@@ -144,60 +182,24 @@ class TradeForm(NamedUrlSessionWizardView):
                         output = output + k.upper() + ', '
         context_dict['output'] = output[:-2]
 
+        context_dict['tables'] = {}
+        for k1, v1 in context_dict['ta'].items():
+            k1 = k1.upper()
+            context_dict['tables'][k1] = {}
+            for k2, v2 in v1.items():
+                if k1 == 'CFTA':
+                    if k2 == 'type' or k2 == 'limited_tendering':
+                        pass
+                    else:
+                        k2 = k2.replace('_', ' ')
+                        k2 = k2.title()
+                        k2 = k2.replace('Cfta Exceptions', 'CFTA Exceptions')
+                        context_dict['tables'][k1][k2] = v2
+                else:
+                    if k2 == 'type' or k2 == 'limited_tendering' or k2 == 'cfta_exceptions':
+                        pass
+                    else:
+                        k2 = k2.replace('_', ' ')
+                        k2 = k2.title()
+                        context_dict['tables'][k1][k2] = v2
         return render(self.request, 'done.html', context_dict)
-
-
-def ajax_type(request):
-    """
-    This view is triggered by changing Commodity Type in the MandatoryElementsEn form.
-    get all the types from the database
-    null and blank values
-    
-    **Context**
-
-    Uses this model
-        :model:`guide.Code`
-    Uses this template
-        :template:`guide.mandatory_elements.html`
-    """
-    if request.method == "GET" and request.is_ajax():
-        type = Code.objects.\
-            exclude(type__isnull=True).\
-            exclude(type__exact='').\
-            order_by('type').\
-            values_list('type').\
-            distinct()
-        type = [i[0] for i in list(type)]
-        data = {
-            "type": type,
-        }
-        return JsonResponse(data, status = 200)
-
-
-def ajax_code(request):
-    """
-    This view is triggered by changing Commodity Type in the MandatoryElementsEn form.
-    get the type and filter to get code
-    database excluding null and blank values
-    
-    **Context**
-
-    Uses this models
-        :model:`guide.Code`
-    Uses this template
-        :template:`guide.mandatory_elements.html`
-    """
-    if request.method == "GET" and request.is_ajax():
-        type = request.GET.get('type')
-        code = Code.objects.\
-            filter(type = type).\
-            exclude(code__isnull=True).\
-            exclude(code__exact='').\
-            values_list('code').\
-            distinct()
-        code = [i[0] for i in list(code)]
-        data = {
-            "code": code,
-        }
-        return JsonResponse(data, status = 200)
-

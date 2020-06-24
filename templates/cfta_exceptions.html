@@ -2,47 +2,57 @@
 {% load i18n %}
 {% load static %}
 {% load humanize %}
-{% load markdown_filter %}
 
+{% block intro %}
+<h2>{% trans "Step 3: Canadian Free Trade Agreement Specific Exclusions" %}</h2>
+<p><b>{% trans "Instructions: " %}</b></p>
+<p>{% trans "Provide a response to the following question: " %}</p>
+<p>{% trans "Is the procurement excluded from the CFTA per the list of CFTA specific exclusions below?" %}</p>
+<p>{% trans "Answer the question by reviewing the following list of CFTA specific trade agreement exclusions. If a procurement falls under one or more of the following exceptions, select the applicable exclusion. If none of the following exclusions apply, click the 'Next' button and leave the fields blank." %}</p>
+<p>{% trans "If there is any discrepancy between this list of exemptions and the text of the " %}<a href="https://www.cfta-alec.ca/">{% trans "Canadian Free Trade Agreement" %}</a>{% trans ", refer to the text of the agreement." %}</p>
+{% endblock %}
 {% block form %}
-    <form action="" method="POST">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        {{ wizard.management_form }}
+<form action="" method="POST" class="form-inline">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {{ wizard.management_form }}
+    <div class="form-group" role="form">
         {% for ffield in form %}
-            <div class="form-group" role="form">
-                {% if ffield.errors %}
-                    {% for error in ffield.errors %}
-                        {{ error }}
+            {% if ffield.errors %}
+                {% for error in ffield.errors %}
+                    {{ error }}
+                {% endfor %}
+            {% endif %}
+            <div class="checkbox">
+                <table class="table table-condensed table-hover">
+                    {% for choice in ffield.field.queryset %}
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="2-cfta_exceptions" value="{{ forloop.counter }}" id="id_2-cfta_exceptions_{{ forloop.counter0 }}">
+                            </td>
+                            <td>
+                                <label for="id_2-cfta_exceptions_{{ forloop.counter0 }}">
+                                    {{ choice|linebreaks|safe }}
+                                </label>
+                            </td>
+                        </tr>
                     {% endfor %}
-                {% endif %}
-                <h2>{% trans "Step 3: Canadian Free Trade Agreement Specific Exclusions" %}</h2>
-                <p><b>{% trans "Important: " %}</b>{% trans "Provide a response to the following question. " %}</p>
-                <p>{% trans "Is the procurement excluded from the CFTA per the list of CFTA specific exclusions below?" %}</p>
-                <p>{% trans "Answer the question by reviewing the following list of CFTA specific trade agreement exclusions. If a procurement falls under one or more of the following exceptions, select “Excluded”. If none of the following exclusions apply, select “Covered”." %}</p>
-                    {% for ce in form.cfta_exceptions %}
-                        <div class="checkbox">
-                            <span>
-                                {{ ce }}	
-                            </span> 
-                        </div>
-                    {% endfor %}
-                <hr>
+                </table>
             </div>
         {% endfor %}
-        <div class="mwspagination section">
-            <nav class="mrgn-bttm-lg">
-                <h3 class="wb-inv">{% trans "Document navigation" %}</h3>
-                <ul class="pager">
-                    <div align="right">
-                        <li class="next">
-                            <input type="submit" class="btn btn-primary" rel="next" id="submit-form-button" value="Next"/>
-                            <span class="wb-inv">{% trans "Go to next step." %}</span>
-                        </li>
-                    </div>
-                </ul>
-            </nav>
-        </div>
-    </form>    
+    </div>
+    <div class="mwspagination section">
+        <nav class="mrgn-bttm-lg">
+            <h3 class="wb-inv">{% trans "Document navigation" %}</h3>
+            <ul class="pager">
+                <div align="right">
+                    <button class="btn btn-default" type="submit" value = "{{ wizard.steps.first }}" name="wizard_goto_step"><span class="wb-inv">{% trans "Go to first step." %}</span>{% trans "Go to First Step" %}</button>
+                    <button class="btn btn-default" type="submit" value = "{{ wizard.steps.prev }}" name="wizard_goto_step"><span class="wb-inv">{% trans "Go to previous step." %}</span>{% trans "Previous" %}</button>
+                    <button class="btn btn-default" type="submit" value="Next" name="submit-form-button"><span class="wb-inv">{% trans "Go to next step." %}</span>{% trans "Next" %}</button>
+                </div>
+            </ul>
+        </nav>
+    </div>
+</form>
 {% endblock %}
 
