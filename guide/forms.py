@@ -22,7 +22,7 @@ class RequiredFieldsForm(forms.Form):
 
     estimated_value = forms.IntegerField(
         label = estimated_value_label,
-        required = True,
+        required = False,
         min_value = 0
     )
     estimated_value.widget.attrs['class'] = 'form-control'
@@ -30,21 +30,21 @@ class RequiredFieldsForm(forms.Form):
     entities = forms.ModelChoiceField(
         Organization.objects.all(),
         label = entities_label,
-        required = True,
+        required = False,
         widget=autocomplete.ModelSelect2(url='entities-autocomplete', attrs={'class':'form-control'})
     )
 
     type = forms.ModelChoiceField(
         CommodityType.objects.all(),
         label = type_label,
-        required = True,
+        required = False,
         widget = autocomplete.ModelSelect2(url='type-autocomplete', attrs={'class':'form-control'})
     )
     
     code = forms.ModelChoiceField(
         Code.objects.only('code'),
         label = code_label,
-        required = True,
+        required = False,
         widget = autocomplete.ModelSelect2(url = 'code-autocomplete', forward=['type'], attrs={'class':'form-control'})
     )
 

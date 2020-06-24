@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from markdownx.models import MarkdownxField
+
 
 class BooleanTradeAgreement(models.Model):
     """
@@ -294,7 +294,7 @@ class CftaException(BooleanTradeAgreement):
     Subclass of :model:`guide.BooleanTradeAgreement`
     This class has Canada Free Trade Agreement exceptions
     """
-    name = MarkdownxField(
+    name = models.TextField(
         default = '',
         unique = True,
         verbose_name = _('Description')

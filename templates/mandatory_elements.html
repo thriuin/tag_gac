@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load static %}
 {% load humanize %}
-{% load markdown %}
+
 {% block intro %}
     <p>{% trans "The Government of Canada is a party to free trade agreements some of which sets out obligations for government procurement. This tool is developed to assist users in determining which free trade agreements would likely apply to a government procurement by responding to a series of questions about the procurement information that are relevant to determine trade agreement coverage.  It is expected that the user of this tool is familiar with federal government procurement obligations under Canada’s domestic and international trade agreements." %}</p>
     <section class="alert alert-info">
@@ -12,12 +12,12 @@
     <p>{% trans "Provide a response to the following questions below and click the ‘Next’ button. Refer to the footnotes at the bottom for helpful hints in answering the questions." %}</p>
 {% endblock %}
 {% block form %}
-<form action="" id="mandatoryElementsForm" method="POST">
+<form action="" id="mandatoryElementsForm" method="POST" novalidate>
     {% csrf_token %}
     {{ form.non_field_errors }}
     {{ wizard.management_form }}
-    {% for ffield in form %}
-        <div class="form-group" role="form">
+    <div class="form-group" role="form">
+        {% for ffield in form %}
             <label for="{{ ffield.id_for_label }}">
                 {{ ffield.field.label }}	        
                 <strong style="color:#d3080c">
@@ -26,16 +26,22 @@
                 <sup id="table1-fn{{ forloop.counter }}-rf"><a class="fn-lnk" href="#table1-fn{{ forloop.counter }}"><span class="wb-inv">table 1 note </span>{{ forloop.counter }}</a></sup>
             </label>
             <br>
+            {% for error in ffield.errors %}
+                <section class="alert alert-danger">
+                    <p><b>{% trans "Error: " %}{{ ffield.errors }}</b></p>
+                </section>
+            {% endfor %}
             {{ ffield }}
-        </div>
-    {% endfor %}
+            <br>
+        {% endfor %}
+    </div>
     <div class="mwspagination section">
         <nav class="mrgn-bttm-lg">
             <h3 class="wb-inv">{% trans "Document navigation" %}</h3>
             <ul class="pager">
                 <div align="right">
                     <li class="next">
-                        <input type="submit" class="btn btn-default" rel="next" id="submit-form-button" value="Next"/>
+                        <input type="submit" class="btn btn-default" rel="next" id="submit-form-button" value="Next" novalidate/>
                         <span class="wb-inv">{% trans "Go to next step." %}</span>
                     </li>
                 </div>
