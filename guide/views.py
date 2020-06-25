@@ -18,8 +18,6 @@ class CodeAutocomplete(autocomplete.Select2QuerySetView):
             qs = Code.objects.filter(type=value).all()
             if self.q:
                 qs = Code.objects.filter(type=value).filter(code__icontains=self.q)
-                print('code inner ifif')
-
         return qs
         
 class EntitiesAutocomplete(autocomplete.Select2QuerySetView):
@@ -140,7 +138,6 @@ class TradeForm(NamedUrlSessionWizardView):
                 qs = [q[0] for q in qs]
                 for q in qs:
                     query_list.append(q)
-            print(query_list)
             form.fields['limited_tendering'].queryset = LimitedTenderingReason.objects.filter(name__in=query_list).only('name')
             
         return form

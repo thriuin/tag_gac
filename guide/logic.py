@@ -18,7 +18,7 @@ AGREEMENTS = [
 
 
 url_name='guide:form_step'
-done_step_name='done_step'
+done_step_name='guide:done_step'
 
 def build_context_dict():
     cxt = {}
