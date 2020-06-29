@@ -1,5 +1,9 @@
 from guide.forms import RequiredFieldsForm, GeneralExceptionForm, LimitedTenderingForm, CftaExceptionForm
 from guide.models import Code, ValueThreshold, Organization, GeneralException, LimitedTenderingReason, CftaException, OrganizationWithCommodityCodeRules, OrganizationWithCommodityTypeRules
+from io import BytesIO
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 
 FORMS = [("0", RequiredFieldsForm),
          ("1", GeneralExceptionForm),
@@ -19,6 +23,15 @@ AGREEMENTS = [
 
 url_name='guide:form_step'
 done_step_name='guide:done_step'
+
+def render_to_pdf(template_src, context_dict={}):
+    template = get_template(template_src)
+    html  = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
 
 def build_context_dict():
     cxt = {}
@@ -86,7 +99,7 @@ def value_threshold_rule(cxt, value_name, type_name):
     Returns:
         [dictionary] -- Updates context with the analyzed value, either true or false
     """
-    value = cxt[value_name]
+    value = int(cxt[value_name])
     type = cxt[type_name]
     try:
         for ta in cxt['ta']:
@@ -164,19 +177,20 @@ def exceptions_rule(cxt, exception_name, model):
     """
     if cxt[exception_name]:
         value = cxt[exception_name]
-        try:
-            for ta in cxt['ta']:
-                for ex in value:
-                    check = model.objects.filter(name=ex).values_list(ta).get()[0]
+        if value != ['None']:
+            try:
+                for ta in cxt['ta']:
+                    for ex in value:
+                        check = model.objects.filter(name=ex).values_list(ta).get()[0]
 
-                    if (cxt['ta'][ta][exception_name] is False):
-                        pass
-                    elif (cxt['ta'][ta][exception_name] is True) and (check is False):
-                        pass
-                    elif (cxt['ta'][ta][exception_name] is True) and (check is True):
-                        cxt['ta'][ta][exception_name] = False
-        except:
-            raise ValueError
+                        if (cxt['ta'][ta][exception_name] is False):
+                            pass
+                        elif (cxt['ta'][ta][exception_name] is True) and (check is False):
+                            pass
+                        elif (cxt['ta'][ta][exception_name] is True) and (check is True):
+                            cxt['ta'][ta][exception_name] = False
+            except:
+                raise ValueError
     else:
         cxt[exception_name]= ['None']
     return cxt

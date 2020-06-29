@@ -132,8 +132,6 @@ dmypy.json
 
 # Django Settings and Project Files
 tag_gac/settings.py
-static/css/
-static/wxt
 themes-dist-GCWeb/
 wet-boew-dist-4.0.32/
 themes-dist-6.0-gcweb/
@@ -143,3 +141,4 @@ coverage
 db.sqlite3
 geckodriver.log
 htmlcov
+static
