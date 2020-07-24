@@ -101,6 +101,7 @@ class CommodityType(models.Model):
     Inherits from :model:`guide.Language`
     This is for Goods, Services, Construction
     '''
+    id = models.AutoField(primary_key=True)
     commodity_type = models.CharField(
         max_length = 128,
         default = '',
@@ -122,7 +123,7 @@ class Code(BooleanTradeAgreement):
     Foreign key from :model:`guide.CommodityType`
     This combines commodity types with specific commodity codes.
     '''
-
+    id = models.AutoField(primary_key=True)
     type = models.ForeignKey(
         CommodityType,
         to_field = 'commodity_type',
@@ -141,7 +142,7 @@ class Code(BooleanTradeAgreement):
         return self.code
 
 
-class OrganizationWithCommodityTypeRules(models.Model):
+class OrganizationWithCommodityTypeRule(BooleanTradeAgreement):
 
     org_fk = models.ForeignKey(
         Organization,
@@ -164,7 +165,8 @@ class OrganizationWithCommodityTypeRules(models.Model):
     def __str__(self):
         return f"{self.org_fk} - Goods Rule: {self.goods_rule} Transport Rule: {self.tc}"
 
-class OrganizationWithCommodityCodeRules(BooleanTradeAgreement):
+class OrganizationWithCommodityCodeRule(BooleanTradeAgreement):
+
     code_fk = models.ForeignKey(
         Code,
         to_field = 'code',
@@ -246,7 +248,7 @@ class ValueThreshold(models.Model):
         blank = False
     )
 
-    type_value = models.ForeignKey(
+    type = models.ForeignKey(
         CommodityType,
         to_field = 'commodity_type',
         related_name = '+',
@@ -257,7 +259,7 @@ class ValueThreshold(models.Model):
     )
 
     def __str__(self):
-        return str(self.type_value)
+        return str(self.type)
 
 
 class LimitedTenderingReason(BooleanTradeAgreement):

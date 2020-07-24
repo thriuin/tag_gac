@@ -18,6 +18,10 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.generic.base import RedirectView
 
+admin.site.site_header = "TAG Admin"
+admin.site.site_title = "TAG Admin Portal"
+admin.site.index_title = "TAG Admin Portal"
+
 urlpatterns = [
     path('tag/admin/doc/', include('django.contrib.admindocs.urls')),
     path('tag/admin/', admin.site.urls),

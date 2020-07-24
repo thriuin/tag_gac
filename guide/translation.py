@@ -1,4 +1,4 @@
-from guide.models import CommodityType, Code, GeneralException, LimitedTenderingReason, CftaException, ValueThreshold, Organization, OrganizationWithCommodityCodeRules, OrganizationWithCommodityTypeRules
+from guide.models import CommodityType, Code, GeneralException, LimitedTenderingReason, CftaException, ValueThreshold, Organization, OrganizationWithCommodityCodeRule, OrganizationWithCommodityTypeRule
 from modeltranslation.translator import register, TranslationOptions
 
 

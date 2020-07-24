@@ -1,20 +1,21 @@
 from django.contrib import admin
-from guide.models import CommodityType, Code, GeneralException, LimitedTenderingReason, CftaException, ValueThreshold, Organization, OrganizationWithCommodityCodeRules, OrganizationWithCommodityTypeRules
+from guide.models import CommodityType, Code, GeneralException, LimitedTenderingReason, CftaException, ValueThreshold, Organization, OrganizationWithCommodityCodeRule, OrganizationWithCommodityTypeRule
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from modeltranslation.admin import TranslationAdmin
+from guide.logic import AGREEMENTS
 
 # Model resources
-class OrganizationWithCommodityTypeRulesResource(resources.ModelResource):
+class OrganizationWithCommodityTypeRuleResource(resources.ModelResource):
 
     class Meta:
-        model = OrganizationWithCommodityTypeRules
+        model = OrganizationWithCommodityTypeRule
 
 
-class OrganizationWithCommodityCodeRulesResource(resources.ModelResource):
+class OrganizationWithCommodityCodeRuleResource(resources.ModelResource):
 
     class Meta:
-        model = OrganizationWithCommodityCodeRules
+        model = OrganizationWithCommodityCodeRule
 
 
 class CommodityTypeResource(resources.ModelResource):
@@ -59,65 +60,72 @@ class OrganizationResource(resources.ModelResource):
         model = Organization
 
 
-# ImportExportModelAdmins
-class OrganizationWithCommodityCodeRulesAdmin(ImportExportModelAdmin):
-    resource_class = OrganizationWithCommodityCodeRulesResource
-    
+class ListDisplayMixin(object):
+    def __init__(self, model, admin_site):
+        lst = [f.name for f in model._meta.get_fields()]
+        self.list_display = list(reversed(lst))
+        self.list_editable = list(filter(lambda x: x != 'id', lst))
+        self.list_display_links = ['id']
+        super(ListDisplayMixin, self).__init__(model, admin_site)
 
-class OrganizationWithCommodityTypeRulesAdmin(ImportExportModelAdmin):
-    resource_class = OrganizationWithCommodityTypeRulesResource
+
+# ModelAdmins
+@admin.register(OrganizationWithCommodityCodeRule)
+class OrganizationWithCommodityCodeRulesAdmin(ListDisplayMixin, ImportExportModelAdmin):
+    resource_class = OrganizationWithCommodityCodeRuleResource
+    list_filter = AGREEMENTS
+    search_fields = ['org_fk']
 
 
+@admin.register(OrganizationWithCommodityTypeRule)
+class OrganizationWithCommodityTypeRuleAdmin(ListDisplayMixin, ImportExportModelAdmin):
+    resource_class = OrganizationWithCommodityTypeRuleResource
+    list_filter = AGREEMENTS
+    search_fields = ['org_fk', 'code_fk']
+
+
+@admin.register(CommodityType)
 class CommodityTypeAdmin(ImportExportModelAdmin, TranslationAdmin):
     resource_class = CommodityTypeResource
-    list_display = [f.name for f in CommodityType._meta.get_fields()][::-1]
-    list_editable = [f.name for f in CommodityType._meta.get_fields() if f.name != 'id']
-    list_display_links = ['id']
 
 
-class CodeAdmin(ImportExportModelAdmin, TranslationAdmin):
+@admin.register(Code)
+class CodeAdmin(ListDisplayMixin, ImportExportModelAdmin, TranslationAdmin):
     resource_class = CodeResource
+    lst = AGREEMENTS.copy()
+    lst.append('type')
+    list_filter = lst
+    search_fields = ['code', 'code_en_ca', 'code_fr_ca']
 
 
-class GeneralExceptionAdmin(ImportExportModelAdmin, TranslationAdmin):
+@admin.register(GeneralException)
+class GeneralExceptionAdmin(ListDisplayMixin, ImportExportModelAdmin, TranslationAdmin):
     resource_class = GeneralExceptionResource
-    list_display = [f.name for f in GeneralException._meta.get_fields()][::-1]
-    list_editable = [f.name for f in GeneralException._meta.get_fields() if f.name != 'id']
-    list_display_links = ['id']
+    list_filter = AGREEMENTS
+    search_fields = ['description', 'description_en_ca', 'description_fr_ca']
 
 
-class TenderingReasonAdmin(ImportExportModelAdmin, TranslationAdmin):
+@admin.register(LimitedTenderingReason)
+class TenderingReasonAdmin(ListDisplayMixin, ImportExportModelAdmin, TranslationAdmin):
     resource_class = TenderingReasonResource
-    list_display = [f.name for f in LimitedTenderingReason._meta.get_fields()][::-1]
-    list_editable = [f.name for f in LimitedTenderingReason._meta.get_fields() if f.name != 'id']
-    list_display_links = ['id']
+    list_filter = AGREEMENTS
+    search_fields = ['description', 'description_en_ca', 'description_fr_ca']
 
 
-class CftaExceptionAdmin(ImportExportModelAdmin, TranslationAdmin):
+@admin.register(CftaException)
+class CftaExceptionAdmin(ListDisplayMixin, ImportExportModelAdmin, TranslationAdmin):
     resource_class = CftaExceptionResource
-    list_display = [f.name for f in CftaException._meta.get_fields()][::-1]
-    list_editable = [f.name for f in CftaException._meta.get_fields() if f.name != 'id']
-    list_display_links = ['id']
+    search_fields = ['description', 'description_en_ca', 'description_fr_ca']
 
 
-class ValueThresholdAdmin(ImportExportModelAdmin):
+@admin.register(ValueThreshold)
+class ValueThresholdAdmin(ListDisplayMixin, ImportExportModelAdmin):
     resource_class = ValueThresholdResource
-    list_display = [f.name for f in ValueThreshold._meta.get_fields()][::-1]
-    list_editable = [f.name for f in ValueThreshold._meta.get_fields() if (f.name != 'id' and f.name != 'type_value')]
-    list_display_links = ['id']
+    list_filter = ['type']
 
 
-class OrganizationAdmin(ImportExportModelAdmin, TranslationAdmin):
+@admin.register(Organization)
+class OrganizationAdmin(ListDisplayMixin, ImportExportModelAdmin, TranslationAdmin):
     resource_class = OrganizationResource
-
-
-# Register your models here
-admin.site.register(CommodityType, CommodityTypeAdmin)
-admin.site.register(Code, CodeAdmin)
-admin.site.register(GeneralException, GeneralExceptionAdmin)
-admin.site.register(LimitedTenderingReason, TenderingReasonAdmin)
-admin.site.register(CftaException, CftaExceptionAdmin)
-admin.site.register(ValueThreshold, ValueThresholdAdmin)
-admin.site.register(Organization, OrganizationAdmin)
-admin.site.register(OrganizationWithCommodityTypeRules, OrganizationWithCommodityTypeRulesAdmin)
-admin.site.register(OrganizationWithCommodityCodeRules, OrganizationWithCommodityCodeRulesAdmin)
+    list_filter = AGREEMENTS
+    search_fields = ['entities', 'entities_en_ca', 'entities_fr_ca']
