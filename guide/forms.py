@@ -31,21 +31,21 @@ class RequiredFieldsForm(forms.Form):
         Organization.objects.all(),
         label = entities_label,
         required = False,
-        widget=autocomplete.ModelSelect2(url='guide:entities-autocomplete', attrs={'class':'form-control'})
+        widget=autocomplete.ModelSelect2(url='guide:entities_autocomplete', attrs={'class':'form-control'})
     )
 
     type = forms.ModelChoiceField(
         CommodityType.objects.all(),
         label = type_label,
         required = False,
-        widget = autocomplete.ModelSelect2(url='guide:type-autocomplete', attrs={'class':'form-control'})
+        widget = autocomplete.ModelSelect2(url='guide:type_autocomplete', attrs={'class':'form-control'})
     )
     
     code = forms.ModelChoiceField(
         Code.objects.only('code'),
         label = code_label,
         required = False,
-        widget = autocomplete.ModelSelect2(url = 'guide:code-autocomplete', forward=['type'], attrs={'class':'form-control', 'size': '1'})
+        widget = autocomplete.ModelSelect2(url = 'guide:code_autocomplete', forward=['type'], attrs={'class':'form-control', 'size': '1'})
     )
 
     def clean_estimated_value(self):

@@ -1,12 +1,72 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from guide.models import Code, GeneralException, CftaException, LimitedTenderingReason, Organization, CommodityType
 from guide.forms import RequiredFieldsForm, GeneralExceptionForm, LimitedTenderingForm, CftaExceptionForm
-from formtools.wizard.views import NamedUrlSessionWizardView
-from django.http import JsonResponse
-from guide.logic import FORMS, TEMPLATES, AGREEMENTS, url_name, done_step_name, determine_final_coverage, organization_rule, value_threshold_rule, code_rule, exceptions_rule, build_context_dict, process_form
+from formtools.wizard.views import NamedUrlCookieWizardView
+from django.http import HttpResponse
+from guide.logic import FORMS, TEMPLATES, AGREEMENTS, url_name, done_step_name, determine_final_coverage, organization_rule, value_threshold_rule, code_rule, exceptions_rule, build_context_dict, process_form, render_to_pdf
 from django.db.models import Q
 from dal import autocomplete
 from django.views.generic.edit import FormView
+from django.views.generic import View
+from collections import OrderedDict
+import json
+from django.core.serializers.json import DjangoJSONEncoder
+from datetime import date
+
+
+class OpenPDF(View):
+    def get(self, request, *args, **kwargs):
+        
+        context_dict = build_context_dict()
+        context_dict = process_form(context_dict, self.request.session)
+        for ta in context_dict['ta']:
+            context_dict['ta'][ta].pop('limited_tendering')
+
+        context_dict = value_threshold_rule(context_dict, 'estimated_value', 'type')
+        context_dict = organization_rule(context_dict, 'entities')
+        context_dict = code_rule(context_dict, 'code', 'type', 'entities')
+        context_dict = exceptions_rule(context_dict, 'exceptions', GeneralException)
+        context_dict = exceptions_rule(context_dict, 'cfta_exceptions', CftaException)
+        context_dict = determine_final_coverage(context_dict)
+
+        num_true = sum(context_dict['bool'].values())
+        
+        if num_true == 0:
+            output = 'No trade agreements apply.  '
+        else:
+            output = ''
+            for k, v in context_dict['bool'].items():
+                if num_true == 1:
+                    if v is True:
+                        output = k.upper() + ', '
+                else:
+                    if v is True:
+                        output = output + k.upper() + ', '
+        context_dict['output'] = output[:-2]
+
+        context_dict['tables'] = {}
+        for k1, v1 in context_dict['ta'].items():
+            k1 = k1.upper()
+            context_dict['tables'][k1] = {}
+            for k2, v2 in v1.items():
+                if k1 == 'CFTA':
+                    if k2 == 'type' or k2 == 'limited_tendering':
+                        pass
+                    else:
+                        k2 = k2.replace('_', ' ')
+                        k2 = k2.title()
+                        k2 = k2.replace('Cfta Exceptions', 'CFTA Exceptions')
+                        context_dict['tables'][k1][k2] = v2
+                else:
+                    if k2 == 'type' or k2 == 'limited_tendering' or k2 == 'cfta_exceptions':
+                        pass
+                    else:
+                        k2 = k2.replace('_', ' ')
+                        k2 = k2.title()
+                        context_dict['tables'][k1][k2] = v2
+
+        pdf = render_to_pdf('pdf.html', context_dict)
+        return HttpResponse(pdf, content_type='application/pdf')
 
 
 class CodeAutocomplete(autocomplete.Select2QuerySetView):
@@ -63,7 +123,7 @@ def lt_condition(wizard):
     return False
 
 
-class TradeForm(NamedUrlSessionWizardView):
+class TradeForm(NamedUrlCookieWizardView):
     """
     This form wizard goes through each each form and template.
 
@@ -116,14 +176,14 @@ class TradeForm(NamedUrlSessionWizardView):
                     return False
                 else:
                     context_dict = process_form(context_dict, val)
-            
+
             context_dict = value_threshold_rule(context_dict, 'estimated_value', 'type')
             context_dict = organization_rule(context_dict, 'entities')
             context_dict = code_rule(context_dict, 'code', 'type', 'entities')
             context_dict = exceptions_rule(context_dict, 'exceptions', GeneralException)
             context_dict = exceptions_rule(context_dict, 'cfta_exceptions', CftaException)
             context_dict = determine_final_coverage(context_dict)
-            
+
             ta_applies = []
             for k, v in context_dict['bool'].items():
                 if v is True:
@@ -199,4 +259,25 @@ class TradeForm(NamedUrlSessionWizardView):
                         k2 = k2.replace('_', ' ')
                         k2 = k2.title()
                         context_dict['tables'][k1][k2] = v2
+        
+        def add_sessions_list(name, model):
+            ex_list = []
+            v = context_dict[name]
+            for ex in v:
+                if ex != 'None':
+                    check = model.objects.filter(name=ex).values_list('name').get()[0]
+                else:
+                    check = 'None'
+                ex_list.append(check)
+            self.request.session[name] = ex_list
+
+        add_sessions_list('exceptions', GeneralException)
+        add_sessions_list('cfta_exceptions', CftaException)
+        for k in context_dict.keys():
+            if k == 'limited_tendering':
+                add_sessions_list('limited_tendering', LimitedTenderingReason)
+        self.request.session['entities'] = str(context_dict['entities'])
+        self.request.session['estimated_value'] = int(context_dict['estimated_value'])
+        self.request.session['type'] = str(context_dict['type'])
+        self.request.session['code'] = str(context_dict['code'])
         return render(self.request, 'done.html', context_dict)

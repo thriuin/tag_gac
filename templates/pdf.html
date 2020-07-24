@@ -1,8 +1,29 @@
-{% extends "base.html" %}
 {% load i18n %}
 {% load static %}
 {% load humanize %}
 
+<head>
+    <style type="text/css">
+        body {
+            font-weight: 200;
+            font-size: 11px;
+        }
+        table, th, td {
+            border: 0.5px solid grey;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        td {
+            vertical-align: text-bottom;
+        }
+        th, td {
+            padding: 1px;
+            text-align: left;
+        }
+
+    </style>
+</head>
 {% block main-content %}
 
     {# --- Main title #}
@@ -162,7 +183,6 @@
                 <ul class="pager">
                     <div align="right">
                         <a class="btn btn-default" href = "{% url 'guide:form_start' %}">{% trans "Go to First Step" %}</a>
-                        <a class="btn btn-default" href = "{% url 'guide:open_pdf' %}">{% trans "Open as PDF" %}</a>
                     </div>
                 </ul>
             </nav>
