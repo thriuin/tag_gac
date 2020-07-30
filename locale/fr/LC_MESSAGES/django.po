@@ -1,0 +1,897 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-07-30 09:38-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: .\guide\forms.py:9
+msgid "What is the total estimated value of the procurement? "
+msgstr ""
+
+#: .\guide\forms.py:10
+msgid "Who is the procuring entity?"
+msgstr ""
+
+#: .\guide\forms.py:11
+msgid "What is the procurement commodity type?"
+msgstr ""
+
+#: .\guide\forms.py:12
+msgid ""
+"What is the Goods and Services Identification Number commodity (GSIN) code "
+"most closely associated with the procurement?"
+msgstr ""
+
+#: .\guide\forms.py:13
+msgid "Exceptions"
+msgstr ""
+
+#: .\guide\forms.py:14 .\templates\done.html:101 .\templates\pdf.html:122
+msgid "Limited Tendering Reasons"
+msgstr ""
+
+#: .\guide\forms.py:15 .\templates\done.html:91 .\templates\pdf.html:112
+msgid "CFTA Exceptions"
+msgstr ""
+
+#: .\guide\models.py:20 .\guide\models.py:197
+msgid "CCFTA"
+msgstr ""
+
+#: .\guide\models.py:25 .\guide\models.py:202
+msgid "CCoFTA"
+msgstr ""
+
+#: .\guide\models.py:30 .\guide\models.py:207
+msgid "CHFTA"
+msgstr ""
+
+#: .\guide\models.py:35 .\guide\models.py:212
+msgid "CPaFTA"
+msgstr ""
+
+#: .\guide\models.py:40 .\guide\models.py:217
+msgid "CPFTA"
+msgstr ""
+
+#: .\guide\models.py:45 .\guide\models.py:222
+msgid "CKFTA"
+msgstr ""
+
+#: .\guide\models.py:50 .\guide\models.py:227
+msgid "CUFTA"
+msgstr ""
+
+#: .\guide\models.py:55 .\guide\models.py:232
+msgid "WTO-AGP"
+msgstr ""
+
+#: .\guide\models.py:60 .\guide\models.py:237
+msgid "CETA"
+msgstr ""
+
+#: .\guide\models.py:65 .\guide\models.py:242
+msgid "CPTPP"
+msgstr ""
+
+#: .\guide\models.py:70 .\guide\models.py:247
+msgid "CFTA"
+msgstr ""
+
+#: .\guide\models.py:88
+msgid "Entities"
+msgstr ""
+
+#: .\guide\models.py:109 .\guide\models.py:131 .\guide\models.py:257
+#: .\templates\done.html:72 .\templates\pdf.html:93
+msgid "Commodity Type"
+msgstr ""
+
+#: .\guide\models.py:138
+msgid "Code"
+msgstr ""
+
+#: .\guide\models.py:151 .\guide\models.py:181
+msgid "Org fk en ca"
+msgstr ""
+
+#: .\guide\models.py:156
+msgid ""
+"Department of Transport has a specific commodity coverage for Construction "
+"Services"
+msgstr ""
+
+#: .\guide\models.py:161
+msgid ""
+"The Department of National Defence, the Canadian Coast Guard, and the Royal "
+"Canadian Mounted Police have specific commodity code coverage for goods."
+msgstr ""
+
+#: .\guide\models.py:174
+msgid "Code FK en ca"
+msgstr ""
+
+#: .\guide\models.py:273 .\guide\models.py:288 .\guide\models.py:302
+msgid "Description"
+msgstr ""
+
+#: .\guide\templatetags\search_extras.py:41
+msgid "There are no filters for this search"
+msgstr ""
+
+#: .\tag_gac\settings.py:125
+msgid "Canadian English"
+msgstr ""
+
+#: .\tag_gac\settings.py:126
+msgid "Canadian French"
+msgstr ""
+
+#: .\templates\404.html:17 .\templates\admin\app_index.html:9
+msgid "Home"
+msgstr ""
+
+#: .\templates\404.html:20 .\templates\base-cdts.html:13
+#: .\templates\base-cdts.html:20 .\templates\base.html:14
+msgid "Open Government"
+msgstr ""
+
+#: .\templates\404.html:21
+msgid "https://open.canada.ca"
+msgstr ""
+
+#: .\templates\404.html:31
+msgid "We couldn't find that Web page"
+msgstr ""
+
+#: .\templates\404.html:32
+msgid "Error 404"
+msgstr ""
+
+#: .\templates\404.html:33
+msgid ""
+"We're sorry you ended up here. Sometimes a page gets moved or deleted, but "
+"hopefully we can help you find what you're looking for. Return to the <a "
+"href=\\"
+msgstr ""
+
+#: .\templates\404.html:47
+msgid "https://open.canada.ca/en/forms/contact-us"
+msgstr ""
+
+#: .\templates\404.html:48
+msgid "Open Government Contact"
+msgstr ""
+
+#: .\templates\404.html:50
+msgid "https://www.canada.ca/en/government/dept.html"
+msgstr ""
+
+#: .\templates\404.html:51
+msgid "Departments and agencies"
+msgstr ""
+
+#: .\templates\404.html:53
+msgid "https://www.canada.ca/en/government/publicservice.html"
+msgstr ""
+
+#: .\templates\404.html:54
+msgid "Public service and military"
+msgstr ""
+
+#: .\templates\404.html:56
+msgid "http://news.gc.ca/"
+msgstr ""
+
+#: .\templates\404.html:57
+msgid "News"
+msgstr ""
+
+#: .\templates\404.html:59
+msgid "https://www.canada.ca/en/government/system/laws.html"
+msgstr ""
+
+#: .\templates\404.html:60
+msgid "Treaties, laws and regulations"
+msgstr ""
+
+#: .\templates\404.html:62
+msgid "https://www.canada.ca/en/transparency/reporting.html"
+msgstr ""
+
+#: .\templates\404.html:63
+msgid "Government-wide reporting"
+msgstr ""
+
+#: .\templates\404.html:65
+msgid "https://www.canada.ca/en/government/system.html"
+msgstr ""
+
+#: .\templates\404.html:66
+msgid "How government works"
+msgstr ""
+
+#: .\templates\admin\filter.html:2
+#, python-format
+msgid " By %(filter_title)s "
+msgstr ""
+
+#: .\templates\admin\index.html:23
+#, python-format
+msgid "Models in the %(name)s application"
+msgstr ""
+
+#: .\templates\admin\index.html:34
+msgid "Add"
+msgstr ""
+
+#: .\templates\admin\index.html:41
+msgid "View"
+msgstr ""
+
+#: .\templates\admin\index.html:43
+msgid "Change"
+msgstr ""
+
+#: .\templates\admin\index.html:54
+msgid "You don't have permission to view or edit anything."
+msgstr ""
+
+#: .\templates\admin\index.html:62
+msgid "Recent actions"
+msgstr ""
+
+#: .\templates\admin\index.html:63
+msgid "My actions"
+msgstr ""
+
+#: .\templates\admin\index.html:67
+msgid "None available"
+msgstr ""
+
+#: .\templates\admin\index.html:81
+msgid "Unknown content"
+msgstr ""
+
+#: .\templates\base-cdts.html:27 .\templates\done.html:14
+#: .\templates\general_form.html:14 .\templates\pdf.html:35
+msgid "Treasury Board of Canada Secretariat"
+msgstr ""
+
+#: .\templates\base.html:62
+msgid "Skip to main content"
+msgstr ""
+
+#: .\templates\base.html:65
+msgid "Skip to \"About government\""
+msgstr ""
+
+#: .\templates\base.html:71
+msgid "Language selection"
+msgstr ""
+
+#: .\templates\base.html:88 .\templates\base.html:90 .\templates\base.html:93
+msgid "Search and menus"
+msgstr ""
+
+#: .\templates\base.html:103
+msgid "Search website"
+msgstr ""
+
+#: .\templates\base.html:107 .\templates\base.html:116
+msgid "Search"
+msgstr ""
+
+#: .\templates\base.html:152
+msgid ""
+"\n"
+"    <nav role=\"navigation\" class=\"container wb-navcurr\">\n"
+"        <h2 class=\"wb-inv\">About government</h2>\n"
+"        <ul class=\"list-unstyled colcount-sm-2 colcount-md-3\">\n"
+"            <li><a href=\"https://www.canada.ca/en/contact.html\">Contact "
+"us</a></li>\n"
+"            <li><a href=\"https://www.canada.ca/en/government/dept.html"
+"\">Departments and agencies</a></li>\n"
+"            <li><a href=\"https://www.canada.ca/en/government/publicservice."
+"html\">Public service and military</a></li>\n"
+"            <li><a href=\"https://www.canada.ca/en/news.html\">News</a></"
+"li>\n"
+"            <li><a href=\"https://www.canada.ca/en/government/system/laws."
+"html\">Treaties, laws and regulations</a></li>\n"
+"            <li><a href=\"https://www.canada.ca/en/transparency/reporting."
+"html\">Government-wide reporting</a></li>\n"
+"            <li><a href=\"http://pm.gc.ca/eng\">Prime Minister</a></li>\n"
+"            <li><a href=\"https://www.canada.ca/en/government/system.html"
+"\">How government works</a></li>\n"
+"            <li><a href=\"http://open.canada.ca/en/\">Open government</a></"
+"li>\n"
+"        </ul>\n"
+"    </nav>\n"
+"    <div class=\"brand\">\n"
+"        <div class=\"container\">\n"
+"            <div class=\"row\">\n"
+"                <nav class=\"col-md-9 col-lg-10 ftr-urlt-lnk\">\n"
+"                    <h2 class=\"wb-inv\">About this site</h2>\n"
+"                    <ul>\n"
+"                        <li><a href=\"https://www.canada.ca/en/social.html"
+"\">Social media</a></li>\n"
+"                        <li><a href=\"https://www.canada.ca/en/mobile.html"
+"\">Mobile applications</a></li>\n"
+"                        <li><a href=\"https://www1.canada.ca/en/newsite.html"
+"\">About Canada.ca</a></li>\n"
+"                        <li><a href=\"https://www.canada.ca/en/transparency/"
+"terms.html\">Terms and conditions</a></li>\n"
+"                        <li><a href=\"https://www.canada.ca/en/transparency/"
+"privacy.html\">Privacy</a></li>\n"
+"                    </ul>\n"
+"                </nav>\n"
+"                <div class=\"col-xs-6 visible-sm visible-xs tofpg\">\n"
+"                    <a href=\"#wb-cont\">Top of Page <span class=\"glyphicon "
+"glyphicon-chevron-up\"></span></a>\n"
+"                </div>\n"
+"                <div class=\"col-xs-6 col-md-3 col-lg-2 text-right\">\n"
+"                    <img src=\"/static/GCWeb/assets/wmms-blk.svg\" alt="
+"\"Symbol of the Government of Canada\">\n"
+"                </div>\n"
+"            </div>\n"
+"        </div>\n"
+"    </div>\n"
+msgstr ""
+
+#: .\templates\cfta_exceptions.html:7
+msgid "Step 3: Canadian Free Trade Agreement Specific Exclusions"
+msgstr ""
+
+#: .\templates\cfta_exceptions.html:8 .\templates\limited_tendering.html:11
+msgid "Instructions: "
+msgstr ""
+
+#: .\templates\cfta_exceptions.html:9
+msgid "Provide a response to the following question: "
+msgstr ""
+
+#: .\templates\cfta_exceptions.html:10
+msgid ""
+"Is the procurement excluded from the CFTA per the list of CFTA specific "
+"exclusions below?"
+msgstr ""
+
+#: .\templates\cfta_exceptions.html:11
+msgid ""
+"Answer the question by reviewing the following list of CFTA specific trade "
+"agreement exclusions. If a procurement falls under one or more of the "
+"following exceptions, select the applicable exclusion. If none of the "
+"following exclusions apply, click the 'Next' button and leave the fields "
+"blank."
+msgstr ""
+
+#: .\templates\cfta_exceptions.html:12
+msgid ""
+"If there is any discrepancy between this list of exemptions and the text of "
+"the "
+msgstr ""
+
+#: .\templates\cfta_exceptions.html:12
+msgid "Canadian Free Trade Agreement"
+msgstr ""
+
+#: .\templates\cfta_exceptions.html:12
+msgid ", refer to the text of the agreement."
+msgstr ""
+
+#: .\templates\cfta_exceptions.html:46 .\templates\done.html:161
+#: .\templates\exceptions.html:45 .\templates\limited_tendering.html:46
+#: .\templates\mandatory_elements.html:40 .\templates\pdf.html:182
+msgid "Document navigation"
+msgstr ""
+
+#: .\templates\cfta_exceptions.html:49 .\templates\limited_tendering.html:49
+msgid "Go to first step."
+msgstr ""
+
+#: .\templates\cfta_exceptions.html:49 .\templates\done.html:164
+#: .\templates\limited_tendering.html:49 .\templates\pdf.html:185
+msgid "Go to First Step"
+msgstr ""
+
+#: .\templates\cfta_exceptions.html:50 .\templates\exceptions.html:47
+#: .\templates\limited_tendering.html:50
+msgid "Go to previous step."
+msgstr ""
+
+#: .\templates\cfta_exceptions.html:50 .\templates\exceptions.html:47
+#: .\templates\limited_tendering.html:50
+msgid "Previous"
+msgstr ""
+
+#: .\templates\cfta_exceptions.html:51 .\templates\exceptions.html:48
+#: .\templates\limited_tendering.html:51 .\templates\mandatory_elements.html:45
+msgid "Go to next step."
+msgstr ""
+
+#: .\templates\cfta_exceptions.html:51 .\templates\exceptions.html:48
+#: .\templates\limited_tendering.html:51
+msgid "Next"
+msgstr ""
+
+#: .\templates\done.html:11 .\templates\general_form.html:11
+#: .\templates\pdf.html:32
+msgid "Trade Agreement Determination Tool"
+msgstr ""
+
+#: .\templates\done.html:21 .\templates\pdf.html:42
+msgid "Suggested Result"
+msgstr ""
+
+#: .\templates\done.html:22 .\templates\pdf.html:43
+msgid ""
+"Based on the information that was provided (e.g. Total Estimated Value, "
+"Procuring Entity, Commodity Type and Commodity Code), the following trade "
+"agreement(s) apply to the procurement:"
+msgstr ""
+
+#: .\templates\done.html:25 .\templates\done.html:112
+#: .\templates\exceptions.html:8 .\templates\mandatory_elements.html:9
+#: .\templates\pdf.html:46 .\templates\pdf.html:133
+msgid "Important: "
+msgstr ""
+
+#: .\templates\done.html:25 .\templates\pdf.html:46
+msgid ""
+" The results provided by this tool is a suggestion only. It is the "
+"responsibility of the user to determine the actual trade agreement coverage "
+"based on the full considerations of the procurement including the exceptions "
+"and exclusions that would apply to the entire procurement. If there are any "
+"discrepancies between the suggested coverage and actual coverage based on "
+"the text of the trade agreements, the text of the trade agreements take "
+"precedence. "
+msgstr ""
+
+#: .\templates\done.html:32 .\templates\pdf.html:53
+msgid "Abbreviation Reference"
+msgstr ""
+
+#: .\templates\done.html:35 .\templates\pdf.html:56
+msgid "WTO-AGP: World Trade Organization - Agreement on Government Procurement"
+msgstr ""
+
+#: .\templates\done.html:36 .\templates\pdf.html:57
+msgid "CCFTA: Canada-Chile Free Trade Agreement"
+msgstr ""
+
+#: .\templates\done.html:37 .\templates\pdf.html:58
+msgid "CPFTA: Canada-Peru Free Trade Agreement"
+msgstr ""
+
+#: .\templates\done.html:38 .\templates\pdf.html:59
+msgid "CCOFTA: Canada-Colombia Free Trade Agreement"
+msgstr ""
+
+#: .\templates\done.html:39 .\templates\pdf.html:60
+msgid "CPAFTA: Canada-Panama Free Trade Agreement"
+msgstr ""
+
+#: .\templates\done.html:40 .\templates\pdf.html:61
+msgid "CHFTA: Canada-Honduras Free Trade Agreement"
+msgstr ""
+
+#: .\templates\done.html:41 .\templates\pdf.html:62
+msgid "CKFTA: Canada-Korea Free Trade Agreement"
+msgstr ""
+
+#: .\templates\done.html:42 .\templates\pdf.html:63
+msgid "CFTA: Canadian Free Trade Agreement"
+msgstr ""
+
+#: .\templates\done.html:43 .\templates\pdf.html:64
+msgid "CETA: Comprehensive Economic Trade Agreement"
+msgstr ""
+
+#: .\templates\done.html:44 .\templates\pdf.html:65
+msgid ""
+"CPTPP: Comprehensive and Progressive Agreement for Trans-Pacific Partnership"
+msgstr ""
+
+#: .\templates\done.html:45 .\templates\pdf.html:66
+msgid "CUFTA: Canada-Ukraine Free Trade Agreement"
+msgstr ""
+
+#: .\templates\done.html:52 .\templates\pdf.html:73
+msgid "Summary"
+msgstr ""
+
+#: .\templates\done.html:55 .\templates\pdf.html:76
+msgid ""
+"The table provides a summary of the user inputs entered to generate the "
+"result."
+msgstr ""
+
+#: .\templates\done.html:58 .\templates\pdf.html:79
+msgid "Categories"
+msgstr ""
+
+#: .\templates\done.html:59 .\templates\pdf.html:80
+msgid "Values"
+msgstr ""
+
+#: .\templates\done.html:64 .\templates\pdf.html:85
+msgid "Total Estimated Value"
+msgstr ""
+
+#: .\templates\done.html:68 .\templates\pdf.html:89
+msgid "Procuring Entity"
+msgstr ""
+
+#: .\templates\done.html:76 .\templates\pdf.html:97
+msgid "Commodity Code"
+msgstr ""
+
+#: .\templates\done.html:81 .\templates\pdf.html:102
+msgid "Exceptions and Exclusions"
+msgstr ""
+
+#: .\templates\done.html:86 .\templates\done.html:96 .\templates\done.html:106
+#: .\templates\pdf.html:107 .\templates\pdf.html:117 .\templates\pdf.html:127
+msgid "None"
+msgstr ""
+
+#: .\templates\done.html:112 .\templates\pdf.html:133
+msgid ""
+"If the Limited Tendering Reason value is “None”, the covered procurement "
+"must use an open or selective tendering process to ensure that Canada "
+"complies with its trade agreement tendering obligations."
+msgstr ""
+
+#: .\templates\done.html:113 .\templates\pdf.html:134
+msgid ""
+"For more information on the trade agreement obligations required for open "
+"tendering and selective tendering, refer to the text of the applicable trade "
+"agreements."
+msgstr ""
+
+#: .\templates\done.html:119 .\templates\pdf.html:140
+msgid "Details"
+msgstr ""
+
+#: .\templates\done.html:121 .\templates\pdf.html:142
+msgid ""
+"The tables below provide details on the following series of conditions used "
+"to determine coverage for each trade agreement. "
+msgstr ""
+
+#: .\templates\done.html:123 .\templates\pdf.html:144
+msgid ""
+"Estimated Value - 'True' indicates that the estimated value is equal to or "
+"greater than the dollar threshold for the trade agreement.  'False' "
+"indicates the estimated value is less than the dollar threshold for the "
+"trade agreement."
+msgstr ""
+
+#: .\templates\done.html:124 .\templates\pdf.html:145
+msgid ""
+"Entities - 'True' indicates the entity is covered under the trade "
+"agreement.  'False' indicates the entity is not covered under the specific "
+"trade agreement."
+msgstr ""
+
+#: .\templates\done.html:125 .\templates\pdf.html:146
+msgid ""
+"Commodity Code - 'True' indicates the commodity code is covered under the "
+"trade agreement.  'False' indicates the commodity code is not covered under "
+"the trade agreement."
+msgstr ""
+
+#: .\templates\done.html:126 .\templates\pdf.html:147
+msgid ""
+"General Exceptions - 'True' indicates no applicable trade agreement "
+"exceptions apply. 'False' indicates one or more trade agreement exception(s) "
+"apply."
+msgstr ""
+
+#: .\templates\done.html:127 .\templates\pdf.html:148
+msgid ""
+"CFTA Exceptions - 'True' indicates no CFTA exceptions apply.  'False' "
+"indicates one or more CFTA exceptions apply.  This only appears for CFTA."
+msgstr ""
+
+#: .\templates\done.html:139 .\templates\pdf.html:160
+msgid "Category"
+msgstr ""
+
+#: .\templates\done.html:140 .\templates\pdf.html:161
+msgid "Result"
+msgstr ""
+
+#: .\templates\done.html:165
+msgid "Open as PDF"
+msgstr ""
+
+#: .\templates\exceptions.html:7
+msgid "Step 2. General Trade Agreement Exceptions and Exclusions"
+msgstr ""
+
+#: .\templates\exceptions.html:8
+msgid ""
+"Provide a response to the following questions below and click the ‘Next’ "
+"button."
+msgstr ""
+
+#: .\templates\exceptions.html:9
+msgid ""
+"Are there any general trade agreement exceptions or exclusions applicable to "
+"the procurement?"
+msgstr ""
+
+#: .\templates\exceptions.html:10
+msgid ""
+"Answer the question by reviewing the list of general trade agreement "
+"exceptions and exclusions below and selecting the ones that apply to the "
+"procurement. If an exception or exclusion only applies to part of the "
+"procurement, it should not be selected. Some of the exceptions or exclusions "
+"only apply to some of Canada's trade agreements and the tool will determine "
+"which exceptions apply when returning the suggested results. Refer to the "
+"footnotes at the bottom for more information on which trade agreements "
+"include the specific exception or exclusion."
+msgstr ""
+
+#: .\templates\exceptions.html:57 .\templates\limited_tendering.html:59
+#: .\templates\mandatory_elements.html:56
+msgid "Caveat"
+msgstr ""
+
+#: .\templates\exceptions.html:59
+msgid ""
+"If there is any discrepancy between this list of exemptions and the text of "
+"the trade agreements, the text of the trade agreements takes precedence."
+msgstr ""
+
+#: .\templates\exceptions.html:60
+msgid ""
+"The numbers in front of each general trade agreement exceptions and "
+"exclusions corresponds to the data values used for proactive disclosure of "
+"contract reporting.  For more information refer to the "
+msgstr ""
+
+#: .\templates\exceptions.html:60 .\templates\limited_tendering.html:63
+msgid "Guidelines on the Proactive Disclosure of Contracts"
+msgstr ""
+
+#: .\templates\exceptions.html:64 .\templates\mandatory_elements.html:66
+msgid "Footnotes"
+msgstr ""
+
+#: .\templates\exceptions.html:66
+msgid ""
+"The applicable exception and exclusions are found under the following trade "
+"agreements:"
+msgstr ""
+
+#: .\templates\exceptions.html:70 .\templates\exceptions.html:82
+#: .\templates\exceptions.html:118
+msgid "Applies to all agreements except CFTA"
+msgstr ""
+
+#: .\templates\exceptions.html:74 .\templates\exceptions.html:78
+msgid "Applies to all agreements except CFTA, CETA, and CPTPP"
+msgstr ""
+
+#: .\templates\exceptions.html:86
+msgid ""
+"Applies to all agreements except CFTA, CUFTA, CKFTA, WTO-AGP, CETA, and CPTPP"
+msgstr ""
+
+#: .\templates\exceptions.html:90 .\templates\exceptions.html:98
+#: .\templates\exceptions.html:102 .\templates\exceptions.html:106
+#: .\templates\exceptions.html:110 .\templates\exceptions.html:114
+msgid "Applies to all agreements"
+msgstr ""
+
+#: .\templates\exceptions.html:94
+msgid "Applies to all agreements except CETA"
+msgstr ""
+
+#: .\templates\exceptions.html:122
+msgid "Applies to all trade agreements"
+msgstr ""
+
+#: .\templates\general_form.html:20
+msgid ""
+"This is a prototype tool staged in a testing environment. It is subject to "
+"significant changes in content and functionality and TBS governance "
+"approval. Do not rely on this tool to determine trade agreement coverage."
+msgstr ""
+
+#: .\templates\limited_tendering.html:7
+msgid "Step 4. Limited Tendering Reasons"
+msgstr ""
+
+#: .\templates\limited_tendering.html:8
+msgid ""
+"Based on the responses provided in prior steps, the procurement appears to "
+"be covered by one or more of the applicable trade agreements. "
+msgstr ""
+
+#: .\templates\limited_tendering.html:9
+msgid ""
+"If a procurement is covered by the trade agreement(s), the contracting "
+"authority is to follow the open or selective tendering procurement "
+"obligations prescribed by the covered trade agreement(s). If there are any "
+"deviations from the open or selective tendering obligations of the covered "
+"trade agreement(s), the contracting authority must consider whether one or "
+"more limited tendering reason is applicable to the procurement in order to "
+"determine whether a limited tendering approach can be used. The tool has pre-"
+"determined which limited tendering reasons exists within the applicable "
+"trade agreements based on the inputs already provided."
+msgstr ""
+
+#: .\templates\limited_tendering.html:11
+msgid ""
+"If the procurement strategy is open tendering or selective tendering, click "
+"the “Next” button and leave the fields below blank. "
+msgstr ""
+
+#: .\templates\limited_tendering.html:12
+msgid ""
+"If a limited tendering strategy is being considered, review the summary list "
+"of limited tendering reasons found in the applicable trade agreements and "
+"select the reason(s) that apply and click the “Next” button. If none of the "
+"limited tendering reasons apply, leave the fields blank. "
+msgstr ""
+
+#: .\templates\limited_tendering.html:61
+msgid ""
+"In order to proceed with a limited tendering procurement strategy, a valid "
+"limited tendering reason must exist in each of the covered trade "
+"agreement(s). The applicable limited tendering rationale used to justify the "
+"procurement strategy must be documented on the procurement file."
+msgstr ""
+
+#: .\templates\limited_tendering.html:62
+msgid ""
+"If there is any discrepancy between the list of limited tendering reasons "
+"and the text of the trade agreement(s), refer to the trade agreement(s)."
+msgstr ""
+
+#: .\templates\limited_tendering.html:63
+msgid ""
+"The numbers in front of each limited tendering reason corresponds to the "
+"data values used for proactive disclosure of contract reporting.  For more "
+"information, refer to the "
+msgstr ""
+
+#: .\templates\mandatory_elements.html:7
+msgid ""
+"The Government of Canada is a party to free trade agreements some of which "
+"sets out obligations for government procurement. This tool is developed to "
+"assist users in determining which free trade agreements would likely apply "
+"to a government procurement by responding to a series of questions about the "
+"procurement information that are relevant to determine trade agreement "
+"coverage.  It is expected that the user of this tool is familiar with "
+"federal government procurement obligations under Canada’s domestic and "
+"international trade agreements."
+msgstr ""
+
+#: .\templates\mandatory_elements.html:9
+msgid ""
+"The results provided by this tool is a suggestion only. It is still the "
+"responsibility of the user to identify actual trade agreement coverage based "
+"on the full considerations of the procurement including exceptions and "
+"exclusions that would apply to the entire procurement. "
+msgstr ""
+
+#: .\templates\mandatory_elements.html:11
+msgid "Step 1. Basic Procurement Information"
+msgstr ""
+
+#: .\templates\mandatory_elements.html:12
+msgid ""
+"Provide a response to the following questions below and click the ‘Next’ "
+"button. Refer to the footnotes at the bottom for helpful hints in answering "
+"the questions."
+msgstr ""
+
+#: .\templates\mandatory_elements.html:24
+msgid "Required"
+msgstr ""
+
+#: .\templates\mandatory_elements.html:57
+msgid ""
+"The following types of procurement have not been factored in this tool. "
+"Users will need to consult the text of Canada’s trade agreement to determine "
+"the application of trade agreement coverage for these procurements:"
+msgstr ""
+
+#: .\templates\mandatory_elements.html:59
+msgid "Procurement of goods or services from non-for-profit institutions."
+msgstr ""
+
+#: .\templates\mandatory_elements.html:60
+msgid ""
+"Procurement related to an international crossing between Canada and another "
+"country."
+msgstr ""
+
+#: .\templates\mandatory_elements.html:61
+msgid "Procurement related to space projects for the Canadian Space Agency."
+msgstr ""
+
+#: .\templates\mandatory_elements.html:62
+msgid ""
+"Procurement of satellite communications, earth observations and global "
+"navigation systems for the Canadian Space Agency."
+msgstr ""
+
+#: .\templates\mandatory_elements.html:70
+msgid ""
+"Enter the maximum total value of the procurement considering all forms of "
+"remuneration over the entire duration of the contract, including the total "
+"value of any options, fees and applicable taxes. For supply arrangement "
+"tenders, input the total estimated value of all potential procurements "
+"(contracts) under the supply arrangement. For standing offer tenders, input "
+"the total estimated value of all potential call-ups (contracts) against the "
+"standing offer."
+msgstr ""
+
+#: .\templates\mandatory_elements.html:75
+msgid ""
+"Select the name of the federal department or departmental agency that is the "
+"procuring entity. Note: This tool cannot be used for procurements on behalf "
+"of federal Crown Corporations or other procuring entitles not listed in "
+"Schedules I, I.1 or II of the  "
+msgstr ""
+
+#: .\templates\mandatory_elements.html:75
+msgid "Financial Administration Act."
+msgstr ""
+
+#: .\templates\mandatory_elements.html:80
+msgid ""
+"Select the commodity type. If a procurement includes more than one commodity "
+"type (e.g. a combination of goods and services), select the one that makes "
+"up the largest portion of the estimated contract value."
+msgstr ""
+
+#: .\templates\mandatory_elements.html:85
+msgid ""
+"Select the applicable commodity code. If multiple commodity codes apply to a "
+"procurement, select the commodity code that represents the largest portion "
+"of the requirement by dollar value or alternatively, best represent the "
+"entire procurement.  "
+msgstr ""
+
+#: .\templates\mandatory_elements.html:86
+msgid ""
+"Note: The Goods and Services Identification Number commodity codes are based "
+"on the following applicable trade agreement commodity codes used to "
+"determine trade agreement commodity coverage:"
+msgstr ""
+
+#: .\templates\mandatory_elements.html:88
+msgid "For goods, the Federal Supply Classification (FSC) is used. "
+msgstr ""
+
+#: .\templates\mandatory_elements.html:89
+msgid ""
+"For services, the Common Classification System (CCS) and the United Nations "
+"Provisional Central Product Classification (CPC) system are used.  "
+msgstr ""
+
+#: .\templates\mandatory_elements.html:90
+msgid ""
+"For construction services, the United Nations Provisional Central Product "
+"Classification (CPC) is used."
+msgstr ""
