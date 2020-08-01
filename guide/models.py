@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+TYPE_CHOICES = ['GOODS, SERVICES, CONSTRUCTION']
+
 
 class BooleanTradeAgreement(models.Model):
     """
@@ -103,6 +105,7 @@ class CommodityType(models.Model):
     '''
     id = models.AutoField(primary_key=True)
     commodity_type = models.CharField(
+        choices=TYPE_CHOICES,
         max_length = 128,
         default = '',
         unique = True,
@@ -142,8 +145,7 @@ class Code(BooleanTradeAgreement):
         return self.code
 
 
-class OrganizationWithCommodityTypeRule(BooleanTradeAgreement):
-
+class CommodityTypeExclusion(BooleanTradeAgreement):
     org_fk = models.ForeignKey(
         Organization,
         to_field = 'name',
@@ -151,22 +153,58 @@ class OrganizationWithCommodityTypeRule(BooleanTradeAgreement):
         verbose_name = _('Org fk en ca'),
         on_delete = models.CASCADE
     )
-    construction = models.BooleanField(
-        default = False,
-        verbose_name = _('Construction Services'),
-        blank = False
+    type_fr = models.ForeignKey(
+        CommodityType,
+        to_field = 'commodity_type',
+        related_name = '+',
+        verbose_name = _('Commodity Type'),
+        on_delete = models.CASCADE
     )
-    goods = models.BooleanField(
-        default = False,
-        verbose_name = _('Goods'),
-        blank = False
+    def __str__(self):
+        return f"{self.org_fk} - {self.type_fr} - Exclusion"
+
+
+class TypeOrganizationInclusion(BooleanTradeAgreement):
+    org_fk = models.ForeignKey(
+        Organization,
+        to_field = 'name',
+        related_name = '+',
+        verbose_name = _('Org fk en ca'),
+        on_delete = models.CASCADE
     )
+    type_fr = models.ForeignKey(
+        CommodityType,
+        to_field = 'commodity_type',
+        related_name = '+',
+        verbose_name = _('Commodity Type'),
+        on_delete = models.CASCADE
+    )
+
 
     def __str__(self):
-        return f"{self.org_fk} - {self.goods} - {self.construction}"
+        return f"{self.org_fk} - {self.type_fr} - Inclusion"
 
-class OrganizationWithCommodityCodeRule(BooleanTradeAgreement):
 
+class CodeOrganizationInclusion(BooleanTradeAgreement):
+    code_fk = models.ForeignKey(
+        Code,
+        to_field = 'code',
+        related_name = '+',
+        verbose_name = _('Code FK en ca'),
+        on_delete = models.CASCADE
+    )
+    org_fk = models.ForeignKey(
+        Organization,
+        to_field = 'name',
+        related_name = '+',
+        verbose_name = _('Org fk en ca'),
+        on_delete = models.CASCADE
+    )
+    def __str__(self):
+        return f"{self.org_fk} - {self.code_fk} - Inclusion"
+
+
+class CodeOrganizationExclusion(BooleanTradeAgreement):
     code_fk = models.ForeignKey(
         Code,
         to_field = 'code',
@@ -183,7 +221,7 @@ class OrganizationWithCommodityCodeRule(BooleanTradeAgreement):
     )
 
     def __str__(self):
-        return f"{self.org_fk} - {self.code_fk}"
+        return f"{self.org_fk} - {self.code_fk} - Exclusion"
 
 
 class ValueThreshold(models.Model):
