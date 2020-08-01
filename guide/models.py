@@ -151,19 +151,19 @@ class OrganizationWithCommodityTypeRule(BooleanTradeAgreement):
         verbose_name = _('Org fk en ca'),
         on_delete = models.CASCADE
     )
-    tc = models.BooleanField(
+    construction = models.BooleanField(
         default = False,
-        verbose_name = _('Department of Transport has a specific commodity coverage for Construction Services'),
+        verbose_name = _('Construction Services'),
         blank = False
     )
-    goods_rule = models.BooleanField(
+    goods = models.BooleanField(
         default = False,
-        verbose_name = _('The Department of National Defence, the Canadian Coast Guard, and the Royal Canadian Mounted Police have specific commodity code coverage for goods.'),
+        verbose_name = _('Goods'),
         blank = False
     )
 
     def __str__(self):
-        return f"{self.org_fk} - Goods Rule: {self.goods_rule} Transport Rule: {self.tc}"
+        return f"{self.org_fk} - {self.goods} - {self.construction}"
 
 class OrganizationWithCommodityCodeRule(BooleanTradeAgreement):
 
