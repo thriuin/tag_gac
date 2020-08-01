@@ -1,38 +1,38 @@
-from guide.models import CommodityType, Code, GeneralException, LimitedTenderingReason, CftaException, ValueThreshold, Organization, OrganizationWithCommodityCodeRule, OrganizationWithCommodityTypeRule
+import guide.models as models
 from modeltranslation.translator import register, TranslationOptions
 
 
-@register(Organization)
+@register(models.Organization)
 class OrganizationTO(TranslationOptions):
     fields = ['name']
     required_languages = ('en', 'fr')
 
 
-@register(CommodityType)
+@register(models.CommodityType)
 class CommodityTypeTO(TranslationOptions):
     fields = ['commodity_type']
     required_languages = ('en', 'fr')
 
 
-@register(Code)
+@register(models.Code)
 class CodeTO(TranslationOptions):
     fields = ['code']
     required_languages = ('en', 'fr')
 
 
-@register(LimitedTenderingReason)
+@register(models.LimitedTenderingReason)
 class LimitedTenderingReasonTO(TranslationOptions):
     fields = ['name']
     required_languages = ('en', 'fr')
 
 
-@register(GeneralException)
+@register(models.GeneralException)
 class GeneralExceptionTO(TranslationOptions):
     fields = ['name']
     required_languages = ('en', 'fr')
 
 
-@register(CftaException)
+@register(models.CftaException)
 class CftaExceptionTO(TranslationOptions):
     fields = ['name']
     required_languages = ('en', 'fr')

@@ -1,7 +1,9 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-TYPE_CHOICES = ['GOODS, SERVICES, CONSTRUCTION']
+TYPE_CHOICES = [('1', 'GOODS'), 
+                ('2', 'SERVICES'), 
+                ('3', 'CONSTRUCTION')]
 
 
 class BooleanTradeAgreement(models.Model):
@@ -104,14 +106,19 @@ class CommodityType(models.Model):
     This is for Goods, Services, Construction
     '''
     id = models.AutoField(primary_key=True)
-    commodity_type = models.CharField(
+    c_type = models.CharField(
         choices=TYPE_CHOICES,
         max_length = 128,
         default = '',
         unique = True,
         verbose_name = _('Commodity Type')
     )
-
+    commodity_type = models.CharField(
+        max_length = 128,
+        default = '',
+        unique = True,
+        verbose_name = _('Commodity Type')
+    )
 
     class Meta:
         ordering = ['commodity_type']
@@ -145,7 +152,7 @@ class Code(BooleanTradeAgreement):
         return self.code
 
 
-class CommodityTypeExclusion(BooleanTradeAgreement):
+class TypeOrganizationExclusion(BooleanTradeAgreement):
     org_fk = models.ForeignKey(
         Organization,
         to_field = 'name',
