@@ -95,27 +95,27 @@ class CodeAdmin(ListDisplayMixin, ImportExportModelAdmin, TranslationAdmin):
     lst = AGREEMENTS.copy()
     lst.append('type')
     list_filter = lst
-    search_fields = ['code', 'code_en_ca', 'code_fr_ca']
+    search_fields = ['code', 'code_en', 'code_fr']
 
 
 @admin.register(GeneralException)
 class GeneralExceptionAdmin(ListDisplayMixin, ImportExportModelAdmin, TranslationAdmin):
     resource_class = GeneralExceptionResource
     list_filter = AGREEMENTS
-    search_fields = ['description', 'description_en_ca', 'description_fr_ca']
+    search_fields = ['description', 'description_en', 'description_fr']
 
 
 @admin.register(LimitedTenderingReason)
 class TenderingReasonAdmin(ListDisplayMixin, ImportExportModelAdmin, TranslationAdmin):
     resource_class = TenderingReasonResource
     list_filter = AGREEMENTS
-    search_fields = ['description', 'description_en_ca', 'description_fr_ca']
+    search_fields = ['description', 'description_en', 'description_fr']
 
 
 @admin.register(CftaException)
 class CftaExceptionAdmin(ListDisplayMixin, ImportExportModelAdmin, TranslationAdmin):
     resource_class = CftaExceptionResource
-    search_fields = ['description', 'description_en_ca', 'description_fr_ca']
+    search_fields = ['description', 'description_en', 'description_fr']
 
 
 @admin.register(ValueThreshold)
@@ -128,4 +128,4 @@ class ValueThresholdAdmin(ListDisplayMixin, ImportExportModelAdmin):
 class OrganizationAdmin(ListDisplayMixin, ImportExportModelAdmin, TranslationAdmin):
     resource_class = OrganizationResource
     list_filter = AGREEMENTS
-    search_fields = ['entities', 'entities_en_ca', 'entities_fr_ca']
+    search_fields = ['entities', 'entities_en', 'entities_fr']
