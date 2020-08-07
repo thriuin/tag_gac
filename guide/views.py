@@ -12,6 +12,31 @@ from collections import OrderedDict
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 from datetime import date
+import pprint
+
+def create_data_dict(form_list):
+    data_dict = {}
+    try:
+        for f in form_list:
+            data_dict.update(self.get_cleaned_data_for_step(f))
+    except:
+        pass
+
+    for k, v in data_dict.items():
+        if v:
+            pass
+        else:
+            data_dict[k] = ['None']
+    return data_dict
+
+def create_agreement_dict():
+    agreement_dict = {}
+    try:
+        for agreement in AGREEMENTS:
+            agreement_dict.update({agreement:{}})
+    except:
+        pass
+    return agreement_dict
 
 
 class OpenPDF(View):
@@ -102,25 +127,41 @@ class TypeAutocomplete(autocomplete.Select2QuerySetView):
 
 def lt_condition(wizard):
     form_list = [f[0] for f in FORMS[:3]]
-    context_dict = build_context_dict()
-    for form in form_list:
-        val = wizard.get_cleaned_data_for_step(form)
-        if not val:
-            return False
+
+    data_dict = {}
+    try:
+        for form in form_list:
+            val = wizard.get_cleaned_data_for_step(form)
+            if not val:
+                return False
+            else:
+                data_dict.update(val)
+    except:
+        pass
+
+    for k, v in data_dict.items():
+        if v:
+            pass
         else:
-            context_dict = process_form(context_dict, val)
+            data_dict[k] = ['None']
 
-    context_dict = value_threshold_rule(context_dict, 'estimated_value', 'type')
-    context_dict = organization_rule(context_dict, 'entities')
-    context_dict = code_rule(context_dict, 'code', 'type', 'entities')
-    context_dict = exceptions_rule(context_dict, 'exceptions', GeneralException)
-    context_dict = exceptions_rule(context_dict, 'cfta_exceptions', CftaException)
-    context_dict = determine_final_coverage(context_dict)
 
-    for v in context_dict['bool'].values():
+    agreement_dict = create_agreement_dict()
+
+
+    agreement_dict = value_threshold_rule(agreement_dict, data_dict)
+    agreement_dict = organization_rule(agreement_dict, data_dict)
+    agreement_dict = code_rule(agreement_dict, data_dict)
+    agreement_dict = exceptions_rule(agreement_dict, data_dict, 'exceptions', GeneralException)
+    agreement_dict = exceptions_rule(agreement_dict, data_dict, 'cfta_exceptions', CftaException)
+    
+    coverage_dict = determine_final_coverage(agreement_dict)
+
+    for v in coverage_dict.values():
         if v is True:
             return True
     return False
+
 
 
 class TradeForm(NamedUrlCookieWizardView):
@@ -169,26 +210,24 @@ class TradeForm(NamedUrlCookieWizardView):
         
         if 'limited_tendering' in form.fields:
             form_list = [f[0] for f in FORMS[:3]]
-            context_dict = build_context_dict()
-            for f in form_list:
-                val = self.get_cleaned_data_for_step(f)
-                if not val:
-                    return False
-                else:
-                    context_dict = process_form(context_dict, val)
 
-            context_dict = value_threshold_rule(context_dict, 'estimated_value', 'type')
-            context_dict = organization_rule(context_dict, 'entities')
-            context_dict = code_rule(context_dict, 'code', 'type', 'entities')
-            context_dict = exceptions_rule(context_dict, 'exceptions', GeneralException)
-            context_dict = exceptions_rule(context_dict, 'cfta_exceptions', CftaException)
-            context_dict = determine_final_coverage(context_dict)
+            data_dict = create_data_dict(form_list)
+
+            agreement_dict = create_agreement_dict()
+
+            agreement_dict = value_threshold_rule(agreement_dict, data_dict)
+            agreement_dict = organization_rule(agreement_dict, data_dict)
+            agreement_dict = code_rule(agreement_dict, data_dict)
+            agreement_dict = exceptions_rule(agreement_dict, data_dict, 'exceptions', GeneralException)
+            agreement_dict = exceptions_rule(agreement_dict, data_dict, 'cfta_exceptions', CftaException)
+            
+            coverage_dict = determine_final_coverage(agreement_dict)
 
             ta_applies = []
-            for k, v in context_dict['bool'].items():
+            for k, v in coverage_dict.items():
                 if v is True:
                     ta_applies.append(k)
-            
+
             query_list = []
             if ta_applies:
                 qs = LimitedTenderingReason.objects.all()
@@ -212,20 +251,27 @@ class TradeForm(NamedUrlCookieWizardView):
         Returns:
             [html] -- Renders done.html with the context that will display the
         """
-        context_dict = build_context_dict()
 
-        for form in form_list:
-            context_dict = process_form(context_dict, form.cleaned_data)
+        form_list = [f[0] for f in FORMS[:3]]
 
-        context_dict = value_threshold_rule(context_dict, 'estimated_value', 'type')
-        context_dict = organization_rule(context_dict, 'entities')
-        context_dict = code_rule(context_dict, 'code', 'type', 'entities')
-        context_dict = exceptions_rule(context_dict, 'exceptions', GeneralException)
-        context_dict = exceptions_rule(context_dict, 'cfta_exceptions', CftaException)
-        context_dict = determine_final_coverage(context_dict)
+        data_dict = create_data_dict(form_list)
 
-        num_true = sum(context_dict['bool'].values())
+        agreement_dict = create_agreement_dict()
+
+        agreement_dict = value_threshold_rule(agreement_dict, data_dict)
+        agreement_dict = organization_rule(agreement_dict, data_dict)
+        agreement_dict = code_rule(agreement_dict, data_dict)
+        agreement_dict = exceptions_rule(agreement_dict, data_dict, 'exceptions', GeneralException)
+        agreement_dict = exceptions_rule(agreement_dict, data_dict, 'cfta_exceptions', CftaException)
         
+        coverage_dict = determine_final_coverage(agreement_dict)
+
+        num_true = sum(coverage_dict.values())
+        
+        context_dict = data_dict
+        context_dict['ta'] = agreement_dict
+        context_dict['bool'] = coverage_dict
+
         if num_true == 0:
             output = 'No trade agreements apply.  '
         else:
@@ -259,7 +305,7 @@ class TradeForm(NamedUrlCookieWizardView):
                         k2 = k2.replace('_', ' ')
                         k2 = k2.title()
                         context_dict['tables'][k1][k2] = v2
-        
+
         def add_sessions_list(name, model):
             ex_list = []
             v = context_dict[name]

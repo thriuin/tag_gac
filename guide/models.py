@@ -105,7 +105,6 @@ class CommodityType(models.Model):
     Inherits from :model:`guide.Language`
     This is for Goods, Services, Construction
     '''
-    id = models.AutoField(primary_key=True)
     c_type = models.CharField(
         choices=TYPE_CHOICES,
         max_length = 128,
@@ -152,7 +151,8 @@ class Code(BooleanTradeAgreement):
         return self.code
 
 
-class TypeOrganizationExclusion(BooleanTradeAgreement):
+class OrgTypeRule(BooleanTradeAgreement):
+
     org_fk = models.ForeignKey(
         Organization,
         to_field = 'name',
@@ -160,55 +160,21 @@ class TypeOrganizationExclusion(BooleanTradeAgreement):
         verbose_name = _('Org fk en ca'),
         on_delete = models.CASCADE
     )
-    type_fr = models.ForeignKey(
-        CommodityType,
-        to_field = 'commodity_type',
-        related_name = '+',
-        verbose_name = _('Commodity Type'),
-        on_delete = models.CASCADE
+    construction = models.BooleanField(
+        default = False,
+        verbose_name = _('Department of Transport has a specific commodity coverage for Construction Services'),
+        blank = False
     )
-    def __str__(self):
-        return f"{self.org_fk} - {self.type_fr} - Exclusion"
-
-
-class TypeOrganizationInclusion(BooleanTradeAgreement):
-    org_fk = models.ForeignKey(
-        Organization,
-        to_field = 'name',
-        related_name = '+',
-        verbose_name = _('Org fk en ca'),
-        on_delete = models.CASCADE
+    goods = models.BooleanField(
+        default = False,
+        verbose_name = _('The Department of National Defence, the Canadian Coast Guard, and the Royal Canadian Mounted Police have specific commodity code coverage for goods.'),
+        blank = False
     )
-    type_fr = models.ForeignKey(
-        CommodityType,
-        to_field = 'commodity_type',
-        related_name = '+',
-        verbose_name = _('Commodity Type'),
-        on_delete = models.CASCADE
-    )
-
 
     def __str__(self):
-        return f"{self.org_fk} - {self.type_fr} - Inclusion"
+        return f"{self.org_fk} - Goods Rule: {self.goods} Transport Rule: {self.construction}"
 
 
-class CodeOrganizationInclusion(BooleanTradeAgreement):
-    code_fk = models.ForeignKey(
-        Code,
-        to_field = 'code',
-        related_name = '+',
-        verbose_name = _('Code FK en ca'),
-        on_delete = models.CASCADE
-    )
-    org_fk = models.ForeignKey(
-        Organization,
-        to_field = 'name',
-        related_name = '+',
-        verbose_name = _('Org fk en ca'),
-        on_delete = models.CASCADE
-    )
-    def __str__(self):
-        return f"{self.org_fk} - {self.code_fk} - Inclusion"
 
 
 class CodeOrganizationExclusion(BooleanTradeAgreement):

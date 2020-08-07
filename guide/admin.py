@@ -6,22 +6,11 @@ from modeltranslation.admin import TranslationAdmin
 from guide.logic import AGREEMENTS
 
 # Model resources
-class TypeOrganizationInclusionResource(resources.ModelResource):
+class OrgTypeRuleResource(resources.ModelResource):
 
     class Meta:
-        model = models.TypeOrganizationInclusion
+        model = models.OrgTypeRule
 
-
-class TypeOrganizationExclusionResource(resources.ModelResource):
-
-    class Meta:
-        model = models.TypeOrganizationExclusion
-
-
-class CodeOrganizationInclusionResource(resources.ModelResource):
-
-    class Meta:
-        model = models.CodeOrganizationInclusion
 
 
 class CodeOrganizationExclusionResource(resources.ModelResource):
@@ -82,28 +71,16 @@ class ListDisplayMixin(object):
 
 
 # ModelAdmins
-@admin.register(models.TypeOrganizationExclusion)
+@admin.register(models.OrgTypeRule)
 class TypeOrganizationExclusionAdmin(ListDisplayMixin, ImportExportModelAdmin):
-    resource_class = TypeOrganizationExclusionResource
+    resource_class = OrgTypeRuleResource
     list_filter = AGREEMENTS
-    search_fields = ['org_fk', 'type_fk']
+    search_fields = ['org_fk']
 
-
-@admin.register(models.TypeOrganizationInclusion)
-class TypeOrganizationInclusionAdmin(ListDisplayMixin, ImportExportModelAdmin):
-    resource_class = TypeOrganizationInclusionResource
-    list_filter = AGREEMENTS
-    search_fields = ['org_fk', 'type_fk']
 
 @admin.register(models.CodeOrganizationExclusion)
 class CodeOrganizationExclusionAdmin(ListDisplayMixin, ImportExportModelAdmin):
     resource_class = CodeOrganizationExclusionResource
-    list_filter = AGREEMENTS
-    search_fields = ['org_fk', 'code_fk']
-
-@admin.register(models.CodeOrganizationInclusion)
-class CodeOrganizationInclusionAdmin(ListDisplayMixin, ImportExportModelAdmin):
-    resource_class = CodeOrganizationInclusionResource
     list_filter = AGREEMENTS
     search_fields = ['org_fk', 'code_fk']
 
