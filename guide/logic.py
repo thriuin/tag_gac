@@ -1,5 +1,5 @@
 from guide.forms import RequiredFieldsForm, GeneralExceptionForm, LimitedTenderingForm, CftaExceptionForm
-from guide.models import Code, ValueThreshold, Organization, GeneralException, LimitedTenderingReason, CftaException, OrganizationWithCommodityCodeRule, OrganizationWithCommodityTypeRule
+import guide.models as models
 from io import BytesIO
 from django.http import HttpResponse
 from django.template.loader import get_template
@@ -48,21 +48,19 @@ def process_form(cxt, form_data):
 def check_if_trade_agreement_applies(ta, cxt, data, name):
     check = data.values_list(ta).get()[0]
     if check is False:
-        cxt['ta'][ta][name] = False
-
+        cxt[ta][name] = False
     return cxt
     
-def determine_final_coverage(cxt):
-    cxt['bool'] = {}
-    trade_agreements = {ta:{} for ta in AGREEMENTS}
-    for ta in trade_agreements:
-        cxt['bool'][ta] = True
-        for v in cxt['ta'][ta].values():
-            if v is False:
-                cxt['bool'][ta] = False
+def determine_final_coverage(agreement):
+    cxt = {}
+    for k1, v1 in agreement.items():
+        cxt[k1] = True
+        for v2 in v1.values():
+            if v2 == False:
+                cxt[k1] = v2
     return cxt
 
-def organization_rule(cxt, org_name):
+def organization_rule(agreement, data):
     """Checks which trade agreements apply to the selected entity
 
     Arguments:
@@ -75,16 +73,23 @@ def organization_rule(cxt, org_name):
     Returns:
         [dictionary] -- Returns updated context dict with analysis (true or false)
     """
-    org = cxt[org_name]
+    model = models.Organization
+    org = data['entities']
+
     try:
-        data = Organization.objects.filter(name=org)
-        for ta in cxt['ta']:
-            cxt = check_if_trade_agreement_applies(ta, cxt, data, org_name)
+        data = model.objects.filter(name=org)
+        for k in agreement.keys():
+            check = data.values_list(k).get()[0]
+            if check is False:
+                agreement[k]['entities'] = False
+            else:
+                agreement[k]['entities'] = True
     except:
         raise ValueError
-    return cxt
+    return agreement
 
-def value_threshold_rule(cxt, value_name, type_name):
+
+def value_threshold_rule(agreement, data):
     """Checks whether the value submitted by the user is less than or greater than the
     value in the trade agreement.
 
@@ -99,20 +104,21 @@ def value_threshold_rule(cxt, value_name, type_name):
     Returns:
         [dictionary] -- Updates context with the analyzed value, either true or false
     """
-    value = int(cxt[value_name])
-    type = cxt[type_name]
+    model = models.ValueThreshold
+    value = int(data['estimated_value'])
+    type = data['type']
     try:
-        for ta in cxt['ta']:
-            check = ValueThreshold.objects.filter(type=type).values_list(ta).get()[0]
+        for k in agreement.keys():
+            check = model.objects.filter(type=type).values_list(k).get()[0]
             if value < check:
-                cxt['ta'][ta][value_name] = False
+                agreement[k]['estimated_value'] = False
             else:
-                cxt['ta'][ta][value_name] = True
+                agreement[k]['estimated_value'] = True
     except:
         raise ValueError
-    return cxt
+    return agreement
 
-def code_rule(cxt, code_name, type_name, org_name):
+def code_rule(agreement, data):
     """Checks if the code selected by the user is covered by each trade agreement.
 
     Arguments:
@@ -127,39 +133,52 @@ def code_rule(cxt, code_name, type_name, org_name):
     Returns:
         [dictionary] -- Returns context with updated analysis
     """
-    value = cxt[code_name]
-    type = cxt[type_name]
-    org = cxt[org_name]
+    code = data['code']
+    commodity = data['type']
+    org = data['entities']
+    data = models.Code.objects.filter(code=code)
 
-    if OrganizationWithCommodityTypeRule.objects.filter(org_fk=org).exists():
-        defence_rule = OrganizationWithCommodityTypeRule.objects.filter(org_fk=org).values_list('goods_rule').get()[0]
-        tc_rule = OrganizationWithCommodityTypeRule.objects.filter(org_fk=org).values_list('tc').get()[0]
-        if type == 'Goods' and defence_rule:
-            data = Code.objects.filter(code=value)
-            for ta in cxt['ta']:
-                cxt = check_if_trade_agreement_applies(ta, cxt, data, code_name)
-        if type == 'Construction' and tc_rule:
-            for ta in cxt['ta']:
-                if ta == 'cfta':
-                    pass
-                else:
-                    cxt['ta'][ta][code_name] = False
+    if models.OrgTypeRule.objects.filter(org_fk=org).exists():
+        goods_rule = models.OrgTypeRule.objects.filter(org_fk=org).values_list('goods').get()[0]
+        tc_rule = models.OrgTypeRule.objects.filter(org_fk=org).values_list('construction').get()[0]
+        if str(commodity) == 'Goods' and goods_rule:
+            for k in agreement.keys():
+                check = data.values_list(k).get()[0]
+                agreement[k]['code'] = check
+            return agreement
+        if str(commodity) == 'Construction' and tc_rule:
+            for k in agreement.keys():
+                check = models.OrgTypeRule.objects.filter(org_fk=org).values_list(k).get()[0]
+                if check is True:
+                    agreement[k]['code'] = False
+                elif check is False:
+                    agreement[k]['code'] = True
+            return agreement
 
-    if OrganizationWithCommodityCodeRule.objects.filter(org_fk=org).filter(code_fk=value).exists():
-        data = OrganizationWithCommodityCodeRule.objects.filter(org_fk=org).filter(code_fk=value)
-        for ta in cxt['ta']:
-            cxt = check_if_trade_agreement_applies(ta, cxt, data, code_name)
+    if models.CodeOrganizationExclusion.objects.filter(org_fk=org).filter(code_fk=code).exists():
+        for k in agreement.keys():
+            check = data.values_list(k).get()[0]
+            if check is True:
+                agreement[k]['code'] = False
+            elif check is False:
+                agreement[k]['code'] = True
+        return agreement
 
-    if str(type) == 'Goods':
-        pass
+    if str(commodity) == 'Goods':
+        for k in agreement.keys():
+            agreement[k]['code'] = True
     else:
-        data = Code.objects.filter(code=value)
-        for ta in cxt['ta']:
-            cxt = check_if_trade_agreement_applies(ta, cxt, data, code_name)
+        for k in agreement.keys():
+            check = data.values_list(k).get()[0]
+            agreement[k]['code'] = check
 
-    return cxt     
+    return agreement
 
-def exceptions_rule(cxt, exception_name, model):
+
+
+  
+
+def exceptions_rule(agreement, data, exception):
     """This function goes through the exceptions that the user selected and checks which trade agreements
     apply to each exception.  If a user selects a trade agreements and an exception applies then that
     agreement is set to False.
@@ -175,23 +194,25 @@ def exceptions_rule(cxt, exception_name, model):
     Returns:
         Dictionary -- Returns updated context dictionary with analysis
     """
-    if cxt[exception_name]:
-        value = cxt[exception_name]
-        if value != ['None']:
-            try:
-                for ta in cxt['ta']:
-                    for ex in value:
-                        check = model.objects.filter(name=ex).values_list(ta).get()[0]
+    try:
+        for exception_name, model in exception.items():
+            exception = data[exception_name]
+            if exception:
+                for k in agreement.keys():
+                    for ex in exception:
+                        check = model.objects.filter(name=ex).values_list(k).get()[0]
+                        agreement[k][exception_name] = check
+                        if (agreement[k][exception_name] is False):
+                            pass
+                        elif (agreement[k][exception_name] is True) and (check is False):
+                            pass
+                        elif (agreement[k][exception_name] is True) and (check is True):
+                            agreement[k][exception_name] = False
+            else:
+                for k in agreement.keys():
+                    agreement[k][exception_name] = True
+    except:
+        pass
 
-                        if (cxt['ta'][ta][exception_name] is False):
-                            pass
-                        elif (cxt['ta'][ta][exception_name] is True) and (check is False):
-                            pass
-                        elif (cxt['ta'][ta][exception_name] is True) and (check is True):
-                            cxt['ta'][ta][exception_name] = False
-            except:
-                raise ValueError
-    else:
-        cxt[exception_name]= ['None']
-    return cxt
+    return agreement
 

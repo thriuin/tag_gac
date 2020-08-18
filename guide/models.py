@@ -1,6 +1,10 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+TYPE_CHOICES = [('1', 'GOODS'), 
+                ('2', 'SERVICES'), 
+                ('3', 'CONSTRUCTION')]
+
 
 class BooleanTradeAgreement(models.Model):
     """
@@ -101,14 +105,19 @@ class CommodityType(models.Model):
     Inherits from :model:`guide.Language`
     This is for Goods, Services, Construction
     '''
-    id = models.AutoField(primary_key=True)
+    c_type = models.CharField(
+        choices=TYPE_CHOICES,
+        max_length = 128,
+        default = '',
+        unique = True,
+        verbose_name = _('Commodity Type')
+    )
     commodity_type = models.CharField(
         max_length = 128,
         default = '',
         unique = True,
         verbose_name = _('Commodity Type')
     )
-
 
     class Meta:
         ordering = ['commodity_type']
@@ -142,7 +151,7 @@ class Code(BooleanTradeAgreement):
         return self.code
 
 
-class OrganizationWithCommodityTypeRule(BooleanTradeAgreement):
+class OrgTypeRule(BooleanTradeAgreement):
 
     org_fk = models.ForeignKey(
         Organization,
@@ -151,22 +160,24 @@ class OrganizationWithCommodityTypeRule(BooleanTradeAgreement):
         verbose_name = _('Org fk en ca'),
         on_delete = models.CASCADE
     )
-    tc = models.BooleanField(
+    construction = models.BooleanField(
         default = False,
         verbose_name = _('Department of Transport has a specific commodity coverage for Construction Services'),
         blank = False
     )
-    goods_rule = models.BooleanField(
+    goods = models.BooleanField(
         default = False,
         verbose_name = _('The Department of National Defence, the Canadian Coast Guard, and the Royal Canadian Mounted Police have specific commodity code coverage for goods.'),
         blank = False
     )
 
     def __str__(self):
-        return f"{self.org_fk} - Goods Rule: {self.goods_rule} Transport Rule: {self.tc}"
+        return f"{self.org_fk} - Goods Rule: {self.goods} Transport Rule: {self.construction}"
 
-class OrganizationWithCommodityCodeRule(BooleanTradeAgreement):
 
+
+
+class CodeOrganizationExclusion(BooleanTradeAgreement):
     code_fk = models.ForeignKey(
         Code,
         to_field = 'code',
@@ -183,7 +194,7 @@ class OrganizationWithCommodityCodeRule(BooleanTradeAgreement):
     )
 
     def __str__(self):
-        return f"{self.org_fk} - {self.code_fk}"
+        return f"{self.org_fk} - {self.code_fk} - Exclusion"
 
 
 class ValueThreshold(models.Model):

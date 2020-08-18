@@ -14,9 +14,6 @@ general_exceptions_label = _("Exceptions")
 limited_tendering_label = _("Limited Tendering Reasons")
 cfta_exceptions_label = _("CFTA Exceptions")
 
-# class MyModelChoiceField(forms.ModelMultipleChoiceField):
-#     def label_from_instance(self, obj):
-#         return obj
 
 class RequiredFieldsForm(forms.Form):
 

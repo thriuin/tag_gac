@@ -2,14 +2,36 @@
 {% load i18n %}
 {% load static %}
 {% load humanize %}
+{% get_current_language as LANGUAGE_CODE %}
+<!-- Current language: {{ LANGUAGE_CODE }} -->
 
 {% block intro %}
-<h2>{% trans "Step 4. Limited Tendering Reasons" %}</h2>
-<p>{% trans "Based on the responses provided in prior steps, the procurement appears to be covered by one or more of the applicable trade agreements. " %}</p> 
-<p>{% trans "If a procurement is covered by the trade agreement(s), the contracting authority is to follow the open or selective tendering procurement obligations prescribed by the covered trade agreement(s). If there are any deviations from the open or selective tendering obligations of the covered trade agreement(s), the contracting authority must consider whether one or more limited tendering reason is applicable to the procurement in order to determine whether a limited tendering approach can be used. The tool has pre-determined which limited tendering reasons exists within the applicable trade agreements based on the inputs already provided." %}</p>
+<h2>
+    {# Translators: Limited Tendering.  Subtitle Step #}
+    {% trans "Step 4. Limited Tendering Reasons" %}
+</h2>
+<p>
+    {# Translators: Limited Tendering.  First paragraph #}
+    {% trans "Based on the responses provided in prior steps, the procurement appears to be covered by one or more of the applicable trade agreements. " %}
+</p> 
+<p>
+    {# Translators: Limited Tendering. Second paragraph #}
+    {% trans "If a procurement is covered by the trade agreement(s), the contracting authority is to follow the open or selective tendering procurement obligations prescribed by the covered trade agreement(s). If there are any deviations from the open or selective tendering obligations of the covered trade agreement(s), the contracting authority must consider whether one or more limited tendering reason is applicable to the procurement in order to determine whether a limited tendering approach can be used. The tool has pre-determined which limited tendering reasons exists within the applicable trade agreements based on the inputs already provided." %}
+</p>
 <br>
-<p><b>{% trans "Instructions: " %}</b>{% trans "If the procurement strategy is open tendering or selective tendering, click the “Next” button and leave the fields below blank. " %}</p>
-<p>{% trans "If a limited tendering strategy is being considered, review the summary list of limited tendering reasons found in the applicable trade agreements and select the reason(s) that apply and click the “Next” button. If none of the limited tendering reasons apply, leave the fields blank. " %}</p>
+<p>
+    
+    <b>
+        {# Translators: Limited Tendering. Subtitle Instructions #}
+        {% trans "Instructions: " %}
+    </b>
+    {# Translators: Limited Tendering. First section instructions #}
+    {% trans "If the procurement strategy is open tendering or selective tendering, click the “Next” button and leave the fields below blank. " %}
+</p>
+<p>
+    {# Translators: Limited Tendering. Second section instructions #}
+    {% trans "If a limited tendering strategy is being considered, review the summary list of limited tendering reasons found in the applicable trade agreements and select the reason(s) that apply and click the “Next” button. If none of the limited tendering reasons apply, leave the fields blank. " %}
+</p>
 {% endblock %}
 {% block form %}
 <form action="" method="POST">
@@ -46,9 +68,30 @@
             <h3 class="wb-inv">{% trans "Document navigation" %}</h3>
             <ul class="pager">
                 <div align="right">
-                    <button class="btn btn-default" type="submit" value = "{{ wizard.steps.first }}" name="wizard_goto_step"><span class="wb-inv">{% trans "Go to first step." %}</span>{% trans "Go to First Step" %}</button>
-                    <button class="btn btn-default" type="submit" value = "{{ wizard.steps.prev }}" name="wizard_goto_step"><span class="wb-inv">{% trans "Go to previous step." %}</span>{% trans "Previous" %}</button>
-                    <button class="btn btn-default" type="submit" value="Next" name="submit-form-button"><span class="wb-inv">{% trans "Go to next step." %}</span>{% trans "Next" %}</button>
+                    <button class="btn btn-default" type="submit" value = "{{ wizard.steps.first }}" name="wizard_goto_step">
+                        <span class="wb-inv">
+                            {# Translators: Limited Tendering. Hidden text back to step 1 #}
+                            {% trans "Go to first step." %}
+                        </span>
+                        {# Translators: Limited Tendering. Visible text back to step 1 #}
+                        {% trans "Go to First Step" %}
+                    </button>
+                    <button class="btn btn-default" type="submit" value = "{{ wizard.steps.prev }}" name="wizard_goto_step">
+                        <span class="wb-inv">
+                            {# Translators: Limited Tendering. Hidden text back to prev step #}
+                            {% trans "Go to previous step." %}
+                        </span>
+                        {# Translators: Limited Tendering. Visible text back to prev step #}
+                        {% trans "Previous" %}
+                    </button>
+                    <button class="btn btn-default" type="submit" value="Next" name="submit-form-button">
+                        <span class="wb-inv">
+                            {# Translators: Limited Tendering. Hidden text go to next step #}
+                            {% trans "Go to next step." %}
+                        </span>
+                        {# Translators: Limited Tendering. Visible text go to next step #}
+                        {% trans "Next" %}
+                    </button>
                 </div>
             </ul>
         </nav>
@@ -56,10 +99,26 @@
 </form>
 {% endblock %}
 {% block footnotes %}
-<h3>{% trans "Caveat" %}</h3>
+<h3>
+    {# Translators: Limited Tendering. Subtitle caveat #}
+    {% trans "Caveat" %}
+</h3>
 <ul>
-    <li>{% trans "In order to proceed with a limited tendering procurement strategy, a valid limited tendering reason must exist in each of the covered trade agreement(s). The applicable limited tendering rationale used to justify the procurement strategy must be documented on the procurement file." %}</li>
-    <li>{% trans "If there is any discrepancy between the list of limited tendering reasons and the text of the trade agreement(s), refer to the trade agreement(s)." %}</li>
-    <li>{% trans "The numbers in front of each limited tendering reason corresponds to the data values used for proactive disclosure of contract reporting.  For more information, refer to the " %}<a href="https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=14676">{% trans "Guidelines on the Proactive Disclosure of Contracts" %}</a></li>
+    <li>
+        {# Translators: Limited Tendering. First section caveat #}
+        {% trans "In order to proceed with a limited tendering procurement strategy, a valid limited tendering reason must exist in each of the covered trade agreement(s). The applicable limited tendering rationale used to justify the procurement strategy must be documented on the procurement file." %}
+    </li>
+    <li>
+        {# Translators: Limited Tendering. Second section caveat #}
+        {% trans "If there is any discrepancy between the list of limited tendering reasons and the text of the trade agreement(s), refer to the trade agreement(s)." %}
+    </li>
+    <li>
+        {# Translators: Limited Tendering. Third section caveat, part 1 #}
+        {% trans "The numbers in front of each limited tendering reason corresponds to the data values used for proactive disclosure of contract reporting.  For more information, refer to the " %}
+        <a href="https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=14676">
+            {# Translators: Limited Tendering. Third section caveat, part 2 #}
+            {% trans "Guidelines on the Proactive Disclosure of Contracts" %}
+        </a>
+    </li>
 </ul>
 {% endblock %}
