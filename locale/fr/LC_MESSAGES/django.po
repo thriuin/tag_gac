@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-30 09:38-0400\n"
+"POT-Creation-Date: 2020-08-17 05:44-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,11 +20,11 @@ msgstr ""
 
 #: .\guide\forms.py:9
 msgid "What is the total estimated value of the procurement? "
-msgstr ""
+msgstr "This text in french"
 
 #: .\guide\forms.py:10
 msgid "Who is the procuring entity?"
-msgstr ""
+msgstr "Text in french"
 
 #: .\guide\forms.py:11
 msgid "What is the procurement commodity type?"
@@ -48,84 +48,84 @@ msgstr ""
 msgid "CFTA Exceptions"
 msgstr ""
 
-#: .\guide\models.py:20 .\guide\models.py:197
+#: .\guide\models.py:24 .\guide\models.py:208
 msgid "CCFTA"
 msgstr ""
 
-#: .\guide\models.py:25 .\guide\models.py:202
+#: .\guide\models.py:29 .\guide\models.py:213
 msgid "CCoFTA"
 msgstr ""
 
-#: .\guide\models.py:30 .\guide\models.py:207
+#: .\guide\models.py:34 .\guide\models.py:218
 msgid "CHFTA"
 msgstr ""
 
-#: .\guide\models.py:35 .\guide\models.py:212
+#: .\guide\models.py:39 .\guide\models.py:223
 msgid "CPaFTA"
 msgstr ""
 
-#: .\guide\models.py:40 .\guide\models.py:217
+#: .\guide\models.py:44 .\guide\models.py:228
 msgid "CPFTA"
 msgstr ""
 
-#: .\guide\models.py:45 .\guide\models.py:222
+#: .\guide\models.py:49 .\guide\models.py:233
 msgid "CKFTA"
 msgstr ""
 
-#: .\guide\models.py:50 .\guide\models.py:227
+#: .\guide\models.py:54 .\guide\models.py:238
 msgid "CUFTA"
 msgstr ""
 
-#: .\guide\models.py:55 .\guide\models.py:232
+#: .\guide\models.py:59 .\guide\models.py:243
 msgid "WTO-AGP"
 msgstr ""
 
-#: .\guide\models.py:60 .\guide\models.py:237
+#: .\guide\models.py:64 .\guide\models.py:248
 msgid "CETA"
 msgstr ""
 
-#: .\guide\models.py:65 .\guide\models.py:242
+#: .\guide\models.py:69 .\guide\models.py:253
 msgid "CPTPP"
 msgstr ""
 
-#: .\guide\models.py:70 .\guide\models.py:247
+#: .\guide\models.py:74 .\guide\models.py:258
 msgid "CFTA"
 msgstr ""
 
-#: .\guide\models.py:88
+#: .\guide\models.py:92
 msgid "Entities"
 msgstr ""
 
-#: .\guide\models.py:109 .\guide\models.py:131 .\guide\models.py:257
-#: .\templates\done.html:72 .\templates\pdf.html:93
+#: .\guide\models.py:113 .\guide\models.py:119 .\guide\models.py:140
+#: .\guide\models.py:268 .\templates\done.html:72 .\templates\pdf.html:93
 msgid "Commodity Type"
 msgstr ""
 
-#: .\guide\models.py:138
+#: .\guide\models.py:147
 msgid "Code"
 msgstr ""
 
-#: .\guide\models.py:151 .\guide\models.py:181
+#: .\guide\models.py:160 .\guide\models.py:192
 msgid "Org fk en ca"
 msgstr ""
 
-#: .\guide\models.py:156
+#: .\guide\models.py:165
 msgid ""
 "Department of Transport has a specific commodity coverage for Construction "
 "Services"
 msgstr ""
 
-#: .\guide\models.py:161
+#: .\guide\models.py:170
 msgid ""
 "The Department of National Defence, the Canadian Coast Guard, and the Royal "
 "Canadian Mounted Police have specific commodity code coverage for goods."
 msgstr ""
 
-#: .\guide\models.py:174
+#: .\guide\models.py:185
 msgid "Code FK en ca"
 msgstr ""
 
-#: .\guide\models.py:273 .\guide\models.py:288 .\guide\models.py:302
+#: .\guide\models.py:284 .\guide\models.py:299 .\guide\models.py:313
 msgid "Description"
 msgstr ""
 
@@ -393,9 +393,10 @@ msgstr ""
 msgid ", refer to the text of the agreement."
 msgstr ""
 
+#. Translators: This text is for doc navigation to submit the form on the first page
 #: .\templates\cfta_exceptions.html:46 .\templates\done.html:161
 #: .\templates\exceptions.html:45 .\templates\limited_tendering.html:46
-#: .\templates\mandatory_elements.html:40 .\templates\pdf.html:182
+#: .\templates\mandatory_elements.html:55 .\templates\pdf.html:182
 msgid "Document navigation"
 msgstr ""
 
@@ -418,13 +419,15 @@ msgstr ""
 msgid "Previous"
 msgstr ""
 
+#. Translators: This is hidden text for the submit button
 #: .\templates\cfta_exceptions.html:51 .\templates\exceptions.html:48
-#: .\templates\limited_tendering.html:51 .\templates\mandatory_elements.html:45
+#: .\templates\limited_tendering.html:51 .\templates\mandatory_elements.html:64
 msgid "Go to next step."
 msgstr ""
 
+#. Translators: This is the text for the submit button
 #: .\templates\cfta_exceptions.html:51 .\templates\exceptions.html:48
-#: .\templates\limited_tendering.html:51
+#: .\templates\limited_tendering.html:51 .\templates\mandatory_elements.html:61
 msgid "Next"
 msgstr ""
 
@@ -444,8 +447,9 @@ msgid ""
 "agreement(s) apply to the procurement:"
 msgstr ""
 
+#. Translators: This is the second section of text on the first page of the form, starts Important:
 #: .\templates\done.html:25 .\templates\done.html:112
-#: .\templates\exceptions.html:8 .\templates\mandatory_elements.html:9
+#: .\templates\exceptions.html:8 .\templates\mandatory_elements.html:12
 #: .\templates\pdf.html:46 .\templates\pdf.html:133
 msgid "Important: "
 msgstr ""
@@ -648,8 +652,9 @@ msgid ""
 "include the specific exception or exclusion."
 msgstr ""
 
+#. Translators: This text is the title of the Caveat section of the first page
 #: .\templates\exceptions.html:57 .\templates\limited_tendering.html:59
-#: .\templates\mandatory_elements.html:56
+#: .\templates\mandatory_elements.html:78
 msgid "Caveat"
 msgstr ""
 
@@ -670,7 +675,8 @@ msgstr ""
 msgid "Guidelines on the Proactive Disclosure of Contracts"
 msgstr ""
 
-#: .\templates\exceptions.html:64 .\templates\mandatory_elements.html:66
+#. Translators: This text is the title for the footnotes section of the first page of the form
+#: .\templates\exceptions.html:64 .\templates\mandatory_elements.html:106
 msgid "Footnotes"
 msgstr ""
 
@@ -773,7 +779,8 @@ msgid ""
 "information, refer to the "
 msgstr ""
 
-#: .\templates\mandatory_elements.html:7
+#. Translators: This is the first section of text on the first page of the form
+#: .\templates\mandatory_elements.html:9
 msgid ""
 "The Government of Canada is a party to free trade agreements some of which "
 "sets out obligations for government procurement. This tool is developed to "
@@ -783,9 +790,9 @@ msgid ""
 "coverage.  It is expected that the user of this tool is familiar with "
 "federal government procurement obligations under Canada’s domestic and "
 "international trade agreements."
-msgstr ""
+msgstr "This message en francais"
 
-#: .\templates\mandatory_elements.html:9
+#: .\templates\mandatory_elements.html:12
 msgid ""
 "The results provided by this tool is a suggestion only. It is still the "
 "responsibility of the user to identify actual trade agreement coverage based "
@@ -793,49 +800,58 @@ msgid ""
 "exclusions that would apply to the entire procurement. "
 msgstr ""
 
-#: .\templates\mandatory_elements.html:11
+#. Translators: This text states Step 1 for the first page of the form
+#: .\templates\mandatory_elements.html:15
 msgid "Step 1. Basic Procurement Information"
 msgstr ""
 
-#: .\templates\mandatory_elements.html:12
+#. Translators: This text is the instructions for the first page of the form
+#: .\templates\mandatory_elements.html:17
 msgid ""
 "Provide a response to the following questions below and click the ‘Next’ "
 "button. Refer to the footnotes at the bottom for helpful hints in answering "
 "the questions."
 msgstr ""
 
-#: .\templates\mandatory_elements.html:24
+#. Translators: This text states which fields are required on the first page of the form
+#: .\templates\mandatory_elements.html:36
 msgid "Required"
 msgstr ""
 
-#: .\templates\mandatory_elements.html:57
+#. Translators: This text is in the caveat section of the first page of the form
+#: .\templates\mandatory_elements.html:82
 msgid ""
 "The following types of procurement have not been factored in this tool. "
 "Users will need to consult the text of Canada’s trade agreement to determine "
 "the application of trade agreement coverage for these procurements:"
 msgstr ""
 
-#: .\templates\mandatory_elements.html:59
+#. Translators: This text is in the caveat section of the first page of the form
+#: .\templates\mandatory_elements.html:87
 msgid "Procurement of goods or services from non-for-profit institutions."
 msgstr ""
 
-#: .\templates\mandatory_elements.html:60
+#. Translators: This text is in the caveat section of the first page of the form
+#: .\templates\mandatory_elements.html:91
 msgid ""
 "Procurement related to an international crossing between Canada and another "
 "country."
 msgstr ""
 
-#: .\templates\mandatory_elements.html:61
+#. Translators: This text is in the caveat section of the first page of the form
+#: .\templates\mandatory_elements.html:95
 msgid "Procurement related to space projects for the Canadian Space Agency."
 msgstr ""
 
-#: .\templates\mandatory_elements.html:62
+#. Translators: This text is in the caveat section of the first page of the form
+#: .\templates\mandatory_elements.html:99
 msgid ""
 "Procurement of satellite communications, earth observations and global "
 "navigation systems for the Canadian Space Agency."
 msgstr ""
 
-#: .\templates\mandatory_elements.html:70
+#. Translators: First section of text of footnotes section first page of the form
+#: .\templates\mandatory_elements.html:113
 msgid ""
 "Enter the maximum total value of the procurement considering all forms of "
 "remuneration over the entire duration of the contract, including the total "
@@ -846,7 +862,8 @@ msgid ""
 "standing offer."
 msgstr ""
 
-#: .\templates\mandatory_elements.html:75
+#. Translators: Second section of text of footnotes section first page of the form
+#: .\templates\mandatory_elements.html:121
 msgid ""
 "Select the name of the federal department or departmental agency that is the "
 "procuring entity. Note: This tool cannot be used for procurements on behalf "
@@ -854,18 +871,21 @@ msgid ""
 "Schedules I, I.1 or II of the  "
 msgstr ""
 
-#: .\templates\mandatory_elements.html:75
+#. Translators: Part of second section of text of footnotes section first page of the form
+#: .\templates\mandatory_elements.html:124
 msgid "Financial Administration Act."
 msgstr ""
 
-#: .\templates\mandatory_elements.html:80
+#. Translators: Third section of text of footnotes section first page of the form
+#: .\templates\mandatory_elements.html:133
 msgid ""
 "Select the commodity type. If a procurement includes more than one commodity "
 "type (e.g. a combination of goods and services), select the one that makes "
 "up the largest portion of the estimated contract value."
 msgstr ""
 
-#: .\templates\mandatory_elements.html:85
+#. Translators: Part of fourth section of text of footnotes section first page of the form
+#: .\templates\mandatory_elements.html:141
 msgid ""
 "Select the applicable commodity code. If multiple commodity codes apply to a "
 "procurement, select the commodity code that represents the largest portion "
@@ -873,24 +893,28 @@ msgid ""
 "entire procurement.  "
 msgstr ""
 
-#: .\templates\mandatory_elements.html:86
+#. Translators: Part of fourth section of text of footnotes section first page of the form
+#: .\templates\mandatory_elements.html:145
 msgid ""
 "Note: The Goods and Services Identification Number commodity codes are based "
 "on the following applicable trade agreement commodity codes used to "
 "determine trade agreement commodity coverage:"
 msgstr ""
 
-#: .\templates\mandatory_elements.html:88
+#. Translators: Part of fourth section of text of footnotes section first page of the form
+#: .\templates\mandatory_elements.html:150
 msgid "For goods, the Federal Supply Classification (FSC) is used. "
 msgstr ""
 
-#: .\templates\mandatory_elements.html:89
+#. Translators: Part of fourth section of text of footnotes section first page of the form
+#: .\templates\mandatory_elements.html:154
 msgid ""
 "For services, the Common Classification System (CCS) and the United Nations "
 "Provisional Central Product Classification (CPC) system are used.  "
 msgstr ""
 
-#: .\templates\mandatory_elements.html:90
+#. Translators: Part of fourth section of text of footnotes section first page of the form
+#: .\templates\mandatory_elements.html:158
 msgid ""
 "For construction services, the United Nations Provisional Central Product "
 "Classification (CPC) is used."

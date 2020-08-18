@@ -25,127 +25,253 @@
     </style>
 </head>
 {% block main-content %}
-
     {# --- Main title #}
     {% block main-content-title %}
         <main role="main" property="mainContentOfPage" class="container">
-            <h1 property="name" id="wb-cont" dir="ltr">{% trans "Trade Agreement Determination Tool" %}</h1>
+            <h1 property="name" id="wb-cont" dir="ltr">
+                {# Translators: Results page. Title #}
+                {% trans "Trade Agreement Determination Tool" %}
+            </h1>
             <div>
                 <div class="mwsgeneric-base-html parbase section">     
-                    <p class="gc-byline"><strong>From: <a href="https://www.canada.ca/en/treasury-board-secretariat.html">{% trans "Treasury Board of Canada Secretariat" %}</a></strong></p>
+                    <p class="gc-byline">
+                        <strong>
+                            {# Translators: Results page. From TBS... #}
+                            {% trans "From:" %} 
+                            <a href="https://www.canada.ca/en/treasury-board-secretariat.html">
+                                {# Translators: Results page. Link to TBS #}
+                                {% trans "Treasury Board of Canada Secretariat" %}
+                            </a>
+                        </strong>
+                    </p>
                 </div>
             </div>
         </main>
     {% endblock %}
     {% block intro %}
         <section class="alert alert-success">
-            <h2>{% trans "Suggested Result" %}</h2>
-            <p>{% trans "Based on the information that was provided (e.g. Total Estimated Value, Procuring Entity, Commodity Type and Commodity Code), the following trade agreement(s) apply to the procurement:"%}</p>
+            <h2>
+                {# Translators: Results page. Subtitle suggest result #}
+                {% trans "Suggested Result" %}
+            </h2>
+            <p>
+                {# Translators: Results page. First section of suggest result #}
+                {% trans "Based on the information that was provided (e.g. Total Estimated Value, Procuring Entity, Commodity Type and Commodity Code), the following trade agreement(s) apply to the procurement:"%}
+            </p>
             <p id='output'>{{ output }}</p>
             <hr>
-            <p><b>{% trans "Important: " %}</b>{% trans " The results provided by this tool is a suggestion only. It is the responsibility of the user to determine the actual trade agreement coverage based on the full considerations of the procurement including the exceptions and exclusions that would apply to the entire procurement. If there are any discrepancies between the suggested coverage and actual coverage based on the text of the trade agreements, the text of the trade agreements take precedence. " %}</p>
+            <p>
+                <b>
+                    {# Translators: Results page.  Important notice #}
+                    {% trans "Important: " %}
+                </b>
+                {# Translators: Results page. Text for important section #}
+                {% trans " The results provided by this tool is a suggestion only. It is the responsibility of the user to determine the actual trade agreement coverage based on the full considerations of the procurement including the exceptions and exclusions that would apply to the entire procurement. If there are any discrepancies between the suggested coverage and actual coverage based on the text of the trade agreements, the text of the trade agreements take precedence. " %}
+            </p>
         </section>
         <hr>
         <ul class="list-unstyled">
             <li>
                 <details>
                     <summary>
-                        <h3>{% trans "Abbreviation Reference" %}</h3>
+                        <h3>
+                            {# Translators: Results page. Subtitle Abreviation #}
+                            {% trans "Abbreviation Reference" %}
+                        </h3>
                     </summary>
                     <ul>
-                        <li>{% trans "WTO-AGP: World Trade Organization - Agreement on Government Procurement" %}</li>
-                        <li>{% trans "CCFTA: Canada-Chile Free Trade Agreement" %}</li>
-                        <li>{% trans "CPFTA: Canada-Peru Free Trade Agreement" %}</li>
-                        <li>{% trans "CCOFTA: Canada-Colombia Free Trade Agreement" %}</li>
-                        <li>{% trans "CPAFTA: Canada-Panama Free Trade Agreement" %}</li>
-                        <li>{% trans "CHFTA: Canada-Honduras Free Trade Agreement" %}</li>
-                        <li>{% trans "CKFTA: Canada-Korea Free Trade Agreement" %}</li>
-                        <li>{% trans "CFTA: Canadian Free Trade Agreement" %}</li>
-                        <li>{% trans "CETA: Comprehensive Economic Trade Agreement" %}</li>
-                        <li>{% trans "CPTPP: Comprehensive and Progressive Agreement for Trans-Pacific Partnership" %}</li>
-                        <li>{% trans "CUFTA: Canada-Ukraine Free Trade Agreement" %}</li>
+                        <li>
+                            {# Translators: Results page. First abbreviation #}
+                            {% trans "WTO-AGP: World Trade Organization - Agreement on Government Procurement" %}
+                        </li>
+                        <li>
+                            {# Translators: Results page. Second abbreviation #}
+                            {% trans "CCFTA: Canada-Chile Free Trade Agreement" %}
+                        </li>
+                        <li>
+                            {# Translators: Results page. Third abbreviation #}
+                            {% trans "CPFTA: Canada-Peru Free Trade Agreement" %}
+                        </li>
+                        <li>
+                            {# Translators: Results page. Fourth abbreviation #}
+                            {% trans "CCOFTA: Canada-Colombia Free Trade Agreement" %}
+                        </li>
+                        <li>
+                            {# Translators: Results page. Fifth abbreviation #}
+                            {% trans "CPAFTA: Canada-Panama Free Trade Agreement" %}
+                        </li>
+                        <li>
+                            {# Translators: Results page. Sixth abbreviation #}
+                            {% trans "CHFTA: Canada-Honduras Free Trade Agreement" %}
+                        </li>
+                        <li>
+                            {# Translators: Results page. Seventh abbreviation #}
+                            {% trans "CKFTA: Canada-Korea Free Trade Agreement" %}
+                        </li>
+                        <li>
+                            {# Translators: Results page. Eighth abbreviation #}
+                            {% trans "CFTA: Canadian Free Trade Agreement" %}
+                        </li>
+                        <li>
+                            {# Translators: Results page. Ninth abbreviation #}
+                            {% trans "CETA: Comprehensive Economic Trade Agreement" %}
+                        </li>
+                        <li>
+                            {# Translators: Results page. Tenth abbreviation #}
+                            {% trans "CPTPP: Comprehensive and Progressive Agreement for Trans-Pacific Partnership" %}
+                        </li>
+                        <li>
+                            {# Translators: Results page. Eleventh abbreviation #}
+                            {% trans "CUFTA: Canada-Ukraine Free Trade Agreement" %}
+                        </li>
                     </ul>
                 </details>
             </li>
             <li>
                 <details>
                     <summary>
-                        <h3>{% trans "Summary" %}</h3>
+                        <h3>
+                            {# Translators: Results page. Subtitle Summary #}
+                            {% trans "Summary" %}
+                        </h3>
                     </summary>
                     <table class="table table-bordered table-condensed">
-                        <p>{% trans "The table provides a summary of the user inputs entered to generate the result."%}</p>
+                        <p>
+                            {# Translators: Results page. First section of summary #}
+                            {% trans "The table provides a summary of the user inputs entered to generate the result."%}
+                        </p>
                         <thead>
                             <tr class="active"> 
-                                <th scope="col">{% trans "Categories" %}</th>
-                                <th scope="col">{% trans "Values" %}</th>
+                                <th scope="col">
+                                    {# Translators: Results page. Summary, Column label #}
+                                    {% trans "Categories" %}
+                                </th>
+                                <th scope="col">
+                                    {# Translators: Results page. Summary, Column label #}
+                                    {% trans "Values" %}
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>{% trans "Total Estimated Value" %}</td>
-                                <td class="text-left">{{ estimated_value|intcomma }}</td>
+                                <td>
+                                    {# Translators: Results page. Summary, Row label #}
+                                    {% trans "Total Estimated Value" %}
+                                </td>
+                                <td class="text-left">
+                                    {{ estimated_value|intcomma }}
+                                </td>
                             </tr>
                             <tr>
-                                <td>{% trans "Procuring Entity" %}</td>
-                                <td class="text-left">{{ entities }}</td>
+                                <td>
+                                    {# Translators: Results page. Summary, Row label #}
+                                    {% trans "Procuring Entity" %}
+                                </td>
+                                <td class="text-left">
+                                    {{ entities }}
+                                </td>
                             </tr>
                             <tr>
-                                <td>{% trans "Commodity Type" %}</td>
-                                <td class="text-left">{{ type }}</td>
+                                <td>
+                                    {# Translators: Results page. Summary, Row label #}
+                                    {% trans "Commodity Type" %}
+                                </td>
+                                <td class="text-left">
+                                    {{ type }}
+                                </td>
                             </tr>
                             <tr>
-                                <td>{% trans "Commodity Code" %}</td>
-                                <td class="text-left">{{ code }}</td>
+                                <td>
+                                    {# Translators: Results page. Summary, Row label #}
+                                    {% trans "Commodity Code" %}
+                                </td>
+                                <td class="text-left">
+                                    {{ code }}
+                                </td>
                             </tr>
                             <br>
                             <tr>
-                                <td>{% trans "Exceptions and Exclusions" %}</td>
+                                <td>
+                                    {# Translators: Results page. Summary, Row label #}
+                                    {% trans "Exceptions and Exclusions" %}
+                                </td>
                                 <td class="text-left">
                                     {% for ex in exceptions %}
                                         <li>{{ ex }}</li>
-                                    {% empty %}
-                                        <li>{% trans "None" %}</li>
                                     {% endfor %}
                                 </td>
                             </tr>
                             <tr>
-                                <td>{% trans "CFTA Exceptions" %}</td>
+                                <td>
+                                    {# Translators: Results page. Summary, Row label #}
+                                    {% trans "CFTA Exceptions" %}
+                                </td>
                                 <td class="text-left">
                                     {% for ce in cfta_exceptions %}
                                         <li>{{ ce }}</li>
-                                    {% empty %}
-                                        <li>{% trans "None" %}</li>
                                     {% endfor %}
                                 </td>
                             </tr>
                             <tr>
-                                <td>{% trans "Limited Tendering Reasons" %}</td>
+                                <td>
+                                    {# Translators: Results page. Summary, Row label #}
+                                    {% trans "Limited Tendering Reasons" %}
+                                </td>
                                 <td class="text-left">
                                     {% for lt in limited_tendering %}
                                         <li>{{ lt }}</li>
-                                    {% empty %}
-                                        <li>{% trans "None" %}</li>
                                     {% endfor %}
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                    <p><b>{% trans "Important: " %}</b>{% trans "If the Limited Tendering Reason value is “None”, the covered procurement must use an open or selective tendering process to ensure that Canada complies with its trade agreement tendering obligations." %}</p>
-                    <p>{% trans "For more information on the trade agreement obligations required for open tendering and selective tendering, refer to the text of the applicable trade agreements." %}</p>
+                    <p>
+                        <b>
+                            {# Translators: Results page. Subtitle Important #}
+                            {% trans "Important: " %}
+                        </b>
+                        {# Translators: Results page. First section of text for Important #}
+                        {% trans "If the Limited Tendering Reason value is “None”, the covered procurement must use an open or selective tendering process to ensure that Canada complies with its trade agreement tendering obligations." %}
+                    </p>
+                    <p>
+                        {# Translators: Results page. Second section of text for Important #}
+                        {% trans "For more information on the trade agreement obligations required for open tendering and selective tendering, refer to the text of the applicable trade agreements." %}
+                    </p>
                 </details>
             </li>
             <li>
                 <details>
                     <summary>
-                        <h3>{% trans "Details" %}</h3>
+                        <h3>
+                            {# Translators: Results page. Subtitle Details #}
+                            {% trans "Details" %}
+                        </h3>
                     </summary>
-                    <p>{% trans "The tables below provide details on the following series of conditions used to determine coverage for each trade agreement. " %}</p>
+                    <p>
+                        {# Translators: Results page. First section of text for details #}
+                        {% trans "The tables below provide details on the following series of conditions used to determine coverage for each trade agreement. " %}
+                    </p>
                     <ul>
-                        <li>{% trans "Estimated Value - 'True' indicates that the estimated value is equal to or greater than the dollar threshold for the trade agreement.  'False' indicates the estimated value is less than the dollar threshold for the trade agreement." %}</li>
-                        <li>{% trans "Entities - 'True' indicates the entity is covered under the trade agreement.  'False' indicates the entity is not covered under the specific trade agreement." %}</li>
-                        <li>{% trans "Commodity Code - 'True' indicates the commodity code is covered under the trade agreement.  'False' indicates the commodity code is not covered under the trade agreement." %}</li>
-                        <li>{% trans "General Exceptions - 'True' indicates no applicable trade agreement exceptions apply. 'False' indicates one or more trade agreement exception(s) apply." %}</li>
-                        <li>{% trans "CFTA Exceptions - 'True' indicates no CFTA exceptions apply.  'False' indicates one or more CFTA exceptions apply.  This only appears for CFTA." %}</li>
+                        <li>
+                            {# Translators: Results page. First explanation of details #}
+                            {% trans "Estimated Value - 'True' indicates that the estimated value is equal to or greater than the dollar threshold for the trade agreement.  'False' indicates the estimated value is less than the dollar threshold for the trade agreement." %}
+                        </li>
+                        <li>
+                            {# Translators: Results page. Second explanation of details #}
+                            {% trans "Entities - 'True' indicates the entity is covered under the trade agreement.  'False' indicates the entity is not covered under the specific trade agreement." %}
+                        </li>
+                        <li>
+                            {# Translators: Results page. Third explanation of details #}
+                            {% trans "Commodity Code - 'True' indicates the commodity code is covered under the trade agreement.  'False' indicates the commodity code is not covered under the trade agreement." %}
+                        </li>
+                        <li>
+                            {# Translators: Results page. Fourth explanation of details #}
+                            {% trans "General Exceptions - 'True' indicates no applicable trade agreement exceptions apply. 'False' indicates one or more trade agreement exception(s) apply." %}
+                        </li>
+                        <li>
+                            {# Translators: Results page. Firth explanation of details #}
+                            {% trans "CFTA Exceptions - 'True' indicates no CFTA exceptions apply.  'False' indicates one or more CFTA exceptions apply.  This only appears for CFTA." %}
+                        </li>
                     </ul>
                     {% for k1, v1 in tables.items %}
                             <ul class="list-unstyled">
@@ -157,8 +283,14 @@
                                         <table class="table table-bordered table-condensed">
                                             <thead>
                                                 <tr class="active">
-                                                    <th scope="col">{% trans "Category" %}</th>
-                                                    <th scope="col">{% trans "Result" %}</th>
+                                                    <th scope="col">
+                                                        {# Translators: Results page. Details, Column label #}
+                                                        {% trans "Category" %}
+                                                    </th>
+                                                    <th scope="col">
+                                                        {# Translators: Results page. Details, Column label #}
+                                                        {% trans "Result" %}
+                                                    </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -182,7 +314,22 @@
                 <h3 class="wb-inv">{% trans "Document navigation" %}</h3>
                 <ul class="pager">
                     <div align="right">
-                        <a class="btn btn-default" href = "{% url 'guide:form_start' %}">{% trans "Go to First Step" %}</a>
+                        <a class="btn btn-default" href = "{% url 'guide:form_start' %}">
+                            <span class="wb-inv">
+                                {# Translators: Results page. Hidden text back to step 1 #}
+                                {% trans "Go to first step." %}
+                            </span>
+                            {# Translators: Results page. Visible text back to step 1 #}
+                            {% trans "Go to First Step" %}
+                        </a>
+                        <a class="btn btn-default" href = "{% url 'guide:open_pdf' %}">
+                            <span class="wb-inv">
+                                {# Translators: Results page.  Hidden text open as pdf #}
+                                {% trans "Go to previous step." %}
+                            </span>
+                            {# Translators: Results page. Visible text open as pdf #}
+                            {% trans "Open as PDF" %}
+                        </a>
                     </div>
                 </ul>
             </nav>

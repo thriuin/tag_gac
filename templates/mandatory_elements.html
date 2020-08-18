@@ -2,14 +2,31 @@
 {% load i18n %}
 {% load static %}
 {% load humanize %}
+{% get_current_language as LANGUAGE_CODE %}
+<!-- Current language: {{ LANGUAGE_CODE }} -->
 
 {% block intro %}
+    {# Translators: First page.  First paragraph #}
     <p>{% trans "The Government of Canada is a party to free trade agreements some of which sets out obligations for government procurement. This tool is developed to assist users in determining which free trade agreements would likely apply to a government procurement by responding to a series of questions about the procurement information that are relevant to determine trade agreement coverage.  It is expected that the user of this tool is familiar with federal government procurement obligations under Canada’s domestic and international trade agreements." %}</p>
     <section class="alert alert-info">
-        <p><b>{% trans "Important: " %}</b>{% trans "The results provided by this tool is a suggestion only. It is still the responsibility of the user to identify actual trade agreement coverage based on the full considerations of the procurement including exceptions and exclusions that would apply to the entire procurement. " %}</p>
+        {# Translators: First page.  Second paragraph #}
+        <p>
+            <b>
+                {# Translators: First page.  Important note #}
+                {% trans "Important: " %}
+            </b>
+            {# Translators: First page.  Third paragraph #}
+            {% trans "The results provided by this tool is a suggestion only. It is still the responsibility of the user to identify actual trade agreement coverage based on the full considerations of the procurement including exceptions and exclusions that would apply to the entire procurement. " %}</p>
     </section>
-    <h2>{% trans "Step 1. Basic Procurement Information" %}</h2>
-    <p>{% trans "Provide a response to the following questions below and click the ‘Next’ button. Refer to the footnotes at the bottom for helpful hints in answering the questions." %}</p>
+    {# Translators: First page. Subtitle Step... #}
+    <h2>
+        {# Translators: First page. Subtitle Step... #}
+        {% trans "Step 1. Basic Procurement Information" %}
+    </h2>
+    <p>
+        {# Translators: First page. Instructions #}
+        {% trans "Provide a response to the following questions below and click the ‘Next’ button. Refer to the footnotes at the bottom for helpful hints in answering the questions." %}
+    </p>
 {% endblock %}
 {% block form %}
 <form action="" id="mandatoryElementsForm" method="POST" novalidate>
@@ -21,6 +38,7 @@
             <label for="{{ ffield.id_for_label }}">
                 {{ ffield.field.label }}	        
                 <strong style="color:#d3080c">
+                    {# Translators: First page.  Required #}
                     ({% trans 'Required' %})
                 </strong>
                 <sup id="table1-fn{{ forloop.counter }}-rf"><a class="fn-lnk" href="#table1-fn{{ forloop.counter }}"><span class="wb-inv">table 1 note </span>{{ forloop.counter }}</a></sup>
@@ -37,12 +55,19 @@
     </div>
     <div class="mwspagination section">
         <nav class="mrgn-bttm-lg">
-            <h3 class="wb-inv">{% trans "Document navigation" %}</h3>
+            <h3 class="wb-inv">
+                {# Translators: First page.  Hidden text.  Doc nav #}
+                {% trans "Document navigation" %}
+            </h3>
             <ul class="pager">
                 <div align="right">
                     <li class="next">
-                        <input type="submit" class="btn btn-default" rel="next" id="submit-form-button" value="Next" novalidate/>
-                        <span class="wb-inv">{% trans "Go to next step." %}</span>
+                        {# Translators: First page.  Visible Submit button text #}
+                        <input type="submit" class="btn btn-default" rel="next" id="submit-form-button" value="{% trans 'Next' %}" novalidate/>
+                        <span class="wb-inv">
+                            {# Translators: First page. Hidden text submit button #}
+                            {% trans "Go to next step." %}
+                        </span>
                     </li>
                 </div>
             </ul>
@@ -53,41 +78,90 @@
 {% endblock %}
 
 {% block footnotes %}
-<h3>{% trans "Caveat" %}</h3>
-<p>{% trans "The following types of procurement have not been factored in this tool. Users will need to consult the text of Canada’s trade agreement to determine the application of trade agreement coverage for these procurements:" %}</p>
+<h3>
+    {# Translators: First page.  Subtitle Caveat #}
+    {% trans "Caveat" %}
+</h3>
+<p>
+    {# Translators: First page. Fist page. First sentence of caveats #}
+    {% trans "The following types of procurement have not been factored in this tool. Users will need to consult the text of Canada’s trade agreement to determine the application of trade agreement coverage for these procurements:" %}
+</p>
 <ul>
-    <li>{% trans "Procurement of goods or services from non-for-profit institutions." %}</li>
-    <li>{% trans "Procurement related to an international crossing between Canada and another country." %}</li>
-    <li>{% trans "Procurement related to space projects for the Canadian Space Agency." %}</li>
-    <li>{% trans "Procurement of satellite communications, earth observations and global navigation systems for the Canadian Space Agency." %}</li>
+    <li>
+        {# Translators: First page. First caveat #}
+        {% trans "Procurement of goods or services from non-for-profit institutions." %}
+    </li>
+    <li>
+        {# Translators: First page.  Second caveat #}
+        {% trans "Procurement related to an international crossing between Canada and another country." %}
+    </li>
+    <li>
+        {# Translators: First page. Third caveat #}
+        {% trans "Procurement related to space projects for the Canadian Space Agency." %}
+    </li>
+    <li>
+        {# Translators: First page.  Fourth caveat #}
+        {% trans "Procurement of satellite communications, earth observations and global navigation systems for the Canadian Space Agency." %}
+    </li>
 </ul>
 <section class="wb-fnote">
     <h2 id="table1-fn" class="wb-inv">Table 1 Notes</h2>
-    <h3>{% trans "Footnotes" %}</h3>
+    <h3>
+        {# Translators: First page.  Subtitle Footnotes #}
+        {% trans "Footnotes" %}
+    </h3>
     <dl>
         <dt>Table 1 Note 1</dt>
         <dd id="table1-fn1">
-            <p>{% trans "Enter the maximum total value of the procurement considering all forms of remuneration over the entire duration of the contract, including the total value of any options, fees and applicable taxes. For supply arrangement tenders, input the total estimated value of all potential procurements (contracts) under the supply arrangement. For standing offer tenders, input the total estimated value of all potential call-ups (contracts) against the standing offer." %}</p>
+            <p>
+                {# Translators: First page. First footnote #}
+                {% trans "Enter the maximum total value of the procurement considering all forms of remuneration over the entire duration of the contract, including the total value of any options, fees and applicable taxes. For supply arrangement tenders, input the total estimated value of all potential procurements (contracts) under the supply arrangement. For standing offer tenders, input the total estimated value of all potential call-ups (contracts) against the standing offer." %}
+            </p>
             <p class="fn-rtn"> <a href="#table1-fn1-rf"><span class="wb-inv">Return to table 1 note </span>1<span class="wb-inv"> referrer</span></a> </p>
         </dd>
         <dt>Table 1 Note 2</dt>
         <dd id="table1-fn2">
-            <p>{% trans "Select the name of the federal department or departmental agency that is the procuring entity. Note: This tool cannot be used for procurements on behalf of federal Crown Corporations or other procuring entitles not listed in Schedules I, I.1 or II of the  "%}<i>{% trans "Financial Administration Act." %}</i></p>
+            <p>
+                {# Translators: First page. Second footnote #}
+                {% trans "Select the name of the federal department or departmental agency that is the procuring entity. Note: This tool cannot be used for procurements on behalf of federal Crown Corporations or other procuring entitles not listed in Schedules I, I.1 or II of the  "%}
+                <i>
+                    {# Translators: First page. Section of second footnote #}
+                    {% trans "Financial Administration Act." %}
+                </i>
+            </p>
             <p class="fn-rtn"> <a href="#table1-fn2-rf"><span class="wb-inv">Return to table 1 note </span>2<span class="wb-inv"> referrer</span></a> </p>
         </dd>
         <dt>Table 1 Note 3</dt>
         <dd id="table1-fn3">
-            <p>{% trans "Select the commodity type. If a procurement includes more than one commodity type (e.g. a combination of goods and services), select the one that makes up the largest portion of the estimated contract value." %}</p>
+            <p>
+                {# Translators: First page. Third footnote #}
+                {% trans "Select the commodity type. If a procurement includes more than one commodity type (e.g. a combination of goods and services), select the one that makes up the largest portion of the estimated contract value." %}
+            </p>
             <p class="fn-rtn"> <a href="#table1-fn3-rf"><span class="wb-inv">Return to table 1 note </span>3<span class="wb-inv"> referrer</span></a> </p>
         </dd>
         <dt>Table 1 Note 4</dt>
         <dd id="table1-fn4">
-            <p>{% trans "Select the applicable commodity code. If multiple commodity codes apply to a procurement, select the commodity code that represents the largest portion of the requirement by dollar value or alternatively, best represent the entire procurement.  " %}</p>
-            <p>{% trans "Note: The Goods and Services Identification Number commodity codes are based on the following applicable trade agreement commodity codes used to determine trade agreement commodity coverage:" %}</p>
+            <p>
+                {# Translators: First page. Fourth footnote #}
+                {% trans "Select the applicable commodity code. If multiple commodity codes apply to a procurement, select the commodity code that represents the largest portion of the requirement by dollar value or alternatively, best represent the entire procurement.  " %}
+            </p>
+            <p>
+                {# Translators: First page. Section of fourth footnote introduces list #}
+                {% trans "Note: The Goods and Services Identification Number commodity codes are based on the following applicable trade agreement commodity codes used to determine trade agreement commodity coverage:" %}
+            </p>
             <ul>
-                <li>{% trans "For goods, the Federal Supply Classification (FSC) is used. " %}</li>
-                <li>{% trans "For services, the Common Classification System (CCS) and the United Nations Provisional Central Product Classification (CPC) system are used.  " %}</li>
-                <li>{% trans "For construction services, the United Nations Provisional Central Product Classification (CPC) is used." %}</li>
+                <li>
+                    {# Translators: First page.  Fourth footnote, item 1 #}
+                    {% trans "For goods, the Federal Supply Classification (FSC) is used. " %}
+                </li>
+                <li>
+                    {# Translators: Firt page. Fourth footnote, item 2 #}
+                    {% trans "For services, the Common Classification System (CCS) and the United Nations Provisional Central Product Classification (CPC) system are used.  " %}
+                </li>
+                <li>
+                    {# Translators: First page. Fourth footnote, item 3 #}
+                    {% trans "For construction services, the United Nations Provisional Central Product Classification (CPC) is used." %}
+                </li>
             </ul>
             <p class="fn-rtn"> <a href="#table1-fn4-rf"><span class="wb-inv">Return to table 1 note </span>4<span class="wb-inv"> referrer</span></a> </p>
         </dd>

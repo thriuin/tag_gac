@@ -12,32 +12,46 @@ from collections import OrderedDict
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 from datetime import date
-import pprint
+from django.utils import translation
 
-def create_data_dict(form_list):
-    data_dict = {}
+def create_data_dict(self, forms):
+    func_dict = {}
     try:
-        for f in form_list:
-            data_dict.update(self.get_cleaned_data_for_step(f))
+        for f in forms:
+            func_dict.update(self.get_cleaned_data_for_step(f))
     except:
         pass
+    return func_dict 
 
-    for k, v in data_dict.items():
+def create_agreement_dict():
+    func_agreement_dict = {}
+    try:
+        for agreement in AGREEMENTS:
+            func_agreement_dict.update({agreement:{}})
+    except:
+        pass
+    return func_agreement_dict
+
+def replace_none_with_string(func_dict):
+    for k, v in func_dict.items():
         if v:
             pass
         else:
-            data_dict[k] = ['None']
-    return data_dict
+            func_dict[k] = ['None']
+    return func_dict
 
-def create_agreement_dict():
-    agreement_dict = {}
-    try:
-        for agreement in AGREEMENTS:
-            agreement_dict.update({agreement:{}})
-    except:
-        pass
-    return agreement_dict
+def get_list_of_applicable_trade_agreements(input_coverage_dict):
+    ta_list = []
+    for k, v in input_coverage_dict.items():
+        if v is True:
+            ta_list.append(k)
+    return ta_list
 
+def analyze_mandatory_elements(agreement, data):
+    agreement = value_threshold_rule(agreement, data)
+    agreement = organization_rule(agreement, data)
+    agreement = code_rule(agreement, data)
+    return agreement
 
 class OpenPDF(View):
     def get(self, request, *args, **kwargs):
@@ -107,7 +121,6 @@ class CodeAutocomplete(autocomplete.Select2QuerySetView):
         
 class EntitiesAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
-        
         qs = Organization.objects.all()
 
         if self.q:
@@ -126,42 +139,30 @@ class TypeAutocomplete(autocomplete.Select2QuerySetView):
         return qs
 
 def lt_condition(wizard):
-    form_list = [f[0] for f in FORMS[:3]]
+    lt_list = [f[0] for f in FORMS[:3]]
 
     data_dict = {}
     try:
-        for form in form_list:
-            val = wizard.get_cleaned_data_for_step(form)
-            if not val:
-                return False
-            else:
-                data_dict.update(val)
+        for f in lt_list:
+            data_dict.update(wizard.get_cleaned_data_for_step(f))
     except:
-        pass
-
-    for k, v in data_dict.items():
-        if v:
-            pass
-        else:
-            data_dict[k] = ['None']
-
-
+        return True
+    
+    data_dict = replace_none_with_string(data_dict)
     agreement_dict = create_agreement_dict()
-
-
-    agreement_dict = value_threshold_rule(agreement_dict, data_dict)
-    agreement_dict = organization_rule(agreement_dict, data_dict)
-    agreement_dict = code_rule(agreement_dict, data_dict)
-    agreement_dict = exceptions_rule(agreement_dict, data_dict, 'exceptions', GeneralException)
-    agreement_dict = exceptions_rule(agreement_dict, data_dict, 'cfta_exceptions', CftaException)
+    
+    agreement_dict = analyze_mandatory_elements(agreement_dict, data_dict)
+    exception_dict = {
+            'exceptions': GeneralException,
+            'cfta_exceptions': CftaException,
+        }
+    agreement_dict = exceptions_rule(agreement_dict, data_dict, exception_dict)
     
     coverage_dict = determine_final_coverage(agreement_dict)
-
-    for v in coverage_dict.values():
-        if v is True:
-            return True
-    return False
-
+    
+    if sum(coverage_dict.values()) == 0:
+        return False
+    return True
 
 
 class TradeForm(NamedUrlCookieWizardView):
@@ -205,29 +206,27 @@ class TradeForm(NamedUrlCookieWizardView):
         form = [TEMPLATES[self.steps.current]]
         return form
 
+
     def get_form(self, step=None, data=None, files=None):
         form = super(TradeForm, self).get_form(step, data, files)
         
         if 'limited_tendering' in form.fields:
-            form_list = [f[0] for f in FORMS[:3]]
-
-            data_dict = create_data_dict(form_list)
-
+            lt_list = [f[0] for f in FORMS[:3]]
+            data_dict = create_data_dict(self, lt_list)
+            data_dict = replace_none_with_string(data_dict)
             agreement_dict = create_agreement_dict()
 
-            agreement_dict = value_threshold_rule(agreement_dict, data_dict)
-            agreement_dict = organization_rule(agreement_dict, data_dict)
-            agreement_dict = code_rule(agreement_dict, data_dict)
-            agreement_dict = exceptions_rule(agreement_dict, data_dict, 'exceptions', GeneralException)
-            agreement_dict = exceptions_rule(agreement_dict, data_dict, 'cfta_exceptions', CftaException)
+            agreement_dict = analyze_mandatory_elements(agreement_dict, data_dict)
+            exception_dict = {
+                'exceptions': GeneralException,
+                'cfta_exceptions': CftaException,
+            }
+            agreement_dict = exceptions_rule(agreement_dict, data_dict, exception_dict)
             
             coverage_dict = determine_final_coverage(agreement_dict)
 
-            ta_applies = []
-            for k, v in coverage_dict.items():
-                if v is True:
-                    ta_applies.append(k)
-
+            ta_applies = get_list_of_applicable_trade_agreements(coverage_dict)
+            
             query_list = []
             if ta_applies:
                 qs = LimitedTenderingReason.objects.all()
@@ -251,44 +250,42 @@ class TradeForm(NamedUrlCookieWizardView):
         Returns:
             [html] -- Renders done.html with the context that will display the
         """
-
-        form_list = [f[0] for f in FORMS[:3]]
-
-        data_dict = create_data_dict(form_list)
-
+        done_list = [f[0] for f in FORMS]
+        data_dict = create_data_dict(self, done_list)
+        data_dict = replace_none_with_string(data_dict)
         agreement_dict = create_agreement_dict()
 
-        agreement_dict = value_threshold_rule(agreement_dict, data_dict)
-        agreement_dict = organization_rule(agreement_dict, data_dict)
-        agreement_dict = code_rule(agreement_dict, data_dict)
-        agreement_dict = exceptions_rule(agreement_dict, data_dict, 'exceptions', GeneralException)
-        agreement_dict = exceptions_rule(agreement_dict, data_dict, 'cfta_exceptions', CftaException)
+        agreement_dict = analyze_mandatory_elements(agreement_dict, data_dict)
+        
+        exception_dict = {
+            'exceptions': GeneralException,
+            'cfta_exceptions': CftaException,
+        }
+        agreement_dict = exceptions_rule(agreement_dict, data_dict, exception_dict)
         
         coverage_dict = determine_final_coverage(agreement_dict)
-
-        num_true = sum(coverage_dict.values())
         
-        context_dict = data_dict
-        context_dict['ta'] = agreement_dict
-        context_dict['bool'] = coverage_dict
+        data_dict['ta'] = agreement_dict
+        data_dict['bool'] = coverage_dict
 
-        if num_true == 0:
+        number_of_ta = sum(coverage_dict.values())
+        if number_of_ta == 0:
             output = 'No trade agreements apply.  '
         else:
             output = ''
-            for k, v in context_dict['bool'].items():
-                if num_true == 1:
+            for k, v in data_dict['bool'].items():
+                if number_of_ta == 1:
                     if v is True:
                         output = k.upper() + ', '
                 else:
                     if v is True:
                         output = output + k.upper() + ', '
-        context_dict['output'] = output[:-2]
+        data_dict['output'] = output[:-2]
 
-        context_dict['tables'] = {}
-        for k1, v1 in context_dict['ta'].items():
+        data_dict['tables'] = {}
+        for k1, v1 in data_dict['ta'].items():
             k1 = k1.upper()
-            context_dict['tables'][k1] = {}
+            data_dict['tables'][k1] = {}
             for k2, v2 in v1.items():
                 if k1 == 'CFTA':
                     if k2 == 'type' or k2 == 'limited_tendering':
@@ -297,18 +294,18 @@ class TradeForm(NamedUrlCookieWizardView):
                         k2 = k2.replace('_', ' ')
                         k2 = k2.title()
                         k2 = k2.replace('Cfta Exceptions', 'CFTA Exceptions')
-                        context_dict['tables'][k1][k2] = v2
+                        data_dict['tables'][k1][k2] = v2
                 else:
                     if k2 == 'type' or k2 == 'limited_tendering' or k2 == 'cfta_exceptions':
                         pass
                     else:
                         k2 = k2.replace('_', ' ')
                         k2 = k2.title()
-                        context_dict['tables'][k1][k2] = v2
+                        data_dict['tables'][k1][k2] = v2
 
         def add_sessions_list(name, model):
             ex_list = []
-            v = context_dict[name]
+            v = data_dict[name]
             for ex in v:
                 if ex != 'None':
                     check = model.objects.filter(name=ex).values_list('name').get()[0]
@@ -319,11 +316,11 @@ class TradeForm(NamedUrlCookieWizardView):
 
         add_sessions_list('exceptions', GeneralException)
         add_sessions_list('cfta_exceptions', CftaException)
-        for k in context_dict.keys():
+        for k in data_dict.keys():
             if k == 'limited_tendering':
                 add_sessions_list('limited_tendering', LimitedTenderingReason)
-        self.request.session['entities'] = str(context_dict['entities'])
-        self.request.session['estimated_value'] = int(context_dict['estimated_value'])
-        self.request.session['type'] = str(context_dict['type'])
-        self.request.session['code'] = str(context_dict['code'])
-        return render(self.request, 'done.html', context_dict)
+        self.request.session['entities'] = str(data_dict['entities'])
+        self.request.session['estimated_value'] = int(data_dict['estimated_value'])
+        self.request.session['type'] = str(data_dict['type'])
+        self.request.session['code'] = str(data_dict['code'])
+        return render(self.request, 'done.html', data_dict)

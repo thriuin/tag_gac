@@ -178,7 +178,7 @@ def code_rule(agreement, data):
 
   
 
-def exceptions_rule(agreement, data, exception_name, model):
+def exceptions_rule(agreement, data, exception):
     """This function goes through the exceptions that the user selected and checks which trade agreements
     apply to each exception.  If a user selects a trade agreements and an exception applies then that
     agreement is set to False.
@@ -194,24 +194,25 @@ def exceptions_rule(agreement, data, exception_name, model):
     Returns:
         Dictionary -- Returns updated context dictionary with analysis
     """
+    try:
+        for exception_name, model in exception.items():
+            exception = data[exception_name]
+            if exception:
+                for k in agreement.keys():
+                    for ex in exception:
+                        check = model.objects.filter(name=ex).values_list(k).get()[0]
+                        agreement[k][exception_name] = check
+                        if (agreement[k][exception_name] is False):
+                            pass
+                        elif (agreement[k][exception_name] is True) and (check is False):
+                            pass
+                        elif (agreement[k][exception_name] is True) and (check is True):
+                            agreement[k][exception_name] = False
+            else:
+                for k in agreement.keys():
+                    agreement[k][exception_name] = True
+    except:
+        pass
 
-    exception = data[exception_name]
-    if exception == ['None']:
-        for k in agreement.keys():
-            agreement[k][exception_name] = True
-    else:
-        try:
-            for k in agreement.keys():
-                for ex in exception:
-                    check = model.objects.filter(name=ex).values_list(k).get()[0]
-                    agreement[k][exception_name] = check
-                    if (agreement[k][exception_name] is False):
-                        pass
-                    elif (agreement[k][exception_name] is True) and (check is False):
-                        pass
-                    elif (agreement[k][exception_name] is True) and (check is True):
-                        agreement[k][exception_name] = False
-        except:
-            raise ValueError
     return agreement
 

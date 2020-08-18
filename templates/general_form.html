@@ -2,22 +2,39 @@
 {% load i18n %}
 {% load static %}
 {% load humanize %}
+{% get_current_language as LANGUAGE_CODE %}
+<!-- Current language: {{ LANGUAGE_CODE }} -->
 
 {% block main-content %}
 
     {# --- Main title #}
     {% block main-content-title %}
     <main role="main" property="mainContentOfPage" class="container">
-        <h1 property="name" id="wb-cont" dir="ltr">{% trans "Trade Agreement Determination Tool" %}</h1>
+        <h1 property="name" id="wb-cont" dir="ltr">
+            {# Translators: General form.  Title #}    
+            {% trans "Trade Agreement Determination Tool" %}
+        </h1>
         <div>
             <div class="mwsgeneric-base-html parbase section">     
-                <p class="gc-byline"><strong>From: <a href="https://www.canada.ca/en/treasury-board-secretariat.html">{% trans "Treasury Board of Canada Secretariat" %}</a></strong></p>
+                <p class="gc-byline">
+                    <strong>
+                        {# Translators: General form. From TBS... #}
+                        {% trans "From:" %}
+                        <a href="https://www.canada.ca/en/treasury-board-secretariat.html">
+                            {# Translators: General form. Link to TBS #}
+                            {% trans "Treasury Board of Canada Secretariat" %}
+                        </a>
+                    </strong>
+                </p>
             </div>
         </div>
     </main>
     {% endblock %}
     <section class="alert alert-warning">
-        <p>{% trans "This is a prototype tool staged in a testing environment. It is subject to significant changes in content and functionality and TBS governance approval. Do not rely on this tool to determine trade agreement coverage."%}</p>
+        <p>
+            {# Translators: General form. Warning #}
+            {% trans "This is a prototype tool staged in a testing environment. It is subject to significant changes in content and functionality and TBS governance approval. Do not rely on this tool to determine trade agreement coverage."%}
+        </p>
     </section>
     {% block intro %}{% endblock %}
     <div class="row mrgn-tp-md mrgn-bttm-md">
