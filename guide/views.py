@@ -57,12 +57,10 @@ class OpenPDF(View):
     def get(self, request, *args, **kwargs):
         
         data_dict = {}
-        print(self.request.session)
         try:
             data_dict.update(self.request.session)
         except:
             pass
-        print(data_dict)
         data_dict = replace_none_with_string(data_dict)
         agreement_dict = create_agreement_dict()
 
