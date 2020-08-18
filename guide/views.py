@@ -56,37 +56,45 @@ def analyze_mandatory_elements(agreement, data):
 class OpenPDF(View):
     def get(self, request, *args, **kwargs):
         
-        context_dict = build_context_dict()
-        context_dict = process_form(context_dict, self.request.session)
-        for ta in context_dict['ta']:
-            context_dict['ta'][ta].pop('limited_tendering')
+        data_dict = {}
+        try:
+            data_dict.update(self.request.session)
+        except:
+            pass
+        data_dict = replace_none_with_string(data_dict)
+        agreement_dict = create_agreement_dict()
 
-        context_dict = value_threshold_rule(context_dict, 'estimated_value', 'type')
-        context_dict = organization_rule(context_dict, 'entities')
-        context_dict = code_rule(context_dict, 'code', 'type', 'entities')
-        context_dict = exceptions_rule(context_dict, 'exceptions', GeneralException)
-        context_dict = exceptions_rule(context_dict, 'cfta_exceptions', CftaException)
-        context_dict = determine_final_coverage(context_dict)
-
-        num_true = sum(context_dict['bool'].values())
+        agreement_dict = analyze_mandatory_elements(agreement_dict, data_dict)
         
-        if num_true == 0:
+        exception_dict = {
+            'exceptions': GeneralException,
+            'cfta_exceptions': CftaException,
+        }
+        agreement_dict = exceptions_rule(agreement_dict, data_dict, exception_dict)
+        
+        coverage_dict = determine_final_coverage(agreement_dict)
+        
+        data_dict['ta'] = agreement_dict
+        data_dict['bool'] = coverage_dict
+
+        number_of_ta = sum(coverage_dict.values())
+        if number_of_ta == 0:
             output = 'No trade agreements apply.  '
         else:
             output = ''
-            for k, v in context_dict['bool'].items():
-                if num_true == 1:
+            for k, v in data_dict['bool'].items():
+                if number_of_ta == 1:
                     if v is True:
                         output = k.upper() + ', '
                 else:
                     if v is True:
                         output = output + k.upper() + ', '
-        context_dict['output'] = output[:-2]
+        data_dict['output'] = output[:-2]
 
-        context_dict['tables'] = {}
-        for k1, v1 in context_dict['ta'].items():
+        data_dict['tables'] = {}
+        for k1, v1 in data_dict['ta'].items():
             k1 = k1.upper()
-            context_dict['tables'][k1] = {}
+            data_dict['tables'][k1] = {}
             for k2, v2 in v1.items():
                 if k1 == 'CFTA':
                     if k2 == 'type' or k2 == 'limited_tendering':
@@ -95,16 +103,16 @@ class OpenPDF(View):
                         k2 = k2.replace('_', ' ')
                         k2 = k2.title()
                         k2 = k2.replace('Cfta Exceptions', 'CFTA Exceptions')
-                        context_dict['tables'][k1][k2] = v2
+                        data_dict['tables'][k1][k2] = v2
                 else:
                     if k2 == 'type' or k2 == 'limited_tendering' or k2 == 'cfta_exceptions':
                         pass
                     else:
                         k2 = k2.replace('_', ' ')
                         k2 = k2.title()
-                        context_dict['tables'][k1][k2] = v2
+                        data_dict['tables'][k1][k2] = v2
 
-        pdf = render_to_pdf('pdf.html', context_dict)
+        pdf = render_to_pdf('pdf.html', data_dict)
         return HttpResponse(pdf, content_type='application/pdf')
 
 
