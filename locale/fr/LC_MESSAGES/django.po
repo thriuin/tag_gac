@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-17 05:44-0400\n"
+"POT-Creation-Date: 2020-08-18 11:30-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -40,11 +40,13 @@ msgstr ""
 msgid "Exceptions"
 msgstr ""
 
-#: .\guide\forms.py:14 .\templates\done.html:101 .\templates\pdf.html:122
+#. Translators: Results page. Summary, Row label
+#: .\guide\forms.py:14 .\templates\done.html:199 .\templates\pdf.html:218
 msgid "Limited Tendering Reasons"
 msgstr ""
 
-#: .\guide\forms.py:15 .\templates\done.html:91 .\templates\pdf.html:112
+#. Translators: Results page. Summary, Row label
+#: .\guide\forms.py:15 .\templates\done.html:188 .\templates\pdf.html:207
 msgid "CFTA Exceptions"
 msgstr ""
 
@@ -96,8 +98,9 @@ msgstr ""
 msgid "Entities"
 msgstr ""
 
+#. Translators: Results page. Summary, Row label
 #: .\guide\models.py:113 .\guide\models.py:119 .\guide\models.py:140
-#: .\guide\models.py:268 .\templates\done.html:72 .\templates\pdf.html:93
+#: .\guide\models.py:268 .\templates\done.html:158 .\templates\pdf.html:177
 msgid "Commodity Type"
 msgstr ""
 
@@ -267,8 +270,11 @@ msgstr ""
 msgid "Unknown content"
 msgstr ""
 
-#: .\templates\base-cdts.html:27 .\templates\done.html:14
-#: .\templates\general_form.html:14 .\templates\pdf.html:35
+#. Translators: Results page. Link to TBS
+#. Translators: General form. Link to TBS
+#. Translators: Results page. Link to TBS
+#: .\templates\base-cdts.html:27 .\templates\done.html:24
+#: .\templates\general_form.html:25 .\templates\pdf.html:43
 msgid "Treasury Board of Canada Secretariat"
 msgstr ""
 
@@ -352,25 +358,31 @@ msgid ""
 "    </div>\n"
 msgstr ""
 
-#: .\templates\cfta_exceptions.html:7
+#. Translators: CFTA Exceptions. Subtitle Step.
+#: .\templates\cfta_exceptions.html:11
 msgid "Step 3: Canadian Free Trade Agreement Specific Exclusions"
 msgstr ""
 
-#: .\templates\cfta_exceptions.html:8 .\templates\limited_tendering.html:11
+#. Translators: CFTA Exceptions. Subtitle Instruction
+#. Translators: Limited Tendering. Subtitle Instructions
+#: .\templates\cfta_exceptions.html:15 .\templates\limited_tendering.html:26
 msgid "Instructions: "
 msgstr ""
 
-#: .\templates\cfta_exceptions.html:9
+#. Translators:  CFTA Exceptions. Instructions, sentence 1
+#: .\templates\cfta_exceptions.html:19
 msgid "Provide a response to the following question: "
 msgstr ""
 
-#: .\templates\cfta_exceptions.html:10
+#. Translators: CFTA Exceptions. Instructions sentence 2
+#: .\templates\cfta_exceptions.html:23
 msgid ""
 "Is the procurement excluded from the CFTA per the list of CFTA specific "
 "exclusions below?"
 msgstr ""
 
-#: .\templates\cfta_exceptions.html:11
+#. Translators: CFTA Exceptions. Instructions sentence 3
+#: .\templates\cfta_exceptions.html:27
 msgid ""
 "Answer the question by reviewing the following list of CFTA specific trade "
 "agreement exclusions. If a procurement falls under one or more of the "
@@ -379,82 +391,129 @@ msgid ""
 "blank."
 msgstr ""
 
-#: .\templates\cfta_exceptions.html:12
+#. Translators: CFTA Exceptions. Instructions sentence 4, part 1
+#: .\templates\cfta_exceptions.html:31
 msgid ""
 "If there is any discrepancy between this list of exemptions and the text of "
 "the "
 msgstr ""
 
-#: .\templates\cfta_exceptions.html:12
+#. Translators: CFTA Exceptions. Instructions, sentence 4, part 2
+#: .\templates\cfta_exceptions.html:34
 msgid "Canadian Free Trade Agreement"
 msgstr ""
 
-#: .\templates\cfta_exceptions.html:12
+#. Translators: CFTA Exceptions. Instructions, sentence 4, part 3
+#: .\templates\cfta_exceptions.html:37
 msgid ", refer to the text of the agreement."
 msgstr ""
 
-#. Translators: This text is for doc navigation to submit the form on the first page
-#: .\templates\cfta_exceptions.html:46 .\templates\done.html:161
-#: .\templates\exceptions.html:45 .\templates\limited_tendering.html:46
-#: .\templates\mandatory_elements.html:55 .\templates\pdf.html:182
+#. Translators: CFTA Exceptions. Doc nav
+#. Translators: First page.  Hidden text.  Doc nav
+#: .\templates\cfta_exceptions.html:74 .\templates\done.html:295
+#: .\templates\exceptions.html:62 .\templates\limited_tendering.html:68
+#: .\templates\mandatory_elements.html:60 .\templates\pdf.html:314
 msgid "Document navigation"
 msgstr ""
 
-#: .\templates\cfta_exceptions.html:49 .\templates\limited_tendering.html:49
+#. Translators: CFTA Exceptions. Hidden text back to step 1 button
+#. Translators: Results page. Hidden text back to step 1
+#. Translators: Limited Tendering. Hidden text back to step 1
+#. Translators: Results page. Hidden text back to step 1
+#: .\templates\cfta_exceptions.html:81 .\templates\done.html:301
+#: .\templates\limited_tendering.html:74 .\templates\pdf.html:320
 msgid "Go to first step."
 msgstr ""
 
-#: .\templates\cfta_exceptions.html:49 .\templates\done.html:164
-#: .\templates\limited_tendering.html:49 .\templates\pdf.html:185
+#. Translators: CFTA Exceptions. Visible text back to step 1 button
+#. Translators: Results page. Visible text back to step 1
+#. Translators: Limited Tendering. Visible text back to step 1
+#. Translators: Results page. Visible text back to step 1
+#: .\templates\cfta_exceptions.html:84 .\templates\done.html:304
+#: .\templates\limited_tendering.html:77 .\templates\pdf.html:323
 msgid "Go to First Step"
 msgstr ""
 
-#: .\templates\cfta_exceptions.html:50 .\templates\exceptions.html:47
-#: .\templates\limited_tendering.html:50
+#. Translators: CFTA Exceptions. Hidden text prev step button
+#. Translators: Results page.  Hidden text open as pdf
+#. Translators: Exceptions page. Hidden text for previous step button
+#. Translators: Limited Tendering. Hidden text back to prev step
+#. Translators: Results page.  Hidden text open as pdf
+#: .\templates\cfta_exceptions.html:89 .\templates\done.html:309
+#: .\templates\exceptions.html:67 .\templates\limited_tendering.html:82
+#: .\templates\pdf.html:328
 msgid "Go to previous step."
 msgstr ""
 
-#: .\templates\cfta_exceptions.html:50 .\templates\exceptions.html:47
-#: .\templates\limited_tendering.html:50
+#. Translators: CFTA Exceptions. Visible text prev step button
+#. Translators: Exceptions Page. Visible text for previous button
+#. Translators: Limited Tendering. Visible text back to prev step
+#: .\templates\cfta_exceptions.html:92 .\templates\exceptions.html:70
+#: .\templates\limited_tendering.html:85
 msgid "Previous"
 msgstr ""
 
-#. Translators: This is hidden text for the submit button
-#: .\templates\cfta_exceptions.html:51 .\templates\exceptions.html:48
-#: .\templates\limited_tendering.html:51 .\templates\mandatory_elements.html:64
+#. Translators: CFTA Exceptions. Hidden text next step button
+#. Translators: Exceptions Page.  Hidden text for the next button
+#. Translators: Limited Tendering. Hidden text go to next step
+#. Translators: First page. Hidden text submit button
+#: .\templates\cfta_exceptions.html:97 .\templates\exceptions.html:75
+#: .\templates\limited_tendering.html:90 .\templates\mandatory_elements.html:69
 msgid "Go to next step."
 msgstr ""
 
-#. Translators: This is the text for the submit button
-#: .\templates\cfta_exceptions.html:51 .\templates\exceptions.html:48
-#: .\templates\limited_tendering.html:51 .\templates\mandatory_elements.html:61
+#. Translators: CFTA Exceptions. Visible text next step button
+#. Translators: Exceptions page.  Visible text for the next button
+#. Translators: Limited Tendering. Visible text go to next step
+#. Translators: First page.  Visible Submit button text
+#: .\templates\cfta_exceptions.html:100 .\templates\exceptions.html:78
+#: .\templates\limited_tendering.html:93 .\templates\mandatory_elements.html:66
 msgid "Next"
 msgstr ""
 
-#: .\templates\done.html:11 .\templates\general_form.html:11
-#: .\templates\pdf.html:32
+#. Translators: Results page. Title
+#. Translators: General form.  Title
+#. Translators: Results page. Title
+#: .\templates\done.html:14 .\templates\general_form.html:15
+#: .\templates\pdf.html:33
 msgid "Trade Agreement Determination Tool"
 msgstr ""
 
-#: .\templates\done.html:21 .\templates\pdf.html:42
+#. Translators: Results page. From TBS...
+#. Translators: General form. From TBS...
+#. Translators: Results page. From TBS...
+#: .\templates\done.html:21 .\templates\general_form.html:22
+#: .\templates\pdf.html:40
+msgid "From:"
+msgstr ""
+
+#. Translators: Results page. Subtitle suggest result
+#: .\templates\done.html:36 .\templates\pdf.html:55
 msgid "Suggested Result"
 msgstr ""
 
-#: .\templates\done.html:22 .\templates\pdf.html:43
+#. Translators: Results page. First section of suggest result
+#: .\templates\done.html:40 .\templates\pdf.html:59
 msgid ""
 "Based on the information that was provided (e.g. Total Estimated Value, "
 "Procuring Entity, Commodity Type and Commodity Code), the following trade "
 "agreement(s) apply to the procurement:"
 msgstr ""
 
-#. Translators: This is the second section of text on the first page of the form, starts Important:
-#: .\templates\done.html:25 .\templates\done.html:112
-#: .\templates\exceptions.html:8 .\templates\mandatory_elements.html:12
-#: .\templates\pdf.html:46 .\templates\pdf.html:133
+#. Translators: Results page.  Important notice
+#. Translators: Results page. Subtitle Important
+#. Translators: Exceptions page. Important notee
+#. Translators: First page.  Important note
+#. Translators: Results page.  Important notice
+#. Translators: Results page. Subtitle Important
+#: .\templates\done.html:47 .\templates\done.html:212
+#: .\templates\exceptions.html:16 .\templates\mandatory_elements.html:16
+#: .\templates\pdf.html:66 .\templates\pdf.html:231
 msgid "Important: "
 msgstr ""
 
-#: .\templates\done.html:25 .\templates\pdf.html:46
+#. Translators: Results page. Text for important section
+#: .\templates\done.html:50 .\templates\pdf.html:69
 msgid ""
 " The results provided by this tool is a suggestion only. It is the "
 "responsibility of the user to determine the actual trade agreement coverage "
@@ -465,119 +524,139 @@ msgid ""
 "precedence. "
 msgstr ""
 
-#: .\templates\done.html:32 .\templates\pdf.html:53
+#. Translators: Results page. Subtitle Abreviation
+#: .\templates\done.html:60 .\templates\pdf.html:79
 msgid "Abbreviation Reference"
 msgstr ""
 
-#: .\templates\done.html:35 .\templates\pdf.html:56
+#. Translators: Results page. First abbreviation
+#: .\templates\done.html:66 .\templates\pdf.html:85
 msgid "WTO-AGP: World Trade Organization - Agreement on Government Procurement"
 msgstr ""
 
-#: .\templates\done.html:36 .\templates\pdf.html:57
+#. Translators: Results page. Second abbreviation
+#: .\templates\done.html:70 .\templates\pdf.html:89
 msgid "CCFTA: Canada-Chile Free Trade Agreement"
 msgstr ""
 
-#: .\templates\done.html:37 .\templates\pdf.html:58
+#. Translators: Results page. Third abbreviation
+#: .\templates\done.html:74 .\templates\pdf.html:93
 msgid "CPFTA: Canada-Peru Free Trade Agreement"
 msgstr ""
 
-#: .\templates\done.html:38 .\templates\pdf.html:59
+#. Translators: Results page. Fourth abbreviation
+#: .\templates\done.html:78 .\templates\pdf.html:97
 msgid "CCOFTA: Canada-Colombia Free Trade Agreement"
 msgstr ""
 
-#: .\templates\done.html:39 .\templates\pdf.html:60
+#. Translators: Results page. Fifth abbreviation
+#: .\templates\done.html:82 .\templates\pdf.html:101
 msgid "CPAFTA: Canada-Panama Free Trade Agreement"
 msgstr ""
 
-#: .\templates\done.html:40 .\templates\pdf.html:61
+#. Translators: Results page. Sixth abbreviation
+#: .\templates\done.html:86 .\templates\pdf.html:105
 msgid "CHFTA: Canada-Honduras Free Trade Agreement"
 msgstr ""
 
-#: .\templates\done.html:41 .\templates\pdf.html:62
+#. Translators: Results page. Seventh abbreviation
+#: .\templates\done.html:90 .\templates\pdf.html:109
 msgid "CKFTA: Canada-Korea Free Trade Agreement"
 msgstr ""
 
-#: .\templates\done.html:42 .\templates\pdf.html:63
+#. Translators: Results page. Eighth abbreviation
+#: .\templates\done.html:94 .\templates\pdf.html:113
 msgid "CFTA: Canadian Free Trade Agreement"
 msgstr ""
 
-#: .\templates\done.html:43 .\templates\pdf.html:64
+#. Translators: Results page. Ninth abbreviation
+#: .\templates\done.html:98 .\templates\pdf.html:117
 msgid "CETA: Comprehensive Economic Trade Agreement"
 msgstr ""
 
-#: .\templates\done.html:44 .\templates\pdf.html:65
+#. Translators: Results page. Tenth abbreviation
+#: .\templates\done.html:102 .\templates\pdf.html:121
 msgid ""
 "CPTPP: Comprehensive and Progressive Agreement for Trans-Pacific Partnership"
 msgstr ""
 
-#: .\templates\done.html:45 .\templates\pdf.html:66
+#. Translators: Results page. Eleventh abbreviation
+#: .\templates\done.html:106 .\templates\pdf.html:125
 msgid "CUFTA: Canada-Ukraine Free Trade Agreement"
 msgstr ""
 
-#: .\templates\done.html:52 .\templates\pdf.html:73
+#. Translators: Results page. Subtitle Summary
+#: .\templates\done.html:116 .\templates\pdf.html:135
 msgid "Summary"
 msgstr ""
 
-#: .\templates\done.html:55 .\templates\pdf.html:76
+#. Translators: Results page. First section of summary
+#: .\templates\done.html:122 .\templates\pdf.html:141
 msgid ""
 "The table provides a summary of the user inputs entered to generate the "
 "result."
 msgstr ""
 
-#: .\templates\done.html:58 .\templates\pdf.html:79
+#. Translators: Results page. Summary, Column label
+#: .\templates\done.html:128 .\templates\pdf.html:147
 msgid "Categories"
 msgstr ""
 
-#: .\templates\done.html:59 .\templates\pdf.html:80
+#. Translators: Results page. Summary, Column label
+#: .\templates\done.html:132 .\templates\pdf.html:151
 msgid "Values"
 msgstr ""
 
-#: .\templates\done.html:64 .\templates\pdf.html:85
+#. Translators: Results page. Summary, Row label
+#: .\templates\done.html:140 .\templates\pdf.html:159
 msgid "Total Estimated Value"
 msgstr ""
 
-#: .\templates\done.html:68 .\templates\pdf.html:89
+#. Translators: Results page. Summary, Row label
+#: .\templates\done.html:149 .\templates\pdf.html:168
 msgid "Procuring Entity"
 msgstr ""
 
-#: .\templates\done.html:76 .\templates\pdf.html:97
+#. Translators: Results page. Summary, Row label
+#: .\templates\done.html:167 .\templates\pdf.html:186
 msgid "Commodity Code"
 msgstr ""
 
-#: .\templates\done.html:81 .\templates\pdf.html:102
+#. Translators: Results page. Summary, Row label
+#: .\templates\done.html:177 .\templates\pdf.html:196
 msgid "Exceptions and Exclusions"
 msgstr ""
 
-#: .\templates\done.html:86 .\templates\done.html:96 .\templates\done.html:106
-#: .\templates\pdf.html:107 .\templates\pdf.html:117 .\templates\pdf.html:127
-msgid "None"
-msgstr ""
-
-#: .\templates\done.html:112 .\templates\pdf.html:133
+#. Translators: Results page. First section of text for Important
+#: .\templates\done.html:215 .\templates\pdf.html:234
 msgid ""
 "If the Limited Tendering Reason value is “None”, the covered procurement "
 "must use an open or selective tendering process to ensure that Canada "
 "complies with its trade agreement tendering obligations."
 msgstr ""
 
-#: .\templates\done.html:113 .\templates\pdf.html:134
+#. Translators: Results page. Second section of text for Important
+#: .\templates\done.html:219 .\templates\pdf.html:238
 msgid ""
 "For more information on the trade agreement obligations required for open "
 "tendering and selective tendering, refer to the text of the applicable trade "
 "agreements."
 msgstr ""
 
-#: .\templates\done.html:119 .\templates\pdf.html:140
+#. Translators: Results page. Subtitle Details
+#: .\templates\done.html:228 .\templates\pdf.html:247
 msgid "Details"
 msgstr ""
 
-#: .\templates\done.html:121 .\templates\pdf.html:142
+#. Translators: Results page. First section of text for details
+#: .\templates\done.html:233 .\templates\pdf.html:252
 msgid ""
 "The tables below provide details on the following series of conditions used "
 "to determine coverage for each trade agreement. "
 msgstr ""
 
-#: .\templates\done.html:123 .\templates\pdf.html:144
+#. Translators: Results page. First explanation of details
+#: .\templates\done.html:238 .\templates\pdf.html:257
 msgid ""
 "Estimated Value - 'True' indicates that the estimated value is equal to or "
 "greater than the dollar threshold for the trade agreement.  'False' "
@@ -585,62 +664,73 @@ msgid ""
 "trade agreement."
 msgstr ""
 
-#: .\templates\done.html:124 .\templates\pdf.html:145
+#. Translators: Results page. Second explanation of details
+#: .\templates\done.html:242 .\templates\pdf.html:261
 msgid ""
 "Entities - 'True' indicates the entity is covered under the trade "
 "agreement.  'False' indicates the entity is not covered under the specific "
 "trade agreement."
 msgstr ""
 
-#: .\templates\done.html:125 .\templates\pdf.html:146
+#. Translators: Results page. Third explanation of details
+#: .\templates\done.html:246 .\templates\pdf.html:265
 msgid ""
 "Commodity Code - 'True' indicates the commodity code is covered under the "
 "trade agreement.  'False' indicates the commodity code is not covered under "
 "the trade agreement."
 msgstr ""
 
-#: .\templates\done.html:126 .\templates\pdf.html:147
+#. Translators: Results page. Fourth explanation of details
+#: .\templates\done.html:250 .\templates\pdf.html:269
 msgid ""
 "General Exceptions - 'True' indicates no applicable trade agreement "
 "exceptions apply. 'False' indicates one or more trade agreement exception(s) "
 "apply."
 msgstr ""
 
-#: .\templates\done.html:127 .\templates\pdf.html:148
+#. Translators: Results page. Firth explanation of details
+#: .\templates\done.html:254 .\templates\pdf.html:273
 msgid ""
 "CFTA Exceptions - 'True' indicates no CFTA exceptions apply.  'False' "
 "indicates one or more CFTA exceptions apply.  This only appears for CFTA."
 msgstr ""
 
-#: .\templates\done.html:139 .\templates\pdf.html:160
+#. Translators: Results page. Details, Column label
+#: .\templates\done.html:269 .\templates\pdf.html:288
 msgid "Category"
 msgstr ""
 
-#: .\templates\done.html:140 .\templates\pdf.html:161
+#. Translators: Results page. Details, Column label
+#: .\templates\done.html:273 .\templates\pdf.html:292
 msgid "Result"
 msgstr ""
 
-#: .\templates\done.html:165
+#. Translators: Results page. Visible text open as pdf
+#: .\templates\done.html:312 .\templates\pdf.html:331
 msgid "Open as PDF"
 msgstr ""
 
-#: .\templates\exceptions.html:7
+#. Translators: Exceptions page. Subtitle Step 2...
+#: .\templates\exceptions.html:11
 msgid "Step 2. General Trade Agreement Exceptions and Exclusions"
 msgstr ""
 
-#: .\templates\exceptions.html:8
+#. Translators: Exceptions page. First sentence on exceptions page
+#: .\templates\exceptions.html:19
 msgid ""
 "Provide a response to the following questions below and click the ‘Next’ "
 "button."
 msgstr ""
 
-#: .\templates\exceptions.html:9
+#. Translators: Exceptions page. Second sentence on exceptions page
+#: .\templates\exceptions.html:23
 msgid ""
 "Are there any general trade agreement exceptions or exclusions applicable to "
 "the procurement?"
 msgstr ""
 
-#: .\templates\exceptions.html:10
+#. Translators: Exceptions page. Third sentence on exceptions page
+#: .\templates\exceptions.html:27
 msgid ""
 "Answer the question by reviewing the list of general trade agreement "
 "exceptions and exclusions below and selecting the ones that apply to the "
@@ -652,86 +742,112 @@ msgid ""
 "include the specific exception or exclusion."
 msgstr ""
 
-#. Translators: This text is the title of the Caveat section of the first page
-#: .\templates\exceptions.html:57 .\templates\limited_tendering.html:59
-#: .\templates\mandatory_elements.html:78
+#. Translators: Exceptions Page. Subtitle Caveat
+#. Translators: Limited Tendering. Subtitle caveat
+#. Translators: First page.  Subtitle Caveat
+#: .\templates\exceptions.html:90 .\templates\limited_tendering.html:104
+#: .\templates\mandatory_elements.html:83
 msgid "Caveat"
 msgstr ""
 
-#: .\templates\exceptions.html:59
+#. Translators: Exceptions Page. First sentence of caveat
+#: .\templates\exceptions.html:95
 msgid ""
 "If there is any discrepancy between this list of exemptions and the text of "
 "the trade agreements, the text of the trade agreements takes precedence."
 msgstr ""
 
-#: .\templates\exceptions.html:60
+#. Translators: Exceptions Page. Second sentence of caveat
+#: .\templates\exceptions.html:99
 msgid ""
 "The numbers in front of each general trade agreement exceptions and "
 "exclusions corresponds to the data values used for proactive disclosure of "
 "contract reporting.  For more information refer to the "
 msgstr ""
 
-#: .\templates\exceptions.html:60 .\templates\limited_tendering.html:63
+#. Translators: Exceptions Page.  Link to the guidelines
+#. Translators: Limited Tendering. Third section caveat, part 2
+#: .\templates\exceptions.html:102 .\templates\limited_tendering.html:120
 msgid "Guidelines on the Proactive Disclosure of Contracts"
 msgstr ""
 
-#. Translators: This text is the title for the footnotes section of the first page of the form
-#: .\templates\exceptions.html:64 .\templates\mandatory_elements.html:106
+#. Translators: Exceptions Page. Subtitle footnotes
+#. Translators: First page.  Subtitle Footnotes
+#: .\templates\exceptions.html:110 .\templates\mandatory_elements.html:111
 msgid "Footnotes"
 msgstr ""
 
-#: .\templates\exceptions.html:66
+#. Translators: Exceptions Page.  First sentence of footnotes
+#: .\templates\exceptions.html:115
 msgid ""
 "The applicable exception and exclusions are found under the following trade "
 "agreements:"
 msgstr ""
 
-#: .\templates\exceptions.html:70 .\templates\exceptions.html:82
-#: .\templates\exceptions.html:118
+#. Translators: Exceptions Page.  First footnote
+#. Translators: Exceptions Page. Fourth footnote
+#. Translators: Exceptions Page. Thirteenth footnote
+#: .\templates\exceptions.html:121 .\templates\exceptions.html:142
+#: .\templates\exceptions.html:205
 msgid "Applies to all agreements except CFTA"
 msgstr ""
 
-#: .\templates\exceptions.html:74 .\templates\exceptions.html:78
+#. Translators: Exceptions Page. Second footnote
+#. Translators: Exceptions Page. Third footnote
+#: .\templates\exceptions.html:128 .\templates\exceptions.html:135
 msgid "Applies to all agreements except CFTA, CETA, and CPTPP"
 msgstr ""
 
-#: .\templates\exceptions.html:86
+#. Translators: Exceptions Page. Fifth footnote
+#: .\templates\exceptions.html:149
 msgid ""
 "Applies to all agreements except CFTA, CUFTA, CKFTA, WTO-AGP, CETA, and CPTPP"
 msgstr ""
 
-#: .\templates\exceptions.html:90 .\templates\exceptions.html:98
-#: .\templates\exceptions.html:102 .\templates\exceptions.html:106
-#: .\templates\exceptions.html:110 .\templates\exceptions.html:114
+#. Translators: Exceptions Page. Sixth footnote
+#. Translators: Exceptions Page. Eighth footnote
+#. Translators: Exceptions Page. Ninth footnote
+#. Translators: Exceptions Page. Tenth footnote
+#. Translators: Exceptions Page. Eleventh footnote
+#. Translators: Exceptions Page. Twelfth footnote
+#: .\templates\exceptions.html:156 .\templates\exceptions.html:170
+#: .\templates\exceptions.html:177 .\templates\exceptions.html:184
+#: .\templates\exceptions.html:191 .\templates\exceptions.html:198
 msgid "Applies to all agreements"
 msgstr ""
 
-#: .\templates\exceptions.html:94
+#. Translators: Exceptions Page. Seventh footnote
+#: .\templates\exceptions.html:163
 msgid "Applies to all agreements except CETA"
 msgstr ""
 
-#: .\templates\exceptions.html:122
+#. Translators: Exceptions Page. Fourteenth footnote
+#: .\templates\exceptions.html:212
 msgid "Applies to all trade agreements"
 msgstr ""
 
-#: .\templates\general_form.html:20
+#. Translators: General form. Warning
+#: .\templates\general_form.html:36
 msgid ""
 "This is a prototype tool staged in a testing environment. It is subject to "
 "significant changes in content and functionality and TBS governance "
 "approval. Do not rely on this tool to determine trade agreement coverage."
 msgstr ""
 
-#: .\templates\limited_tendering.html:7
+#. Translators: Limited Tendering.  Subtitle Step
+#: .\templates\limited_tendering.html:11
 msgid "Step 4. Limited Tendering Reasons"
 msgstr ""
 
-#: .\templates\limited_tendering.html:8
+#. Translators: Limited Tendering.  First paragraph
+#: .\templates\limited_tendering.html:15
 msgid ""
 "Based on the responses provided in prior steps, the procurement appears to "
 "be covered by one or more of the applicable trade agreements. "
 msgstr ""
 
-#: .\templates\limited_tendering.html:9
+#. Translators: Limited Tendering. Second paragraph
+#: .\templates\limited_tendering.html:19
 msgid ""
 "If a procurement is covered by the trade agreement(s), the contracting "
 "authority is to follow the open or selective tendering procurement "
@@ -744,13 +860,15 @@ msgid ""
 "trade agreements based on the inputs already provided."
 msgstr ""
 
-#: .\templates\limited_tendering.html:11
+#. Translators: Limited Tendering. First section instructions
+#: .\templates\limited_tendering.html:29
 msgid ""
 "If the procurement strategy is open tendering or selective tendering, click "
 "the “Next” button and leave the fields below blank. "
 msgstr ""
 
-#: .\templates\limited_tendering.html:12
+#. Translators: Limited Tendering. Second section instructions
+#: .\templates\limited_tendering.html:33
 msgid ""
 "If a limited tendering strategy is being considered, review the summary list "
 "of limited tendering reasons found in the applicable trade agreements and "
@@ -758,7 +876,8 @@ msgid ""
 "limited tendering reasons apply, leave the fields blank. "
 msgstr ""
 
-#: .\templates\limited_tendering.html:61
+#. Translators: Limited Tendering. First section caveat
+#: .\templates\limited_tendering.html:109
 msgid ""
 "In order to proceed with a limited tendering procurement strategy, a valid "
 "limited tendering reason must exist in each of the covered trade "
@@ -766,21 +885,23 @@ msgid ""
 "procurement strategy must be documented on the procurement file."
 msgstr ""
 
-#: .\templates\limited_tendering.html:62
+#. Translators: Limited Tendering. Second section caveat
+#: .\templates\limited_tendering.html:113
 msgid ""
 "If there is any discrepancy between the list of limited tendering reasons "
 "and the text of the trade agreement(s), refer to the trade agreement(s)."
 msgstr ""
 
-#: .\templates\limited_tendering.html:63
+#. Translators: Limited Tendering. Third section caveat, part 1
+#: .\templates\limited_tendering.html:117
 msgid ""
 "The numbers in front of each limited tendering reason corresponds to the "
 "data values used for proactive disclosure of contract reporting.  For more "
 "information, refer to the "
 msgstr ""
 
-#. Translators: This is the first section of text on the first page of the form
-#: .\templates\mandatory_elements.html:9
+#. Translators: First page.  First paragraph
+#: .\templates\mandatory_elements.html:10
 msgid ""
 "The Government of Canada is a party to free trade agreements some of which "
 "sets out obligations for government procurement. This tool is developed to "
@@ -792,7 +913,8 @@ msgid ""
 "international trade agreements."
 msgstr "This message en francais"
 
-#: .\templates\mandatory_elements.html:12
+#. Translators: First page.  Third paragraph
+#: .\templates\mandatory_elements.html:19
 msgid ""
 "The results provided by this tool is a suggestion only. It is still the "
 "responsibility of the user to identify actual trade agreement coverage based "
@@ -800,58 +922,58 @@ msgid ""
 "exclusions that would apply to the entire procurement. "
 msgstr ""
 
-#. Translators: This text states Step 1 for the first page of the form
-#: .\templates\mandatory_elements.html:15
+#. Translators: First page. Subtitle Step...
+#: .\templates\mandatory_elements.html:24
 msgid "Step 1. Basic Procurement Information"
 msgstr ""
 
-#. Translators: This text is the instructions for the first page of the form
-#: .\templates\mandatory_elements.html:17
+#. Translators: First page. Instructions
+#: .\templates\mandatory_elements.html:28
 msgid ""
 "Provide a response to the following questions below and click the ‘Next’ "
 "button. Refer to the footnotes at the bottom for helpful hints in answering "
 "the questions."
 msgstr ""
 
-#. Translators: This text states which fields are required on the first page of the form
-#: .\templates\mandatory_elements.html:36
+#. Translators: First page.  Required
+#: .\templates\mandatory_elements.html:42
 msgid "Required"
 msgstr ""
 
-#. Translators: This text is in the caveat section of the first page of the form
-#: .\templates\mandatory_elements.html:82
+#. Translators: First page. Fist page. First sentence of caveats
+#: .\templates\mandatory_elements.html:87
 msgid ""
 "The following types of procurement have not been factored in this tool. "
 "Users will need to consult the text of Canada’s trade agreement to determine "
 "the application of trade agreement coverage for these procurements:"
 msgstr ""
 
-#. Translators: This text is in the caveat section of the first page of the form
-#: .\templates\mandatory_elements.html:87
+#. Translators: First page. First caveat
+#: .\templates\mandatory_elements.html:92
 msgid "Procurement of goods or services from non-for-profit institutions."
 msgstr ""
 
-#. Translators: This text is in the caveat section of the first page of the form
-#: .\templates\mandatory_elements.html:91
+#. Translators: First page.  Second caveat
+#: .\templates\mandatory_elements.html:96
 msgid ""
 "Procurement related to an international crossing between Canada and another "
 "country."
 msgstr ""
 
-#. Translators: This text is in the caveat section of the first page of the form
-#: .\templates\mandatory_elements.html:95
+#. Translators: First page. Third caveat
+#: .\templates\mandatory_elements.html:100
 msgid "Procurement related to space projects for the Canadian Space Agency."
 msgstr ""
 
-#. Translators: This text is in the caveat section of the first page of the form
-#: .\templates\mandatory_elements.html:99
+#. Translators: First page.  Fourth caveat
+#: .\templates\mandatory_elements.html:104
 msgid ""
 "Procurement of satellite communications, earth observations and global "
 "navigation systems for the Canadian Space Agency."
 msgstr ""
 
-#. Translators: First section of text of footnotes section first page of the form
-#: .\templates\mandatory_elements.html:113
+#. Translators: First page. First footnote
+#: .\templates\mandatory_elements.html:118
 msgid ""
 "Enter the maximum total value of the procurement considering all forms of "
 "remuneration over the entire duration of the contract, including the total "
@@ -862,8 +984,8 @@ msgid ""
 "standing offer."
 msgstr ""
 
-#. Translators: Second section of text of footnotes section first page of the form
-#: .\templates\mandatory_elements.html:121
+#. Translators: First page. Second footnote
+#: .\templates\mandatory_elements.html:126
 msgid ""
 "Select the name of the federal department or departmental agency that is the "
 "procuring entity. Note: This tool cannot be used for procurements on behalf "
@@ -871,21 +993,21 @@ msgid ""
 "Schedules I, I.1 or II of the  "
 msgstr ""
 
-#. Translators: Part of second section of text of footnotes section first page of the form
-#: .\templates\mandatory_elements.html:124
+#. Translators: First page. Section of second footnote
+#: .\templates\mandatory_elements.html:129
 msgid "Financial Administration Act."
 msgstr ""
 
-#. Translators: Third section of text of footnotes section first page of the form
-#: .\templates\mandatory_elements.html:133
+#. Translators: First page. Third footnote
+#: .\templates\mandatory_elements.html:138
 msgid ""
 "Select the commodity type. If a procurement includes more than one commodity "
 "type (e.g. a combination of goods and services), select the one that makes "
 "up the largest portion of the estimated contract value."
 msgstr ""
 
-#. Translators: Part of fourth section of text of footnotes section first page of the form
-#: .\templates\mandatory_elements.html:141
+#. Translators: First page. Fourth footnote
+#: .\templates\mandatory_elements.html:146
 msgid ""
 "Select the applicable commodity code. If multiple commodity codes apply to a "
 "procurement, select the commodity code that represents the largest portion "
@@ -893,28 +1015,28 @@ msgid ""
 "entire procurement.  "
 msgstr ""
 
-#. Translators: Part of fourth section of text of footnotes section first page of the form
-#: .\templates\mandatory_elements.html:145
+#. Translators: First page. Section of fourth footnote introduces list
+#: .\templates\mandatory_elements.html:150
 msgid ""
 "Note: The Goods and Services Identification Number commodity codes are based "
 "on the following applicable trade agreement commodity codes used to "
 "determine trade agreement commodity coverage:"
 msgstr ""
 
-#. Translators: Part of fourth section of text of footnotes section first page of the form
-#: .\templates\mandatory_elements.html:150
+#. Translators: First page.  Fourth footnote, item 1
+#: .\templates\mandatory_elements.html:155
 msgid "For goods, the Federal Supply Classification (FSC) is used. "
 msgstr ""
 
-#. Translators: Part of fourth section of text of footnotes section first page of the form
-#: .\templates\mandatory_elements.html:154
+#. Translators: Firt page. Fourth footnote, item 2
+#: .\templates\mandatory_elements.html:159
 msgid ""
 "For services, the Common Classification System (CCS) and the United Nations "
 "Provisional Central Product Classification (CPC) system are used.  "
 msgstr ""
 
-#. Translators: Part of fourth section of text of footnotes section first page of the form
-#: .\templates\mandatory_elements.html:158
+#. Translators: First page. Fourth footnote, item 3
+#: .\templates\mandatory_elements.html:163
 msgid ""
 "For construction services, the United Nations Provisional Central Product "
 "Classification (CPC) is used."
