@@ -4,6 +4,7 @@ from io import BytesIO
 from django.http import HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
+from guide.models import AGREEMENTS, AGREEMENTS_FIELDS
 
 FORMS = [("0", RequiredFieldsForm),
          ("1", GeneralExceptionForm),
@@ -15,10 +16,7 @@ TEMPLATES = {"0": "mandatory_elements.html",
              "2": "cfta_exceptions.html",
              "3": "limited_tendering.html"}
 
-AGREEMENTS = [
-    'ccfta', 'ccofta', 'chfta', 'cpafta', 'cpfta', 
-    'ckfta', 'cufta', 'wto_agp', 'ceta', 'cptpp', 'cfta'
-]
+
 
 
 url_name='guide:form_step'

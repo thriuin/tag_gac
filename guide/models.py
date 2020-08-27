@@ -5,6 +5,21 @@ TYPE_CHOICES = [('1', 'GOODS'),
                 ('2', 'SERVICES'), 
                 ('3', 'CONSTRUCTION')]
 
+AGREEMENTS = (
+    _('CCFTA'), 
+    _('CCoFTA'), 
+    _('CHFTA'), 
+    _('CPaFTA'), 
+    _('CPFTA'), 
+    _('CKFTA'), 
+    _('CUFTA'), 
+    _('WTO-AGP'),
+    _('CETA'), 
+    _('CPTPP'), 
+    _('CFTA')
+)
+
+AGREEMENTS_FIELDS = [field.replace('-', '_').lower() for field in AGREEMENTS]
 
 class BooleanTradeAgreement(models.Model):
     """
@@ -21,57 +36,57 @@ class BooleanTradeAgreement(models.Model):
     id = models.AutoField(primary_key=True)
     ccfta = models.BooleanField(
         default = False,
-        verbose_name = _('CCFTA'),
+        verbose_name = AGREEMENTS[0],
         blank = False
     )
     ccofta = models.BooleanField(
         default = False,
-        verbose_name = _('CCoFTA'),
+        verbose_name = AGREEMENTS[1],
         blank = False
     )
     chfta = models.BooleanField(
         default = False,
-        verbose_name = _('CHFTA'),
+        verbose_name = AGREEMENTS[2],
         blank = False
     )
     cpafta = models.BooleanField(
         default = False,
-        verbose_name = _('CPaFTA'),
+        verbose_name = AGREEMENTS[3],
         blank = False
     )
     cpfta = models.BooleanField(
         default = False,
-        verbose_name = _('CPFTA'),
+        verbose_name = AGREEMENTS[4],
         blank = False
     )
     ckfta = models.BooleanField(
         default = False,
-        verbose_name = _('CKFTA'),
+        verbose_name = AGREEMENTS[5],
         blank = False
     )
     cufta = models.BooleanField(
         default = False,
-        verbose_name = _('CUFTA'),
+        verbose_name = AGREEMENTS[6],
         blank = False
     )
     wto_agp = models.BooleanField(
         default = False,
-        verbose_name = _('WTO-AGP'),
+        verbose_name = AGREEMENTS[7],
         blank = False
     )
     ceta = models.BooleanField(
         default = False,
-        verbose_name = _('CETA'),
+        verbose_name = AGREEMENTS[8],
         blank = False
     )
     cptpp = models.BooleanField(
         default = False,
-        verbose_name = _('CPTPP'),
+        verbose_name = AGREEMENTS[9],
         blank = False
     )
     cfta = models.BooleanField(
         default = False,
-        verbose_name = _('CFTA'),
+        verbose_name = AGREEMENTS[10],
         blank = False
     )
 
@@ -162,18 +177,17 @@ class OrgTypeRule(BooleanTradeAgreement):
     )
     construction = models.BooleanField(
         default = False,
-        verbose_name = _('Department of Transport has a specific commodity coverage for Construction Services'),
+        verbose_name = _('Construction services not covered'),
         blank = False
     )
     goods = models.BooleanField(
         default = False,
-        verbose_name = _('The Department of National Defence, the Canadian Coast Guard, and the Royal Canadian Mounted Police have specific commodity code coverage for goods.'),
+        verbose_name = _('Mixed goods coverage'),
         blank = False
     )
 
     def __str__(self):
-        return f"{self.org_fk} - Goods Rule: {self.goods} Transport Rule: {self.construction}"
-
+        return f"{self.org_fk}, Goods Rule: {self.goods}, Transport Rule: {self.construction}"
 
 
 
@@ -205,57 +219,57 @@ class ValueThreshold(models.Model):
     id = models.AutoField(primary_key = True)
     ccfta = models.PositiveIntegerField(
         default = 0,
-        verbose_name = _('CCFTA'),
+        verbose_name = AGREEMENTS[0],
         blank = False
     )
     ccofta = models.PositiveIntegerField(
         default = 0,
-        verbose_name = _('CCoFTA'),
+        verbose_name = AGREEMENTS[1],
         blank = False
     )
     chfta = models.PositiveIntegerField(
         default = 0,
-        verbose_name = _('CHFTA'),
+        verbose_name = AGREEMENTS[2],
         blank = False
     )
     cpafta = models.PositiveIntegerField(
         default = 0,
-        verbose_name = _('CPaFTA'),
+        verbose_name = AGREEMENTS[3],
         blank = False
     )
     cpfta = models.PositiveIntegerField(
         default = 0,
-        verbose_name = _('CPFTA'),
+        verbose_name = AGREEMENTS[4],
         blank = False
     )
     ckfta = models.PositiveIntegerField(
         default = 0,
-        verbose_name = _('CKFTA'),
+        verbose_name = AGREEMENTS[5],
         blank = False
     )
     cufta = models.PositiveIntegerField(
         default = 0,
-        verbose_name = _('CUFTA'),
+        verbose_name = AGREEMENTS[6],
         blank = False
     )
     wto_agp = models.PositiveIntegerField(
         default = 0,
-        verbose_name = _('WTO-AGP'),
+        verbose_name = AGREEMENTS[7],
         blank = False
     )
     ceta = models.PositiveIntegerField(
         default = 0,
-        verbose_name = _('CETA'),
+        verbose_name = AGREEMENTS[8],
         blank = False
     )
     cptpp = models.PositiveIntegerField(
         default = 0,
-        verbose_name = _('CPTPP'),
+        verbose_name = AGREEMENTS[9],
         blank = False
     )
     cfta = models.PositiveIntegerField(
         default = 0,
-        verbose_name = _('CFTA'),
+        verbose_name = AGREEMENTS[10],
         blank = False
     )
 

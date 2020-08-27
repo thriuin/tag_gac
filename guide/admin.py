@@ -3,7 +3,8 @@ import guide.models as models
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from modeltranslation.admin import TranslationAdmin
-from guide.logic import AGREEMENTS
+from guide.models import AGREEMENTS_FIELDS
+
 
 # Model resources
 class OrgTypeRuleResource(resources.ModelResource):
@@ -61,28 +62,28 @@ class OrganizationResource(resources.ModelResource):
         model = models.Organization
 
 
-class ListDisplayMixin(object):
-    def __init__(self, model, admin_site):
-        lst = [f.name for f in model._meta.get_fields()]
-        self.list_display = list(reversed(lst))
-        self.list_editable = list(filter(lambda x: x != 'id', lst))
-        self.list_display_links = ['id']
-        super(ListDisplayMixin, self).__init__(model, admin_site)
-
 
 # ModelAdmins
 @admin.register(models.OrgTypeRule)
-class TypeOrganizationExclusionAdmin(ListDisplayMixin, ImportExportModelAdmin):
+class TypeOrganizationExclusionAdmin(ImportExportModelAdmin):
     resource_class = OrgTypeRuleResource
-    list_filter = AGREEMENTS
-    search_fields = ['org_fk']
+    lst = ['__str__']
+    list_filter = AGREEMENTS_FIELDS
+    lst.extend(AGREEMENTS_FIELDS)
+    list_display = lst
+    list_editable = AGREEMENTS_FIELDS
+    list_display_links = ['__str__']
 
 
 @admin.register(models.CodeOrganizationExclusion)
-class CodeOrganizationExclusionAdmin(ListDisplayMixin, ImportExportModelAdmin):
+class CodeOrganizationExclusionAdmin(ImportExportModelAdmin):
     resource_class = CodeOrganizationExclusionResource
-    list_filter = AGREEMENTS
-    search_fields = ['org_fk', 'code_fk']
+    lst = ['__str__']
+    list_filter = AGREEMENTS_FIELDS
+    lst.extend(AGREEMENTS_FIELDS)
+    list_display = lst
+    list_editable = AGREEMENTS_FIELDS
+    list_display_links = ['__str__']
 
 
 @admin.register(models.CommodityType)
@@ -91,42 +92,73 @@ class CommodityTypeAdmin(ImportExportModelAdmin, TranslationAdmin):
 
 
 @admin.register(models.Code)
-class CodeAdmin(ListDisplayMixin, ImportExportModelAdmin, TranslationAdmin):
+class CodeAdmin(ImportExportModelAdmin, TranslationAdmin):
     resource_class = CodeResource
-    lst = AGREEMENTS.copy()
-    lst.append('type')
-    list_filter = lst
-    search_fields = ['code', 'code_en', 'code_fr']
+    lst = ['id', 'code', 'type']
+    lst.extend(AGREEMENTS_FIELDS)
+    types = ['type']
+    types.extend(AGREEMENTS_FIELDS)
+    list_filter = types
+    search_fields = ['code']
+    list_display = lst
+    list_editable = list(filter(lambda x: x != 'id', lst))
+    list_display_links = ['id']
 
 
 @admin.register(models.GeneralException)
-class GeneralExceptionAdmin(ListDisplayMixin, ImportExportModelAdmin, TranslationAdmin):
+class GeneralExceptionAdmin(ImportExportModelAdmin, TranslationAdmin):
     resource_class = GeneralExceptionResource
-    list_filter = AGREEMENTS
-    search_fields = ['description', 'description_en', 'description_fr']
+    lst = ['id', 'name']
+    lst.extend(AGREEMENTS_FIELDS)
+    list_filter = AGREEMENTS_FIELDS
+    search_fields = ['name']
+    list_display = lst
+    list_editable = list(filter(lambda x: x != 'id', lst))
+    list_display_links = ['id']
 
 
 @admin.register(models.LimitedTenderingReason)
-class TenderingReasonAdmin(ListDisplayMixin, ImportExportModelAdmin, TranslationAdmin):
+class TenderingReasonAdmin(ImportExportModelAdmin, TranslationAdmin):
     resource_class = TenderingReasonResource
-    list_filter = AGREEMENTS
-    search_fields = ['description', 'description_en', 'description_fr']
+    lst = ['id', 'name']
+    lst.extend(AGREEMENTS_FIELDS)
+    list_filter = AGREEMENTS_FIELDS
+    search_fields = ['name']
+    list_display = lst
+    list_editable = list(filter(lambda x: x != 'id', lst))
+    list_display_links = ['id']
 
 
 @admin.register(models.CftaException)
-class CftaExceptionAdmin(ListDisplayMixin, ImportExportModelAdmin, TranslationAdmin):
+class CftaExceptionAdmin(ImportExportModelAdmin, TranslationAdmin):
     resource_class = CftaExceptionResource
-    search_fields = ['description', 'description_en', 'description_fr']
+    lst = ['id', 'name']
+    lst.extend(AGREEMENTS_FIELDS)
+    list_filter = AGREEMENTS_FIELDS
+    search_fields = ['name']
+    list_display = lst
+    list_editable = list(filter(lambda x: x != 'id', lst))
+    list_display_links = ['id']
 
 
 @admin.register(models.ValueThreshold)
-class ValueThresholdAdmin(ListDisplayMixin, ImportExportModelAdmin):
+class ValueThresholdAdmin(ImportExportModelAdmin):
     resource_class = ValueThresholdResource
-    list_filter = ['type']
+    lst = ['type']
+    list_filter = lst
+    list_display_links = lst
+    list_display = lst + AGREEMENTS_FIELDS
+    list_editable = AGREEMENTS_FIELDS
 
 
 @admin.register(models.Organization)
-class OrganizationAdmin(ListDisplayMixin, ImportExportModelAdmin, TranslationAdmin):
+class OrganizationAdmin(ImportExportModelAdmin, TranslationAdmin):
     resource_class = OrganizationResource
-    list_filter = AGREEMENTS
-    search_fields = ['entities', 'entities_en', 'entities_fr']
+    lst = ['id', 'name']
+    lst.extend(AGREEMENTS_FIELDS)
+    list_filter = AGREEMENTS_FIELDS
+    search_fields = ['name']
+    list_display = lst
+    list_editable = list(filter(lambda x: x != 'id', lst))
+    list_display_links = ['id']
+

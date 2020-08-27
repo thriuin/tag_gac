@@ -3,7 +3,7 @@ from guide.models import Code, GeneralException, CftaException, LimitedTendering
 from guide.forms import RequiredFieldsForm, GeneralExceptionForm, LimitedTenderingForm, CftaExceptionForm
 from formtools.wizard.views import NamedUrlCookieWizardView
 from django.http import HttpResponse
-from guide.logic import FORMS, TEMPLATES, AGREEMENTS, url_name, done_step_name, determine_final_coverage, organization_rule, value_threshold_rule, code_rule, exceptions_rule, build_context_dict, process_form, render_to_pdf
+from guide.logic import FORMS, TEMPLATES, url_name, done_step_name, determine_final_coverage, organization_rule, value_threshold_rule, code_rule, exceptions_rule, build_context_dict, process_form, render_to_pdf
 from django.db.models import Q
 from dal import autocomplete
 from django.views.generic.edit import FormView
@@ -13,6 +13,7 @@ import json
 from django.core.serializers.json import DjangoJSONEncoder
 from datetime import date
 from django.utils import translation
+from guide.models import AGREEMENTS, AGREEMENTS_FIELDS
 
 def create_data_dict(self, forms):
     func_dict = {}
@@ -26,7 +27,7 @@ def create_data_dict(self, forms):
 def create_agreement_dict():
     func_agreement_dict = {}
     try:
-        for agreement in AGREEMENTS:
+        for agreement in AGREEMENTS_FIELDS:
             func_agreement_dict.update({agreement:{}})
     except:
         pass
