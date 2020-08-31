@@ -3,7 +3,7 @@ from guide.models import Code, GeneralException, CftaException, LimitedTendering
 from guide.forms import RequiredFieldsForm, GeneralExceptionForm, LimitedTenderingForm, CftaExceptionForm
 from formtools.wizard.views import NamedUrlCookieWizardView
 from django.http import HttpResponse
-from guide.logic import FORMS, TEMPLATES, url_name, done_step_name, determine_final_coverage, organization_rule, value_threshold_rule, code_rule, exceptions_rule, build_context_dict, process_form, render_to_pdf
+from guide.logic import FORMS, TEMPLATES, url_name, done_step_name, organization_rule, value_threshold_rule, code_rule, exceptions_rule, render_to_pdf
 from django.db.models import Q
 from dal import autocomplete
 from django.views.generic.edit import FormView
@@ -15,38 +15,33 @@ from datetime import date
 from django.utils import translation
 from guide.models import AGREEMENTS, AGREEMENTS_FIELDS
 
+def replace_none_with_string(func_dict):
+    func_replace_dict = {k:['None'] if not v else v for k,v in func_dict.items()}
+    return func_replace_dict
+    
+def determine_final_coverage(_agreement):
+    cxt = {}
+    for k in _agreement.keys():
+        if all(_agreement[k].values()):
+            cxt[k] = True
+        else:
+            cxt[k] = False
+    return cxt
+
 def create_data_dict(self, forms):
-    func_dict = {}
+    func_data_dict = {}
     try:
         for f in forms:
-            func_dict.update(self.get_cleaned_data_for_step(f))
+            func_data_dict.update(self.get_cleaned_data_for_step(f))
     except:
         pass
-    return func_dict 
+    return func_data_dict
 
 def create_agreement_dict():
-    func_agreement_dict = {}
-    try:
-        for agreement in AGREEMENTS_FIELDS:
-            func_agreement_dict.update({agreement:{}})
-    except:
-        pass
+    func_agreement_dict = {k:{} for k in AGREEMENTS_FIELDS}
     return func_agreement_dict
 
-def replace_none_with_string(func_dict):
-    for k, v in func_dict.items():
-        if v:
-            pass
-        else:
-            func_dict[k] = ['None']
-    return func_dict
 
-def get_list_of_applicable_trade_agreements(input_coverage_dict):
-    ta_list = []
-    for k, v in input_coverage_dict.items():
-        if v is True:
-            ta_list.append(k)
-    return ta_list
 
 def analyze_mandatory_elements(agreement, data):
     agreement = value_threshold_rule(agreement, data)
@@ -63,7 +58,7 @@ class OpenPDF(View):
         except:
             pass
         data_dict = replace_none_with_string(data_dict)
-        agreement_dict = create_agreement_dict()
+        agreement_dict = create_agreement_dict(data_dict)
 
         agreement_dict = analyze_mandatory_elements(agreement_dict, data_dict)
         
@@ -157,9 +152,8 @@ def lt_condition(wizard):
     except:
         return True
     
-    data_dict = replace_none_with_string(data_dict)
     agreement_dict = create_agreement_dict()
-    
+
     agreement_dict = analyze_mandatory_elements(agreement_dict, data_dict)
     exception_dict = {
             'exceptions': GeneralException,
@@ -222,7 +216,6 @@ class TradeForm(NamedUrlCookieWizardView):
         if 'limited_tendering' in form.fields:
             lt_list = [f[0] for f in FORMS[:3]]
             data_dict = create_data_dict(self, lt_list)
-            data_dict = replace_none_with_string(data_dict)
             agreement_dict = create_agreement_dict()
 
             agreement_dict = analyze_mandatory_elements(agreement_dict, data_dict)
@@ -234,8 +227,8 @@ class TradeForm(NamedUrlCookieWizardView):
             
             coverage_dict = determine_final_coverage(agreement_dict)
 
-            ta_applies = get_list_of_applicable_trade_agreements(coverage_dict)
-            
+            ta_applies = [k for k,v in coverage_dict.items() if v is True]
+
             query_list = []
             if ta_applies:
                 qs = LimitedTenderingReason.objects.all()
@@ -261,23 +254,20 @@ class TradeForm(NamedUrlCookieWizardView):
         """
         done_list = [f[0] for f in FORMS]
         data_dict = create_data_dict(self, done_list)
-        data_dict = replace_none_with_string(data_dict)
         agreement_dict = create_agreement_dict()
 
         agreement_dict = analyze_mandatory_elements(agreement_dict, data_dict)
-        
         exception_dict = {
             'exceptions': GeneralException,
             'cfta_exceptions': CftaException,
         }
         agreement_dict = exceptions_rule(agreement_dict, data_dict, exception_dict)
-        
-        coverage_dict = determine_final_coverage(agreement_dict)
+        data_dict = replace_none_with_string(data_dict)
         
         data_dict['ta'] = agreement_dict
-        data_dict['bool'] = coverage_dict
+        data_dict['bool'] = determine_final_coverage(agreement_dict)
 
-        number_of_ta = sum(coverage_dict.values())
+        number_of_ta = sum(data_dict['bool'].values())
         if number_of_ta == 0:
             output = 'No trade agreements apply.  '
         else:

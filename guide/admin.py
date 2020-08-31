@@ -7,11 +7,16 @@ from guide.models import AGREEMENTS_FIELDS
 
 
 # Model resources
-class OrgTypeRuleResource(resources.ModelResource):
+class ConstructionCoverageResource(resources.ModelResource):
 
     class Meta:
-        model = models.OrgTypeRule
+        model = models.ConstructionCoverage
 
+
+class GoodsCoverageResource(resources.ModelResource):
+
+    class Meta:
+        model = models.GoodsCoverage
 
 
 class CodeOrganizationExclusionResource(resources.ModelResource):
@@ -64,15 +69,26 @@ class OrganizationResource(resources.ModelResource):
 
 
 # ModelAdmins
-@admin.register(models.OrgTypeRule)
-class TypeOrganizationExclusionAdmin(ImportExportModelAdmin):
-    resource_class = OrgTypeRuleResource
-    lst = ['__str__']
+@admin.register(models.ConstructionCoverage)
+class ConstructionCoverageAdmin(ImportExportModelAdmin):
+    resource_class = ConstructionCoverageResource
+    lst = ['org_fk']
     list_filter = AGREEMENTS_FIELDS
     lst.extend(AGREEMENTS_FIELDS)
     list_display = lst
     list_editable = AGREEMENTS_FIELDS
-    list_display_links = ['__str__']
+    list_display_links = ['org_fk']
+
+
+@admin.register(models.GoodsCoverage)
+class GoodsCoverageAdmin(ImportExportModelAdmin):
+    resource_class = GoodsCoverageResource
+    lst = ['org_fk']
+    list_filter = AGREEMENTS_FIELDS
+    lst.extend(AGREEMENTS_FIELDS)
+    list_display = lst
+    list_editable = AGREEMENTS_FIELDS
+    list_display_links = ['org_fk']
 
 
 @admin.register(models.CodeOrganizationExclusion)

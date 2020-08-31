@@ -110,7 +110,8 @@ class Organization(BooleanTradeAgreement):
 
     class Meta:
         ordering = ['name']
-
+        verbose_name_plural = "  Entities" # 2 space
+    
     def __str__(self):
         return self.name
 
@@ -134,9 +135,11 @@ class CommodityType(models.Model):
         verbose_name = _('Commodity Type')
     )
 
+
     class Meta:
         ordering = ['commodity_type']
-
+        verbose_name_plural = "  Commodity Types" # 2 space
+ 
     def __str__(self):
         return self.commodity_type
 
@@ -164,9 +167,11 @@ class Code(BooleanTradeAgreement):
 
     def __str__(self):
         return self.code
+    class Meta:
+        verbose_name_plural = " Commodity Codes" # 1 space
 
 
-class OrgTypeRule(BooleanTradeAgreement):
+class ConstructionCoverage(BooleanTradeAgreement):
 
     org_fk = models.ForeignKey(
         Organization,
@@ -175,21 +180,27 @@ class OrgTypeRule(BooleanTradeAgreement):
         verbose_name = _('Org fk en ca'),
         on_delete = models.CASCADE
     )
-    construction = models.BooleanField(
-        default = False,
-        verbose_name = _('Construction services not covered'),
-        blank = False
-    )
-    goods = models.BooleanField(
-        default = False,
-        verbose_name = _('Mixed goods coverage'),
-        blank = False
+
+
+    class Meta:
+        verbose_name_plural = "Construction Coverage" # 0 space
+
+
+class GoodsCoverage(BooleanTradeAgreement):
+    
+    org_fk = models.ForeignKey(
+        Organization,
+        to_field = 'name',
+        related_name = '+',
+        verbose_name = _('Org fk en ca'),
+        on_delete = models.CASCADE
     )
 
     def __str__(self):
-        return f"{self.org_fk}, Goods Rule: {self.goods}, Transport Rule: {self.construction}"
-
-
+        return str(self.org_fk)
+    
+    class Meta:
+        verbose_name_plural = "Goods Coverage" # 0 space
 
 class CodeOrganizationExclusion(BooleanTradeAgreement):
     code_fk = models.ForeignKey(
@@ -209,6 +220,9 @@ class CodeOrganizationExclusion(BooleanTradeAgreement):
 
     def __str__(self):
         return f"{self.org_fk} - {self.code_fk} - Exclusion"
+
+    class Meta:
+        verbose_name_plural = "Commodity Code - Entities - Exclusions" # 0 space
 
 
 class ValueThreshold(models.Model):
@@ -285,6 +299,8 @@ class ValueThreshold(models.Model):
 
     def __str__(self):
         return str(self.type)
+    class Meta:
+        verbose_name_plural = "  Value Thresholds" # 2 space
 
 
 class LimitedTenderingReason(BooleanTradeAgreement):
@@ -300,6 +316,10 @@ class LimitedTenderingReason(BooleanTradeAgreement):
 
     def __str__(self):
         return self.name
+    
+    
+    class Meta:
+        verbose_name_plural = "  Limited Tendering Reasons" # 2 space
 
 
 class GeneralException(BooleanTradeAgreement):
@@ -315,6 +335,9 @@ class GeneralException(BooleanTradeAgreement):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name_plural = "  General Exceptions" # 2 space
+
 
 class CftaException(BooleanTradeAgreement):
     """
@@ -329,3 +352,6 @@ class CftaException(BooleanTradeAgreement):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name_plural = "  CFTA Exceptions" # 2 space

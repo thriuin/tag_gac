@@ -16,9 +16,6 @@ TEMPLATES = {"0": "mandatory_elements.html",
              "2": "cfta_exceptions.html",
              "3": "limited_tendering.html"}
 
-
-
-
 url_name='guide:form_step'
 done_step_name='guide:done_step'
 
@@ -30,33 +27,6 @@ def render_to_pdf(template_src, context_dict={}):
     if not pdf.err:
         return HttpResponse(result.getvalue(), content_type='application/pdf')
     return None
-
-def build_context_dict():
-    cxt = {}
-    cxt['ta'] = {ta:{} for ta in AGREEMENTS}
-    return cxt
-        
-def process_form(cxt, form_data):
-    for k, v in form_data.items():
-        cxt[k] = v
-        for k2 in cxt['ta'].keys():
-            cxt['ta'][k2][k] = True
-    return cxt
-
-def check_if_trade_agreement_applies(ta, cxt, data, name):
-    check = data.values_list(ta).get()[0]
-    if check is False:
-        cxt[ta][name] = False
-    return cxt
-    
-def determine_final_coverage(agreement):
-    cxt = {}
-    for k1, v1 in agreement.items():
-        cxt[k1] = True
-        for v2 in v1.values():
-            if v2 == False:
-                cxt[k1] = v2
-    return cxt
 
 def organization_rule(agreement, data):
     """Checks which trade agreements apply to the selected entity
@@ -74,16 +44,11 @@ def organization_rule(agreement, data):
     model = models.Organization
     org = data['entities']
 
-    try:
-        data = model.objects.filter(name=org)
-        for k in agreement.keys():
-            check = data.values_list(k).get()[0]
-            if check is False:
-                agreement[k]['entities'] = False
-            else:
-                agreement[k]['entities'] = True
-    except:
-        raise ValueError
+    data = model.objects.filter(name=org)
+    for k in agreement.keys():
+        check = data.values_list(k).get()[0]
+        agreement[k]['entities'] = check
+
     return agreement
 
 
@@ -116,7 +81,7 @@ def value_threshold_rule(agreement, data):
         raise ValueError
     return agreement
 
-def code_rule(agreement, data):
+def code_rule(agreement, data_dict):
     """Checks if the code selected by the user is covered by each trade agreement.
 
     Arguments:
@@ -131,84 +96,107 @@ def code_rule(agreement, data):
     Returns:
         [dictionary] -- Returns context with updated analysis
     """
-    code = data['code']
-    commodity = data['type']
-    org = data['entities']
-    data = models.Code.objects.filter(code=code)
+    code = data_dict['code']
+    commodity = data_dict['type']
+    org = data_dict['entities']
+    code_db = models.Code.objects.filter(code=code)
 
-    if models.OrgTypeRule.objects.filter(org_fk=org).exists():
-        goods_rule = models.OrgTypeRule.objects.filter(org_fk=org).values_list('goods').get()[0]
-        tc_rule = models.OrgTypeRule.objects.filter(org_fk=org).values_list('construction').get()[0]
-        if str(commodity) == 'Goods' and goods_rule:
+
+    def construction_coverage(_agreement):
+        if models.ConstructionCoverage.objects.filter(org_fk=org).exists():
             for k in agreement.keys():
-                check = data.values_list(k).get()[0]
-                agreement[k]['code'] = check
-            return agreement
-        if str(commodity) == 'Construction' and tc_rule:
-            for k in agreement.keys():
-                check = models.OrgTypeRule.objects.filter(org_fk=org).values_list(k).get()[0]
-                if check is True:
-                    agreement[k]['code'] = False
-                elif check is False:
-                    agreement[k]['code'] = True
-            return agreement
+                check = models.ConstructionCoverage.objects.filter(org_fk=org).values_list(k).get()[0]
+                if check:
+                    _agreement[k]['code'] = False
+        else:
+            for k in _agreement.keys():
+                check = code_db.values_list(k).get()[0]
+                if not check:
+                    _agreement[k]['code'] = False
+        return _agreement
+    
+    def goods_coverage(_agreement):
+        if models.GoodsCoverage.objects.filter(org_fk=org).exists():
+            for k in _agreement.keys():
+                check = code_db.values_list(k).get()[0]
+                if not check:
+                    _agreement[k]['code'] = False
+        return _agreement
 
-    if models.CodeOrganizationExclusion.objects.filter(org_fk=org).filter(code_fk=code).exists():
-        for k in agreement.keys():
-            check = data.values_list(k).get()[0]
-            if check is True:
-                agreement[k]['code'] = False
-            elif check is False:
-                agreement[k]['code'] = True
-        return agreement
+    def services_coverage(_agreement):
+        for k in _agreement.keys():
+            check = code_db.values_list(k).get()[0]
+            if not check:
+                _agreement[k]['code'] = False
+        return _agreement
+    
+    def code_org_exclusion(_agreement):
+        if models.CodeOrganizationExclusion.objects.filter(org_fk=org).filter(code_fk=code).exists():
+            for k in _agreement.keys():
+                check = code_db.values_list(k).get()[0]
+                if not check:
+                    _agreement[k]['code'] = False
+        return _agreement
 
-    if str(commodity) == 'Goods':
-        for k in agreement.keys():
-            agreement[k]['code'] = True
-    else:
-        for k in agreement.keys():
-            check = data.values_list(k).get()[0]
-            agreement[k]['code'] = check
+    def set_false(_agreement):
+        if str(commodity) == 'Goods':
+            _agreement = goods_coverage(_agreement)
+        elif str(commodity) == 'Services':
+            _agreement = services_coverage(_agreement)
+        else:
+            _agreement = construction_coverage(_agreement)
+        _agreement = code_org_exclusion(_agreement)
+        return _agreement
 
+    def set_true(_agreement):
+        for k in _agreement.keys():
+            try: 
+                _test = _agreement[k]['code']
+            except:
+                _agreement[k]['code'] = True
+        return _agreement
+
+    agreement = set_false(agreement)
+    agreement = set_true(agreement)
     return agreement
 
 
-
-  
 
 def exceptions_rule(agreement, data, exception):
     """This function goes through the exceptions that the user selected and checks which trade agreements
     apply to each exception.  If a user selects a trade agreements and an exception applies then that
     agreement is set to False.
-
     Arguments:
         context {dictionary} -- Context tracks user input and analysis
         col {[type]} -- From context this gets the submitted value
         model {model} -- This gets the model related to the submitted value
-
     Raises:
         ValueError: If error in context
-
     Returns:
         Dictionary -- Returns updated context dictionary with analysis
     """
+    def set_false(_agreement, _exception, _model, _exception_name):
+        for k in _agreement.keys():
+            for ex in _exception:
+                check = _model.objects.filter(name=ex).values_list(k).get()[0]
+                if check:
+                    _agreement[k][_exception_name] = False
+        return _agreement
+
+    def set_true(_agreement, _exception_name):
+        for k in _agreement.keys():
+            try: 
+                _test = _agreement[k][_exception_name]
+            except:
+                _agreement[k][_exception_name] = True
+        return _agreement
+
     try:
         for exception_name, model in exception.items():
             exception = data[exception_name]
             if exception:
-                for k in agreement.keys():
-                    for ex in exception:
-                        check = model.objects.filter(name=ex).values_list(k).get()[0]
-                        agreement[k][exception_name] = check
-                        if (agreement[k][exception_name] is False):
-                            pass
-                        elif (agreement[k][exception_name] is True) and (check is False):
-                            pass
-                        elif (agreement[k][exception_name] is True) and (check is True):
-                            agreement[k][exception_name] = False
-            else:
-                for k in agreement.keys():
-                    agreement[k][exception_name] = True
+                agreement = set_false(agreement, exception, model, exception_name)
+            agreement = set_true(agreement, exception_name)
     except:
         pass
 
