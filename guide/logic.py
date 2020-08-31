@@ -41,12 +41,10 @@ def organization_rule(agreement, data):
     Returns:
         [dictionary] -- Returns updated context dict with analysis (true or false)
     """
-    model = models.Organization
     org = data['entities']
 
-    data = model.objects.filter(name=org)
     for k in agreement.keys():
-        check = data.values_list(k).get()[0]
+        check = models.Organization.objects.filter(name=org).values_list(k).get()[0]
         agreement[k]['entities'] = check
 
     return agreement
@@ -72,8 +70,8 @@ def value_threshold_rule(agreement, data):
     type = data['type']
     try:
         for k in agreement.keys():
-            check = model.objects.filter(type=type).values_list(k).get()[0]
-            if value < check:
+            threshold = model.objects.filter(type=type).values_list(k).get()[0]
+            if value < threshold:
                 agreement[k]['estimated_value'] = False
             else:
                 agreement[k]['estimated_value'] = True

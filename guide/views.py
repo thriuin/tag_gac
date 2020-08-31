@@ -15,18 +15,46 @@ from datetime import date
 from django.utils import translation
 from guide.models import AGREEMENTS, AGREEMENTS_FIELDS
 
+def get_ta_text(_data_dict):
+    if sum(_data_dict['bool'].values()) == 0:
+        output = 'No trade agreements apply.  '
+    else:
+        output = ''
+        for k, v in _data_dict['bool'].items():
+            if v is True:
+                output = output + k.upper() + ', '
+    _data_dict['output'] = output[:-2]
+    return _data_dict
+
+def get_tables_text(_data_dict):
+    _data_dict['tables'] = {}
+    for k1, v1 in _data_dict['ta'].items():
+        k1 = k1.upper()
+        _data_dict['tables'][k1] = {}
+        for k2, v2 in v1.items():
+            if k2 == 'type' or k2 == 'limited_tendering':
+                pass
+            else:
+                k2 = k2.replace('_', ' ')
+                k2 = k2.title()
+                if k1 == 'CFTA':
+                    k2 = k2.replace('Cfta Exceptions', 'CFTA Exceptions')
+                    _data_dict['tables'][k1][k2] = v2
+                else:
+                    if k2 == 'Cfta Exceptions':
+                        pass
+                    else:
+                        _data_dict['tables'][k1][k2] = v2
+    return _data_dict
+
 def replace_none_with_string(func_dict):
     func_replace_dict = {k:['None'] if not v else v for k,v in func_dict.items()}
     return func_replace_dict
     
 def determine_final_coverage(_agreement):
-    cxt = {}
-    for k in _agreement.keys():
-        if all(_agreement[k].values()):
-            cxt[k] = True
-        else:
-            cxt[k] = False
+    cxt={k:True if all(_agreement[k].values()) else False for k in _agreement.keys()}
     return cxt
+
 
 def create_data_dict(self, forms):
     func_data_dict = {}
@@ -41,13 +69,26 @@ def create_agreement_dict():
     func_agreement_dict = {k:{} for k in AGREEMENTS_FIELDS}
     return func_agreement_dict
 
-
-
 def analyze_mandatory_elements(agreement, data):
     agreement = value_threshold_rule(agreement, data)
     agreement = organization_rule(agreement, data)
     agreement = code_rule(agreement, data)
     return agreement
+
+def get_coverage(data_dict):
+    agreement_dict = create_agreement_dict()
+
+    agreement_dict = analyze_mandatory_elements(agreement_dict, data_dict)
+    exception_dict = {
+        'exceptions': GeneralException,
+        'cfta_exceptions': CftaException,
+    }
+    agreement_dict = exceptions_rule(agreement_dict, data_dict, exception_dict)
+    data_dict = replace_none_with_string(data_dict)
+    
+    data_dict['ta'] = agreement_dict
+    data_dict['bool'] = determine_final_coverage(agreement_dict)
+    return data_dict
 
 class OpenPDF(View):
     def get(self, request, *args, **kwargs):
@@ -57,56 +98,11 @@ class OpenPDF(View):
             data_dict.update(self.request.session)
         except:
             pass
-        data_dict = replace_none_with_string(data_dict)
-        agreement_dict = create_agreement_dict(data_dict)
+        data_dict = get_coverage(data_dict)
 
-        agreement_dict = analyze_mandatory_elements(agreement_dict, data_dict)
-        
-        exception_dict = {
-            'exceptions': GeneralException,
-            'cfta_exceptions': CftaException,
-        }
-        agreement_dict = exceptions_rule(agreement_dict, data_dict, exception_dict)
-        
-        coverage_dict = determine_final_coverage(agreement_dict)
-        
-        data_dict['ta'] = agreement_dict
-        data_dict['bool'] = coverage_dict
+        data_dict = get_ta_text(data_dict)
 
-        number_of_ta = sum(coverage_dict.values())
-        if number_of_ta == 0:
-            output = 'No trade agreements apply.  '
-        else:
-            output = ''
-            for k, v in data_dict['bool'].items():
-                if number_of_ta == 1:
-                    if v is True:
-                        output = k.upper() + ', '
-                else:
-                    if v is True:
-                        output = output + k.upper() + ', '
-        data_dict['output'] = output[:-2]
-
-        data_dict['tables'] = {}
-        for k1, v1 in data_dict['ta'].items():
-            k1 = k1.upper()
-            data_dict['tables'][k1] = {}
-            for k2, v2 in v1.items():
-                if k1 == 'CFTA':
-                    if k2 == 'type' or k2 == 'limited_tendering':
-                        pass
-                    else:
-                        k2 = k2.replace('_', ' ')
-                        k2 = k2.title()
-                        k2 = k2.replace('Cfta Exceptions', 'CFTA Exceptions')
-                        data_dict['tables'][k1][k2] = v2
-                else:
-                    if k2 == 'type' or k2 == 'limited_tendering' or k2 == 'cfta_exceptions':
-                        pass
-                    else:
-                        k2 = k2.replace('_', ' ')
-                        k2 = k2.title()
-                        data_dict['tables'][k1][k2] = v2
+        data_dict = get_tables_text(data_dict)
 
         pdf = render_to_pdf('pdf.html', data_dict)
         return HttpResponse(pdf, content_type='application/pdf')
@@ -152,18 +148,9 @@ def lt_condition(wizard):
     except:
         return True
     
-    agreement_dict = create_agreement_dict()
-
-    agreement_dict = analyze_mandatory_elements(agreement_dict, data_dict)
-    exception_dict = {
-            'exceptions': GeneralException,
-            'cfta_exceptions': CftaException,
-        }
-    agreement_dict = exceptions_rule(agreement_dict, data_dict, exception_dict)
+    data_dict = get_coverage(data_dict)
     
-    coverage_dict = determine_final_coverage(agreement_dict)
-    
-    if sum(coverage_dict.values()) == 0:
+    if sum(data_dict['bool'].values()) == 0:
         return False
     return True
 
@@ -216,18 +203,10 @@ class TradeForm(NamedUrlCookieWizardView):
         if 'limited_tendering' in form.fields:
             lt_list = [f[0] for f in FORMS[:3]]
             data_dict = create_data_dict(self, lt_list)
-            agreement_dict = create_agreement_dict()
-
-            agreement_dict = analyze_mandatory_elements(agreement_dict, data_dict)
-            exception_dict = {
-                'exceptions': GeneralException,
-                'cfta_exceptions': CftaException,
-            }
-            agreement_dict = exceptions_rule(agreement_dict, data_dict, exception_dict)
             
-            coverage_dict = determine_final_coverage(agreement_dict)
+            data_dict = get_coverage(data_dict)
 
-            ta_applies = [k for k,v in coverage_dict.items() if v is True]
+            ta_applies = [k for k,v in data_dict['bool'].items() if v is True]
 
             query_list = []
             if ta_applies:
@@ -254,53 +233,12 @@ class TradeForm(NamedUrlCookieWizardView):
         """
         done_list = [f[0] for f in FORMS]
         data_dict = create_data_dict(self, done_list)
-        agreement_dict = create_agreement_dict()
+        data_dict = get_coverage(data_dict)
 
-        agreement_dict = analyze_mandatory_elements(agreement_dict, data_dict)
-        exception_dict = {
-            'exceptions': GeneralException,
-            'cfta_exceptions': CftaException,
-        }
-        agreement_dict = exceptions_rule(agreement_dict, data_dict, exception_dict)
-        data_dict = replace_none_with_string(data_dict)
-        
-        data_dict['ta'] = agreement_dict
-        data_dict['bool'] = determine_final_coverage(agreement_dict)
+        data_dict = get_ta_text(data_dict)
 
-        number_of_ta = sum(data_dict['bool'].values())
-        if number_of_ta == 0:
-            output = 'No trade agreements apply.  '
-        else:
-            output = ''
-            for k, v in data_dict['bool'].items():
-                if number_of_ta == 1:
-                    if v is True:
-                        output = k.upper() + ', '
-                else:
-                    if v is True:
-                        output = output + k.upper() + ', '
-        data_dict['output'] = output[:-2]
+        data_dict = get_tables_text(data_dict)
 
-        data_dict['tables'] = {}
-        for k1, v1 in data_dict['ta'].items():
-            k1 = k1.upper()
-            data_dict['tables'][k1] = {}
-            for k2, v2 in v1.items():
-                if k1 == 'CFTA':
-                    if k2 == 'type' or k2 == 'limited_tendering':
-                        pass
-                    else:
-                        k2 = k2.replace('_', ' ')
-                        k2 = k2.title()
-                        k2 = k2.replace('Cfta Exceptions', 'CFTA Exceptions')
-                        data_dict['tables'][k1][k2] = v2
-                else:
-                    if k2 == 'type' or k2 == 'limited_tendering' or k2 == 'cfta_exceptions':
-                        pass
-                    else:
-                        k2 = k2.replace('_', ' ')
-                        k2 = k2.title()
-                        data_dict['tables'][k1][k2] = v2
 
         def add_sessions_list(name, model):
             ex_list = []
