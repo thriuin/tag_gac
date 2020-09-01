@@ -1,62 +1,43 @@
-from django.shortcuts import render, redirect
-from guide.models import Code, GeneralException, CftaException, LimitedTenderingReason, Organization, CommodityType
+from django.shortcuts import render
+from guide.models import Code, GeneralException, CftaException, LimitedTenderingReason, Organization, CommodityType, ValueThreshold, GoodsCoverage, ConstructionCoverage, CodeOrganizationExclusion
 from guide.forms import RequiredFieldsForm, GeneralExceptionForm, LimitedTenderingForm, CftaExceptionForm
 from formtools.wizard.views import NamedUrlCookieWizardView
 from django.http import HttpResponse
-from guide.logic import FORMS, TEMPLATES, url_name, done_step_name, organization_rule, value_threshold_rule, code_rule, exceptions_rule, render_to_pdf
-from django.db.models import Q
 from dal import autocomplete
-from django.views.generic.edit import FormView
 from django.views.generic import View
-from collections import OrderedDict
+from guide.models import AGREEMENTS_FIELDS
 import json
-from django.core.serializers.json import DjangoJSONEncoder
-from datetime import date
-from django.utils import translation
-from guide.models import AGREEMENTS, AGREEMENTS_FIELDS
+from io import BytesIO
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 
-def get_ta_text(_data_dict):
-    if sum(_data_dict['bool'].values()) == 0:
-        output = 'No trade agreements apply.  '
-    else:
-        output = ''
-        for k, v in _data_dict['bool'].items():
-            if v is True:
-                output = output + k.upper() + ', '
-    _data_dict['output'] = output[:-2]
-    return _data_dict
+FORMS = [("0", RequiredFieldsForm),
+         ("1", GeneralExceptionForm),
+         ("2", CftaExceptionForm),
+         ("3", LimitedTenderingForm)]
 
-def get_tables_text(_data_dict):
-    _data_dict['tables'] = {}
-    for k1, v1 in _data_dict['ta'].items():
-        k1 = k1.upper()
-        _data_dict['tables'][k1] = {}
-        for k2, v2 in v1.items():
-            if k2 == 'type' or k2 == 'limited_tendering':
-                pass
-            else:
-                k2 = k2.replace('_', ' ')
-                k2 = k2.title()
-                if k1 == 'CFTA':
-                    k2 = k2.replace('Cfta Exceptions', 'CFTA Exceptions')
-                    _data_dict['tables'][k1][k2] = v2
-                else:
-                    if k2 == 'Cfta Exceptions':
-                        pass
-                    else:
-                        _data_dict['tables'][k1][k2] = v2
-    return _data_dict
+TEMPLATES = {"0": "mandatory_elements.html",
+             "1": "exceptions.html",
+             "2": "cfta_exceptions.html",
+             "3": "limited_tendering.html"}
 
-def replace_none_with_string(func_dict):
-    func_replace_dict = {k:['None'] if not v else v for k,v in func_dict.items()}
-    return func_replace_dict
-    
-def determine_final_coverage(_agreement):
-    cxt={k:True if all(_agreement[k].values()) else False for k in _agreement.keys()}
-    return cxt
+TYPE_CHOICES = [('1', 'GOODS'), 
+                ('2', 'SERVICES'), 
+                ('3', 'CONSTRUCTION')]
 
+url_name='guide:form_step'
+done_step_name='guide:done_step'
 
 def create_data_dict(self, forms):
+    """[summary]
+
+    Args:
+        forms ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
     func_data_dict = {}
     try:
         for f in forms:
@@ -65,62 +46,405 @@ def create_data_dict(self, forms):
         pass
     return func_data_dict
 
-def create_agreement_dict():
-    func_agreement_dict = {k:{} for k in AGREEMENTS_FIELDS}
-    return func_agreement_dict
-
-def analyze_mandatory_elements(agreement, data):
-    agreement = value_threshold_rule(agreement, data)
-    agreement = organization_rule(agreement, data)
-    agreement = code_rule(agreement, data)
-    return agreement
-
 def get_coverage(data_dict):
+    """[summary]
+
+    Args:
+        data_dict ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    def create_agreement_dict():
+        """[summary]
+
+        Returns:
+            [type]: [description]
+        """
+        func_agreement_dict = {k:{} for k in AGREEMENTS_FIELDS}
+        return func_agreement_dict
+    
+    def value_threshold_rule(agreement, data):
+        """[summary]
+
+        Args:
+            agreement ([type]): [description]
+            data ([type]): [description]
+
+        Raises:
+            ValueError: [description]
+
+        Returns:
+            [type]: [description]
+        """
+        model = ValueThreshold
+        value = int(data['estimated_value'])
+        type = data['type']
+        try:
+            for k in agreement.keys():
+                threshold = model.objects.filter(type=type).values_list(k).get()[0]
+                if value < threshold:
+                    agreement[k]['estimated_value'] = False
+                else:
+                    agreement[k]['estimated_value'] = True
+        except:
+            pass
+        return agreement
+
+    def organization_rule(agreement, data):
+        """[summary]
+
+        Args:
+            agreement ([type]): [description]
+            data ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        """
+        org = data['entities']
+
+        for k in agreement.keys():
+            check = Organization.objects.filter(name=org).values_list(k).get()[0]
+            agreement[k]['entities'] = check
+
+        return agreement
+
+    def code_rule(agreement, data_dict):
+        """[summary]
+
+        Args:
+            agreement ([type]): [description]
+            data_dict ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        """
+        code = data_dict['code']
+        commodity = data_dict['type']
+        org = data_dict['entities']
+        code_db = Code.objects.filter(code=code)
+
+
+        def construction_coverage(_agreement):
+            """[summary]
+
+            Args:
+                _agreement ([type]): [description]
+
+            Returns:
+                [type]: [description]
+            """
+            if ConstructionCoverage.objects.filter(org_fk=org).exists():
+                for k in agreement.keys():
+                    check = ConstructionCoverage.objects.filter(org_fk=org).values_list(k).get()[0]
+                    if check:
+                        _agreement[k]['code'] = False
+            else:
+                for k in _agreement.keys():
+                    check = code_db.values_list(k).get()[0]
+                    if not check:
+                        _agreement[k]['code'] = False
+            return _agreement
+        
+        def goods_coverage(_agreement):
+            """[summary]
+
+            Args:
+                _agreement ([type]): [description]
+
+            Returns:
+                [type]: [description]
+            """
+            if GoodsCoverage.objects.filter(org_fk=org).exists():
+                for k in _agreement.keys():
+                    check = code_db.values_list(k).get()[0]
+                    if not check:
+                        _agreement[k]['code'] = False
+            return _agreement
+
+        def services_coverage(_agreement):
+            """[summary]
+
+            Args:
+                _agreement ([type]): [description]
+
+            Returns:
+                [type]: [description]
+            """
+            for k in _agreement.keys():
+                check = code_db.values_list(k).get()[0]
+                if not check:
+                    _agreement[k]['code'] = False
+            return _agreement
+        
+        def code_org_exclusion(_agreement):
+            """[summary]
+
+            Args:
+                _agreement ([type]): [description]
+
+            Returns:
+                [type]: [description]
+            """
+            if CodeOrganizationExclusion.objects.filter(org_fk=org).filter(code_fk=code).exists():
+                for k in _agreement.keys():
+                    check = code_db.values_list(k).get()[0]
+                    if not check:
+                        _agreement[k]['code'] = False
+            return _agreement
+
+        def set_false(_agreement):
+            """[summary]
+
+            Args:
+                _agreement ([type]): [description]
+
+            Returns:
+                [type]: [description]
+            """
+            print
+            if str(commodity) == 'Goods':
+                _agreement = goods_coverage(_agreement)
+            elif str(commodity) == 'Services':
+                _agreement = services_coverage(_agreement)
+            else:
+                _agreement = construction_coverage(_agreement)
+            _agreement = code_org_exclusion(_agreement)
+            return _agreement
+
+        def set_true(_agreement):
+            """[summary]
+
+            Args:
+                _agreement ([type]): [description]
+
+            Returns:
+                [type]: [description]
+            """
+            for k in _agreement.keys():
+                try: 
+                    _test = _agreement[k]['code']
+                except:
+                    _agreement[k]['code'] = True
+            return _agreement
+
+        agreement = set_false(agreement)
+        agreement = set_true(agreement)
+        return agreement
+
+    def exceptions_rule(agreement, data, exception):
+        """[summary]
+
+        Args:
+            agreement ([type]): [description]
+            data ([type]): [description]
+            exception ([type]): [description]
+        """
+        def set_false(_agreement, _exception, _model, _exception_name):
+            for k in _agreement.keys():
+                for ex in _exception:
+                    check = _model.objects.filter(name=ex).values_list(k).get()[0]
+                    if check:
+                        _agreement[k][_exception_name] = False
+            return _agreement
+
+        def set_true(_agreement, _exception_name):
+            for k in _agreement.keys():
+                try: 
+                    _test = _agreement[k][_exception_name]
+                except:
+                    _agreement[k][_exception_name] = True
+            return _agreement
+
+        try:
+            for exception_name, model in exception.items():
+                exception = data[exception_name]
+                if exception:
+                    agreement = set_false(agreement, exception, model, exception_name)
+                agreement = set_true(agreement, exception_name)
+        except:
+            pass
+
+        return agreement
+
+    def determine_final_coverage(_agreement):
+        """[summary]
+
+        Args:
+            _agreement ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        """
+        cxt={k:True if all(_agreement[k].values()) else False for k in _agreement.keys()}
+        return cxt
+
     agreement_dict = create_agreement_dict()
 
-    agreement_dict = analyze_mandatory_elements(agreement_dict, data_dict)
+    agreement_dict = value_threshold_rule(agreement_dict, data_dict)
+    agreement_dict = organization_rule(agreement_dict, data_dict)
+    agreement_dict = code_rule(agreement_dict, data_dict)
+
     exception_dict = {
         'exceptions': GeneralException,
         'cfta_exceptions': CftaException,
     }
     agreement_dict = exceptions_rule(agreement_dict, data_dict, exception_dict)
-    data_dict = replace_none_with_string(data_dict)
     
     data_dict['ta'] = agreement_dict
     data_dict['bool'] = determine_final_coverage(agreement_dict)
     return data_dict
 
-class OpenPDF(View):
-    def get(self, request, *args, **kwargs):
-        
-        data_dict = {}
-        try:
-            data_dict.update(self.request.session)
-        except:
+def get_output_text(_output_text):
+    """[summary]
+
+    Args:
+        _output_text ([type]): [description]
+    """
+    def get_ta_text(_ta_text):
+        """[summary]
+
+        Args:
+            _ta_text ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        """
+        if sum(_ta_text['bool'].values()) == 0:
+            output = 'No trade agreements apply.  '
+        else:
+            output = ''
+            for k, v in _ta_text['bool'].items():
+                if v is True:
+                    output = output + k.upper() + ', '
+        _ta_text['output'] = output[:-2]
+        return _ta_text
+
+    def get_summary_text(_sum_text):
+        """[summary]
+
+        Args:
+            _sum_text ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        """
+        _sum_text2 = {k:['None'] if not v else v for k,v in _sum_text.items()}
+        if 'limited_tendering' in _sum_text2:
             pass
-        data_dict = get_coverage(data_dict)
+        else:
+            _sum_text2['limited_tendering'] = ['None']
+        return _sum_text2
 
-        data_dict = get_ta_text(data_dict)
+    def get_tables_text(_table_text):
+        """[summary]
 
-        data_dict = get_tables_text(data_dict)
+        Args:
+            _table_text ([type]): [description]
 
-        pdf = render_to_pdf('pdf.html', data_dict)
+        Returns:
+            [type]: [description]
+        """
+        _table_text['tables'] = {}
+        for k1, v1 in _table_text['ta'].items():
+            k1 = k1.upper()
+            _table_text['tables'][k1] = {}
+            for k2, v2 in v1.items():
+                if k2 == 'type' or k2 == 'limited_tendering':
+                    pass
+                else:
+                    k2 = k2.replace('_', ' ')
+                    k2 = k2.title()
+                    if k1 == 'CFTA':
+                        k2 = k2.replace('Cfta Exceptions', 'CFTA Exceptions')
+                        _table_text['tables'][k1][k2] = v2
+                    else:
+                        if k2 == 'Cfta Exceptions':
+                            pass
+                        else:
+                            _table_text['tables'][k1][k2] = v2
+        return _table_text
+
+    _output_text = get_ta_text(_output_text)
+    _output_text = get_summary_text(_output_text)
+    _output_text = get_tables_text(_output_text)
+    return _output_text
+
+class OpenPDF(View):
+    """[summary]
+
+    Args:
+        View ([type]): [description]
+    """
+    def get(self, request, *args, **kwargs):
+        """[summary]
+
+        Args:
+            request ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        """
+        def render_to_pdf(template_src, context_dict={}):
+            """[summary]
+
+            Args:
+                template_src ([type]): [description]
+                context_dict (dict, optional): [description]. Defaults to {}.
+
+            Returns:
+                [type]: [description]
+            """
+            template = get_template(template_src)
+            html  = template.render(context_dict)
+            result = BytesIO()
+            pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result)
+            if not pdf.err:
+                return HttpResponse(result.getvalue(), content_type='application/pdf')
+            return None
+
+        _data_dict = {}
+        _data_dict.update(self.request.session)
+        _data_dict = get_coverage(_data_dict)
+        _data_dict = get_output_text(_data_dict)
+        pdf = render_to_pdf('pdf.html', _data_dict)
         return HttpResponse(pdf, content_type='application/pdf')
 
 
 class CodeAutocomplete(autocomplete.Select2QuerySetView):
+    """[summary]
+
+    Args:
+        autocomplete ([type]): [description]
+    """
     def get_queryset(self):
-        type = self.forwarded.get('type', None)
+        """[summary]
+
+        Returns:
+            [type]: [description]
+        """
+        forward_type = self.forwarded.get('type', None)
         qs = Code.objects.none()
-        if type:
-            value = CommodityType.objects.filter(id=type).get()
+        if forward_type:
+            value = CommodityType.objects.filter(id=forward_type).values_list('commodity_type_en').get()[0]
+
             qs = Code.objects.filter(type=value).all()
             if self.q:
                 qs = Code.objects.filter(type=value).filter(code__icontains=self.q)
         return qs
         
 class EntitiesAutocomplete(autocomplete.Select2QuerySetView):
+    """[summary]
+
+    Args:
+        autocomplete ([type]): [description]
+    """
     def get_queryset(self):
+        """[summary]
+
+        Returns:
+            [type]: [description]
+        """
         qs = Organization.objects.all()
 
         if self.q:
@@ -130,7 +454,17 @@ class EntitiesAutocomplete(autocomplete.Select2QuerySetView):
 
 
 class TypeAutocomplete(autocomplete.Select2QuerySetView):
+    """[summary]
+
+    Args:
+        autocomplete ([type]): [description]
+    """
     def get_queryset(self):
+        """[summary]
+
+        Returns:
+            [type]: [description]
+        """
         qs = CommodityType.objects.all()
 
         if self.q:
@@ -139,6 +473,14 @@ class TypeAutocomplete(autocomplete.Select2QuerySetView):
         return qs
 
 def lt_condition(wizard):
+    """[summary]
+
+    Args:
+        wizard ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
     lt_list = [f[0] for f in FORMS[:3]]
 
     data_dict = {}
@@ -156,48 +498,38 @@ def lt_condition(wizard):
 
 
 class TradeForm(NamedUrlCookieWizardView):
+    """[summary]
+
+    Args:
+        NamedUrlCookieWizardView ([type]): [description]
+
+    Returns:
+        [type]: [description]
     """
-    This form wizard goes through each each form and template.
-
-    **Context**
-
-    Forms
-        MandatoryElementsEN
-            Uses these models
-                :model:`guide.ValueThreshold`
-                :model:`guide.Entities`
-                :model:`guide.Code`
-            Uses this template
-                :template:'guide.mandatory_elements.html'
-        
-        ExceptionsEN
-            Uses these models
-                :model:`guide.TAExceptions`
-            Uses this template
-                :model:`guide.exceptions.html`
-        
-        CftaExceptionsEN
-            Uses these models:
-                :model:`guide.CftaExceptions`
-            Uses this template:
-                :model:`guide.cfta_exceptions.html`
-    """
-
     form_list = [f[1] for f in FORMS]
     url_name=url_name
     done_step_name=done_step_name
 
     def get_template_names(self):
-        """Takes the dictionary of template names defined above and returns them for the current step
+        """[summary]
 
         Returns:
-            html file -- Returns html file for form with right template
+            [type]: [description]
         """
         form = [TEMPLATES[self.steps.current]]
         return form
 
-
     def get_form(self, step=None, data=None, files=None):
+        """[summary]
+
+        Args:
+            step ([type], optional): [description]. Defaults to None.
+            data ([type], optional): [description]. Defaults to None.
+            files ([type], optional): [description]. Defaults to None.
+
+        Returns:
+            [type]: [description]
+        """
         form = super(TradeForm, self).get_form(step, data, files)
         
         if 'limited_tendering' in form.fields:
@@ -222,25 +554,27 @@ class TradeForm(NamedUrlCookieWizardView):
         return form
 
     def done(self, form_list, form_dict, **kwargs):
-        """This function outputs the parameters for the final page done.html
+        """[summary]
 
-        Arguments:
-            form_list {list} -- list of all the forms
-            form_dict {dictionary} -- list of user submitted values for each form
+        Args:
+            form_list ([type]): [description]
+            form_dict ([type]): [description]
 
         Returns:
-            [html] -- Renders done.html with the context that will display the
+            [type]: [description]
         """
         done_list = [f[0] for f in FORMS]
         data_dict = create_data_dict(self, done_list)
         data_dict = get_coverage(data_dict)
 
-        data_dict = get_ta_text(data_dict)
+       
+        def add_session_list(name, model):
+            """[summary]
 
-        data_dict = get_tables_text(data_dict)
-
-
-        def add_sessions_list(name, model):
+            Args:
+                name ([type]): [description]
+                model ([type]): [description]
+            """
             ex_list = []
             v = data_dict[name]
             for ex in v:
@@ -251,13 +585,17 @@ class TradeForm(NamedUrlCookieWizardView):
                 ex_list.append(check)
             self.request.session[name] = ex_list
 
-        add_sessions_list('exceptions', GeneralException)
-        add_sessions_list('cfta_exceptions', CftaException)
-        for k in data_dict.keys():
-            if k == 'limited_tendering':
-                add_sessions_list('limited_tendering', LimitedTenderingReason)
-        self.request.session['entities'] = str(data_dict['entities'])
-        self.request.session['estimated_value'] = int(data_dict['estimated_value'])
-        self.request.session['type'] = str(data_dict['type'])
-        self.request.session['code'] = str(data_dict['code'])
+        exception_dict = {
+            'exceptions': GeneralException,
+            'cfta_exceptions': CftaException,
+            'limited_tendering': LimitedTenderingReason
+        }
+        for k, v in exception_dict.items():
+            add_session_list(k, v)
+
+        data_fields = ['entities', 'estimated_value', 'type', 'code']
+        for field in data_fields:
+            self.request.session[field] = str(data_dict[field])
+
+        data_dict = get_output_text(data_dict)
         return render(self.request, 'done.html', data_dict)

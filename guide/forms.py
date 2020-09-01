@@ -2,9 +2,7 @@ from django import forms
 from django.forms.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from guide.models import Organization, Code, GeneralException, LimitedTenderingReason, CftaException, CommodityType
-from django.db.models import Q
 from dal import autocomplete
-from markdownx.fields import MarkdownxFormField
 
 estimated_value_label = _('What is the total estimated value of the procurement? ')
 entities_label = _('Who is the procuring entity?')
@@ -56,16 +54,16 @@ class RequiredFieldsForm(forms.Form):
             return int(val)
 
     def clean_entities(self):
-        org = self.cleaned_data.get('entities')
-        if Organization.objects.filter(name = org).exists():
-            return org
+        clean_org = self.cleaned_data.get('entities')
+        if Organization.objects.filter(name = clean_org).exists():
+            return clean_org
         else:
             raise ValidationError('Select a valid choice. That choice is not one of the available choices.')
 
     def clean_type(self):
-        type = self.cleaned_data.get('type')
-        if Code.objects.filter(type = type).exists():
-            return type
+        clean_type = self.cleaned_data.get('type')
+        if CommodityType.objects.filter(commodity_type = clean_type).exists():
+            return clean_type
         else:
             raise ValidationError('Select a valid choice. That choice is not one of the available choices.')
 
