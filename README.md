@@ -46,20 +46,18 @@ python manage.py createsuperuser
 The main page is /tag/form/0/ 
 
 Populate the first page with the mandatory information.  
-![mandatory_elements](![Farmers Market Finder Demo](gifs/me.gif))
 
-A proceed through the next three optional steps.
-First general exceptions:
-![exceptions](gifs/ge.gif)
+![The first page contains from mandatory information about the procurement](gifs/me.gif)
 
-Next are the CFTA exceptions:
-![cfta_exceptions](gifs/cfta.gif)
 
-Next are the limited tendering reasons:
-![limited_tendering](gifs/lt.gif)
+![The next step is to select any general exceptions, if any, which apply](gifs/ge.gif)
 
-The next screen is the final screen showing the results:
-![done](gifs/done.gif)
+
+![The next step is to select any CFTA-specific exceptions, if any, which apply](gifs/cfta.gif)
+
+![The next step is the limited tendering reasons, select any which apply](gifs/lt.gif)
+
+![The last screen shows the final results indicating which trade agreements may apply](gifs/done.gif)
 
 ## Create Fixtures
 
