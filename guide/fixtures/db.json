@@ -1,0 +1,711 @@
+[
+{
+  "model": "guide.organization",
+  "pk": 1,
+  "fields": {
+    "ccfta": false,
+    "ccofta": false,
+    "chfta": false,
+    "cpafta": false,
+    "cpfta": false,
+    "ckfta": false,
+    "cufta": false,
+    "wto_agp": false,
+    "ceta": false,
+    "cptpp": false,
+    "cfta": false,
+    "name": "Entity 1: None Apply",
+    "name_en": "Entity 1: None Apply",
+    "name_fr": "Entity 1: None Apply"
+  }
+},
+{
+  "model": "guide.organization",
+  "pk": 2,
+  "fields": {
+    "ccfta": true,
+    "ccofta": true,
+    "chfta": true,
+    "cpafta": true,
+    "cpfta": true,
+    "ckfta": true,
+    "cufta": true,
+    "wto_agp": true,
+    "ceta": true,
+    "cptpp": true,
+    "cfta": true,
+    "name": "Entity 2: All Apply",
+    "name_en": "Entity 2: All Apply",
+    "name_fr": "Entity 2: All Apply"
+  }
+},
+{
+  "model": "guide.organization",
+  "pk": 3,
+  "fields": {
+    "ccfta": true,
+    "ccofta": true,
+    "chfta": true,
+    "cpafta": true,
+    "cpfta": true,
+    "ckfta": false,
+    "cufta": false,
+    "wto_agp": false,
+    "ceta": false,
+    "cptpp": false,
+    "cfta": false,
+    "name": "Entity 3: NAFTA-era Apply",
+    "name_en": "Entity 3: NAFTA-era Apply",
+    "name_fr": "Entity 3: NAFTA-era Apply"
+  }
+},
+{
+  "model": "guide.organization",
+  "pk": 4,
+  "fields": {
+    "ccfta": true,
+    "ccofta": true,
+    "chfta": true,
+    "cpafta": true,
+    "cpfta": true,
+    "ckfta": true,
+    "cufta": true,
+    "wto_agp": true,
+    "ceta": true,
+    "cptpp": true,
+    "cfta": true,
+    "name": "Entity 4: Goods Coverage All Apply",
+    "name_en": "Entity 4: Goods Coverage All Apply",
+    "name_fr": "Entity 4: Goods Coverage All Apply"
+  }
+},
+{
+  "model": "guide.organization",
+  "pk": 5,
+  "fields": {
+    "ccfta": true,
+    "ccofta": true,
+    "chfta": true,
+    "cpafta": true,
+    "cpfta": true,
+    "ckfta": true,
+    "cufta": true,
+    "wto_agp": true,
+    "ceta": true,
+    "cptpp": true,
+    "cfta": true,
+    "name": "Entity 5: Construction Coverage All Apply",
+    "name_en": "Entity 5: Construction Coverage All Apply",
+    "name_fr": "Entity 5: Construction Coverage All Apply"
+  }
+},
+{
+  "model": "guide.organization",
+  "pk": 6,
+  "fields": {
+    "ccfta": true,
+    "ccofta": true,
+    "chfta": true,
+    "cpafta": true,
+    "cpfta": true,
+    "ckfta": true,
+    "cufta": true,
+    "wto_agp": true,
+    "ceta": true,
+    "cptpp": true,
+    "cfta": true,
+    "name": "Entity 6 Exclusion: All Apply",
+    "name_en": "Entity 6 Exclusion: All Apply",
+    "name_fr": "Entity 6 Exclusion: All Apply"
+  }
+},
+{
+  "model": "guide.commoditytype",
+  "pk": 2,
+  "fields": {
+    "c_type": "1",
+    "commodity_type": "Goods",
+    "commodity_type_en": "Goods",
+    "commodity_type_fr": "Produits"
+  }
+},
+{
+  "model": "guide.commoditytype",
+  "pk": 3,
+  "fields": {
+    "c_type": "2",
+    "commodity_type": "Services",
+    "commodity_type_en": "Services",
+    "commodity_type_fr": "Services"
+  }
+},
+{
+  "model": "guide.commoditytype",
+  "pk": 4,
+  "fields": {
+    "c_type": "3",
+    "commodity_type": "Construction",
+    "commodity_type_en": "Construction",
+    "commodity_type_fr": "Construction"
+  }
+},
+{
+  "model": "guide.code",
+  "pk": 1,
+  "fields": {
+    "ccfta": false,
+    "ccofta": false,
+    "chfta": false,
+    "cpafta": false,
+    "cpfta": false,
+    "ckfta": false,
+    "cufta": false,
+    "wto_agp": false,
+    "ceta": false,
+    "cptpp": false,
+    "cfta": false,
+    "type": "Goods",
+    "code": "Goods 1: None Apply",
+    "code_en": "Goods 1: None Apply",
+    "code_fr": "Goods 1: None Apply"
+  }
+},
+{
+  "model": "guide.code",
+  "pk": 2,
+  "fields": {
+    "ccfta": false,
+    "ccofta": false,
+    "chfta": false,
+    "cpafta": false,
+    "cpfta": false,
+    "ckfta": false,
+    "cufta": false,
+    "wto_agp": false,
+    "ceta": false,
+    "cptpp": false,
+    "cfta": false,
+    "type": "Services",
+    "code": "Services 1: None Apply",
+    "code_en": "Services 1: None Apply",
+    "code_fr": "Services 1: None Apply"
+  }
+},
+{
+  "model": "guide.code",
+  "pk": 3,
+  "fields": {
+    "ccfta": false,
+    "ccofta": false,
+    "chfta": false,
+    "cpafta": false,
+    "cpfta": false,
+    "ckfta": false,
+    "cufta": false,
+    "wto_agp": false,
+    "ceta": false,
+    "cptpp": false,
+    "cfta": false,
+    "type": "Construction",
+    "code": "Construction 1: None Apply",
+    "code_en": "Construction 1: None Apply",
+    "code_fr": "Construction 1: None Apply"
+  }
+},
+{
+  "model": "guide.code",
+  "pk": 4,
+  "fields": {
+    "ccfta": true,
+    "ccofta": true,
+    "chfta": true,
+    "cpafta": true,
+    "cpfta": true,
+    "ckfta": true,
+    "cufta": true,
+    "wto_agp": true,
+    "ceta": true,
+    "cptpp": true,
+    "cfta": true,
+    "type": "Goods",
+    "code": "Goods 2: All Apply",
+    "code_en": "Goods 2: All Apply",
+    "code_fr": "Goods 2: All Apply"
+  }
+},
+{
+  "model": "guide.code",
+  "pk": 5,
+  "fields": {
+    "ccfta": true,
+    "ccofta": true,
+    "chfta": true,
+    "cpafta": true,
+    "cpfta": true,
+    "ckfta": true,
+    "cufta": true,
+    "wto_agp": true,
+    "ceta": true,
+    "cptpp": true,
+    "cfta": true,
+    "type": "Services",
+    "code": "Services 2: All Apply",
+    "code_en": "Services 2: All Apply",
+    "code_fr": "Services 2: All Apply"
+  }
+},
+{
+  "model": "guide.code",
+  "pk": 6,
+  "fields": {
+    "ccfta": true,
+    "ccofta": true,
+    "chfta": true,
+    "cpafta": true,
+    "cpfta": true,
+    "ckfta": true,
+    "cufta": true,
+    "wto_agp": true,
+    "ceta": true,
+    "cptpp": true,
+    "cfta": true,
+    "type": "Construction",
+    "code": "Construction 2: All Apply",
+    "code_en": "Construction 2: All Apply",
+    "code_fr": "Construction 2: All Apply"
+  }
+},
+{
+  "model": "guide.code",
+  "pk": 7,
+  "fields": {
+    "ccfta": true,
+    "ccofta": true,
+    "chfta": true,
+    "cpafta": true,
+    "cpfta": true,
+    "ckfta": false,
+    "cufta": false,
+    "wto_agp": false,
+    "ceta": false,
+    "cptpp": false,
+    "cfta": false,
+    "type": "Goods",
+    "code": "Goods 3: NAFTA-era Apply",
+    "code_en": "Goods 3: NAFTA-era Apply",
+    "code_fr": "Goods 3: NAFTA-era Apply"
+  }
+},
+{
+  "model": "guide.code",
+  "pk": 8,
+  "fields": {
+    "ccfta": true,
+    "ccofta": true,
+    "chfta": true,
+    "cpafta": true,
+    "cpfta": true,
+    "ckfta": false,
+    "cufta": false,
+    "wto_agp": false,
+    "ceta": false,
+    "cptpp": false,
+    "cfta": false,
+    "type": "Services",
+    "code": "Services 3: NAFTA-era Apply",
+    "code_en": "Services 3: NAFTA-era Apply",
+    "code_fr": "Services 3: NAFTA-era Apply"
+  }
+},
+{
+  "model": "guide.code",
+  "pk": 9,
+  "fields": {
+    "ccfta": true,
+    "ccofta": true,
+    "chfta": true,
+    "cpafta": true,
+    "cpfta": true,
+    "ckfta": false,
+    "cufta": false,
+    "wto_agp": false,
+    "ceta": false,
+    "cptpp": false,
+    "cfta": false,
+    "type": "Construction",
+    "code": "Construction 3: NAFTA-era Apply",
+    "code_en": "Construction 3: NAFTA-era Apply",
+    "code_fr": "Construction 3: NAFTA-era Apply"
+  }
+},
+{
+  "model": "guide.code",
+  "pk": 10,
+  "fields": {
+    "ccfta": true,
+    "ccofta": true,
+    "chfta": true,
+    "cpafta": true,
+    "cpfta": true,
+    "ckfta": true,
+    "cufta": true,
+    "wto_agp": true,
+    "ceta": true,
+    "cptpp": true,
+    "cfta": true,
+    "type": "Goods",
+    "code": "Goods Code For Exclusion: All Apply",
+    "code_en": "Goods Code For Exclusion: All Apply",
+    "code_fr": "Goods Code For Exclusion: All Apply"
+  }
+},
+{
+  "model": "guide.code",
+  "pk": 11,
+  "fields": {
+    "ccfta": true,
+    "ccofta": true,
+    "chfta": true,
+    "cpafta": true,
+    "cpfta": true,
+    "ckfta": true,
+    "cufta": true,
+    "wto_agp": true,
+    "ceta": true,
+    "cptpp": true,
+    "cfta": true,
+    "type": "Services",
+    "code": "Services Code For Exclusion: All Apply",
+    "code_en": "Services Code For Exclusion: All Apply",
+    "code_fr": "Services Code For Exclusion: All Apply"
+  }
+},
+{
+  "model": "guide.code",
+  "pk": 12,
+  "fields": {
+    "ccfta": true,
+    "ccofta": true,
+    "chfta": true,
+    "cpafta": true,
+    "cpfta": true,
+    "ckfta": true,
+    "cufta": true,
+    "wto_agp": true,
+    "ceta": true,
+    "cptpp": true,
+    "cfta": true,
+    "type": "Construction",
+    "code": "Construction Code For Exclusion: All Apply",
+    "code_en": "Construction Code For Exclusion: All Apply",
+    "code_fr": "Construction Code For Exclusion: All Apply"
+  }
+},
+{
+  "model": "guide.constructioncoverage",
+  "pk": 1,
+  "fields": {
+    "ccfta": true,
+    "ccofta": true,
+    "chfta": true,
+    "cpafta": true,
+    "cpfta": true,
+    "ckfta": true,
+    "cufta": true,
+    "wto_agp": true,
+    "ceta": true,
+    "cptpp": true,
+    "cfta": true,
+    "org_fk": "Entity 5: Construction Coverage All Apply"
+  }
+},
+{
+  "model": "guide.goodscoverage",
+  "pk": 1,
+  "fields": {
+    "ccfta": true,
+    "ccofta": true,
+    "chfta": true,
+    "cpafta": true,
+    "cpfta": true,
+    "ckfta": true,
+    "cufta": true,
+    "wto_agp": true,
+    "ceta": true,
+    "cptpp": true,
+    "cfta": true,
+    "org_fk": "Entity 4: Goods Coverage All Apply"
+  }
+},
+{
+  "model": "guide.codeorganizationexclusion",
+  "pk": 1,
+  "fields": {
+    "ccfta": false,
+    "ccofta": false,
+    "chfta": false,
+    "cpafta": false,
+    "cpfta": false,
+    "ckfta": false,
+    "cufta": false,
+    "wto_agp": false,
+    "ceta": false,
+    "cptpp": false,
+    "cfta": false,
+    "code_fk": "Goods Code For Exclusion: All Apply",
+    "org_fk": "Entity 6 Exclusion: All Apply"
+  }
+},
+{
+  "model": "guide.codeorganizationexclusion",
+  "pk": 2,
+  "fields": {
+    "ccfta": true,
+    "ccofta": true,
+    "chfta": true,
+    "cpafta": true,
+    "cpfta": true,
+    "ckfta": true,
+    "cufta": true,
+    "wto_agp": true,
+    "ceta": true,
+    "cptpp": true,
+    "cfta": true,
+    "code_fk": "Services Code For Exclusion: All Apply",
+    "org_fk": "Entity 6 Exclusion: All Apply"
+  }
+},
+{
+  "model": "guide.codeorganizationexclusion",
+  "pk": 3,
+  "fields": {
+    "ccfta": true,
+    "ccofta": true,
+    "chfta": true,
+    "cpafta": true,
+    "cpfta": true,
+    "ckfta": false,
+    "cufta": false,
+    "wto_agp": false,
+    "ceta": false,
+    "cptpp": false,
+    "cfta": false,
+    "code_fk": "Construction Code For Exclusion: All Apply",
+    "org_fk": "Entity 6 Exclusion: All Apply"
+  }
+},
+{
+  "model": "guide.valuethreshold",
+  "pk": 2,
+  "fields": {
+    "ccfta": 100000,
+    "ccofta": 100000,
+    "chfta": 100000,
+    "cpafta": 100000,
+    "cpfta": 100000,
+    "ckfta": 100000,
+    "cufta": 100000,
+    "wto_agp": 100000,
+    "ceta": 100000,
+    "cptpp": 100000,
+    "cfta": 100000,
+    "type": "Goods"
+  }
+},
+{
+  "model": "guide.valuethreshold",
+  "pk": 3,
+  "fields": {
+    "ccfta": 250000,
+    "ccofta": 250000,
+    "chfta": 250000,
+    "cpafta": 250000,
+    "cpfta": 250000,
+    "ckfta": 250000,
+    "cufta": 250000,
+    "wto_agp": 250000,
+    "ceta": 250000,
+    "cptpp": 250000,
+    "cfta": 250000,
+    "type": "Services"
+  }
+},
+{
+  "model": "guide.valuethreshold",
+  "pk": 4,
+  "fields": {
+    "ccfta": 1000000,
+    "ccofta": 1000000,
+    "chfta": 1000000,
+    "cpafta": 1000000,
+    "cpfta": 1000000,
+    "ckfta": 1000000,
+    "cufta": 1000000,
+    "wto_agp": 1000000,
+    "ceta": 1000000,
+    "cptpp": 1000000,
+    "cfta": 1000000,
+    "type": "Construction"
+  }
+},
+{
+  "model": "guide.limitedtenderingreason",
+  "pk": 1,
+  "fields": {
+    "ccfta": false,
+    "ccofta": false,
+    "chfta": false,
+    "cpafta": false,
+    "cpfta": false,
+    "ckfta": false,
+    "cufta": false,
+    "wto_agp": false,
+    "ceta": false,
+    "cptpp": false,
+    "cfta": false,
+    "name": "Limited Tendering Reason 1: None Apply",
+    "name_en": "Limited Tendering Reason 1: None Apply",
+    "name_fr": "Limited Tendering Reason 1: None Apply"
+  }
+},
+{
+  "model": "guide.limitedtenderingreason",
+  "pk": 2,
+  "fields": {
+    "ccfta": true,
+    "ccofta": true,
+    "chfta": true,
+    "cpafta": true,
+    "cpfta": true,
+    "ckfta": true,
+    "cufta": true,
+    "wto_agp": true,
+    "ceta": true,
+    "cptpp": true,
+    "cfta": true,
+    "name": "Limited Tendering Reason 2: All Apply",
+    "name_en": "Limited Tendering Reason 2: All Apply",
+    "name_fr": "Limited Tendering Reason 2: All Apply"
+  }
+},
+{
+  "model": "guide.limitedtenderingreason",
+  "pk": 3,
+  "fields": {
+    "ccfta": true,
+    "ccofta": true,
+    "chfta": true,
+    "cpafta": true,
+    "cpfta": true,
+    "ckfta": false,
+    "cufta": false,
+    "wto_agp": false,
+    "ceta": false,
+    "cptpp": false,
+    "cfta": false,
+    "name": "Limited Tendering Reason 3: NAFTA-era Apply",
+    "name_en": "Limited Tendering Reason 3: NAFTA-era Apply",
+    "name_fr": "Limited Tendering Reason 3: NAFTA-era Apply"
+  }
+},
+{
+  "model": "guide.generalexception",
+  "pk": 1,
+  "fields": {
+    "ccfta": false,
+    "ccofta": false,
+    "chfta": false,
+    "cpafta": false,
+    "cpfta": false,
+    "ckfta": false,
+    "cufta": false,
+    "wto_agp": false,
+    "ceta": false,
+    "cptpp": false,
+    "cfta": false,
+    "name": "Exception 1: None Apply",
+    "name_en": "Exception 1: None Apply",
+    "name_fr": "Exception 1: None Apply"
+  }
+},
+{
+  "model": "guide.generalexception",
+  "pk": 2,
+  "fields": {
+    "ccfta": true,
+    "ccofta": true,
+    "chfta": true,
+    "cpafta": true,
+    "cpfta": true,
+    "ckfta": true,
+    "cufta": true,
+    "wto_agp": true,
+    "ceta": true,
+    "cptpp": true,
+    "cfta": true,
+    "name": "Exception 2: All Apply",
+    "name_en": "Exception 2: All Apply",
+    "name_fr": "Exception 2: All Apply"
+  }
+},
+{
+  "model": "guide.generalexception",
+  "pk": 3,
+  "fields": {
+    "ccfta": true,
+    "ccofta": true,
+    "chfta": true,
+    "cpafta": true,
+    "cpfta": true,
+    "ckfta": false,
+    "cufta": false,
+    "wto_agp": false,
+    "ceta": false,
+    "cptpp": false,
+    "cfta": false,
+    "name": "Exception 3: NAFTA-era Apply",
+    "name_en": "Exception 3: NAFTA-era Apply",
+    "name_fr": "Exception 3: NAFTA-era Apply"
+  }
+},
+{
+  "model": "guide.cftaexception",
+  "pk": 1,
+  "fields": {
+    "ccfta": false,
+    "ccofta": false,
+    "chfta": false,
+    "cpafta": false,
+    "cpfta": false,
+    "ckfta": false,
+    "cufta": false,
+    "wto_agp": false,
+    "ceta": false,
+    "cptpp": false,
+    "cfta": false,
+    "name": "CFTA Exception 1: None Apply",
+    "name_en": "CFTA Exception 1: None Apply",
+    "name_fr": "CFTA Exception 1: None Apply"
+  }
+},
+{
+  "model": "guide.cftaexception",
+  "pk": 2,
+  "fields": {
+    "ccfta": false,
+    "ccofta": false,
+    "chfta": false,
+    "cpafta": false,
+    "cpfta": false,
+    "ckfta": false,
+    "cufta": false,
+    "wto_agp": false,
+    "ceta": false,
+    "cptpp": false,
+    "cfta": true,
+    "name": "CFTA Exception 2: CFTA Applies",
+    "name_en": "CFTA Exception 2: CFTA Applies",
+    "name_fr": "CFTA Exception 2: CFTA Applies"
+  }
+}
+]

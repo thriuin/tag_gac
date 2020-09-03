@@ -25,7 +25,7 @@ admin.site.index_title = "TAG Admin Portal"
 urlpatterns = [
     path('tag/admin/doc/', include('django.contrib.admindocs.urls')),
     path('tag/admin/', admin.site.urls),
-    path(r"ouvert/tag/", include(('guide.urls', 'guide'), namespace = 'guide')),
+    path(r"tag/", include(('guide.urls', 'guide'), namespace = 'guide')),
     re_path('', RedirectView.as_view(url='tag/form/0/')),
     re_path(r'^.*$', RedirectView.as_view(url='tag/form/0/'))
 ]
