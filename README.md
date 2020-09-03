@@ -42,24 +42,24 @@ python manage.py createsuperuser
 ++ There are instructions on the admin page to help you load models.
 
 
-## Use ##
+## Demo ##
 The main page is /tag/form/0/ 
 
 Populate the first page with the mandatory information.  
-![mandatory_elements](https://github.com/liverms/tag_gac/blob/master/gifs/me.PNG)
+![mandatory_elements](![Farmers Market Finder Demo](gifs/me.gif))
 
 A proceed through the next three optional steps.
 First general exceptions:
-![exceptions](https://github.com/liverms/tag_gac/blob/master/gifs/ge.PNG)
+![exceptions](gifs/ge.gif)
 
 Next are the CFTA exceptions:
-![cfta_exceptions](https://github.com/liverms/tag_gac/blob/master/gifs/cfta.PNG)
+![cfta_exceptions](gifs/cfta.gif)
 
 Next are the limited tendering reasons:
-![limited_tendering](https://github.com/liverms/tag_gac/blob/master/gifs/lt.PNG)
+![limited_tendering](gifs/lt.gif)
 
 The next screen is the final screen showing the results:
-![done](https://github.com/liverms/tag_gac/blob/master/gifs/done.PNG)
+![done](gifs/done.gif)
 
 ## Create Fixtures
 
