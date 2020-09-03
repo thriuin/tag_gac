@@ -13,80 +13,84 @@
 <div id="content-main">
 
 {% if app_list %}
-    <h2>Instructions</h2>
-    <p>This is the main screen of the admin site.</p>
-    <p><b>User: </b>This section controls user access to the admin site.</p>
-    <p><b>Guide: </b>This section has the information that populates the app.</p>
-    <br>
-    <p>Each app has 'models', these correspond to things like Entities in the Guide app and Users in the User app</p>
-    <p>Each 'model' stores specific information.  The Entities 'model' has a list of GC organizations.  The User 'model' has a list of users with access to the admin page.</p>
-    <p>The order in which information is input matters, because some models required information from other models.</p>
-    <br>
-    <p><b>Independent models: </b>These do not require information from other models and any information can be added or deleted from these models at any time.</p>
     <details>
         <summary>
-            <b>Independent Models</b>
+            <b>Instructions</b>
         </summary>
-        <table>
-            <tbody>
-                <tr>
-                    <td>
-                        CFTA Exceptions
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Commodity Types
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Entities
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        General Exceptions
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Limited Tendering Reasons
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </details>
-    <br>
-    <p><b>Dependent models: </b>These require information from other models.  If you delete information in linked model then the information in the dependent model will also be deleted.  For instance Commodity Codes depends on Commodity Types.  If you delete Construction from Commodity Types then all the codes linked to Construction will also be deleted.</p>
-    <details>
-        <summary>
-            <b>Dependent Models</b>
-        </summary>
-        <table>
-            <tbody>
-                <tr>
-                    <td>
-                        Value Thresholds - Depends on Commodity Type
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Commodity Codes - Depends on Commodity Type
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Commodity Code - Entities - Exclusions - Depends on Commodity Codes and Entities
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Entities - Commodity Type - Rules - Depends on Entities and Commodity Type
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <p>This is the main screen of the admin site.</p>
+        <p><b>User: </b>This section controls user access to the admin site.</p>
+        <p><b>Guide: </b>This section has the information that populates the app.</p>
+        <br>
+        <p>Each app has 'models', these correspond to things like Entities in the Guide app and Users in the User app</p>
+        <p>Each 'model' stores specific information.  The Entities 'model' has a list of GC organizations.  The User 'model' has a list of users with access to the admin page.</p>
+        <p>The order in which information is input matters, because some models required information from other models.</p>
+        <br>
+        <p><b>Independent models: </b>These do not require information from other models and any information can be added or deleted from these models at any time.</p>
+        <details>
+            <summary>
+                <b>Independent Models</b>
+            </summary>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            CFTA Exceptions
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Commodity Types
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Entities
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            General Exceptions
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Limited Tendering Reasons
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </details>
+        <br>
+        <p><b>Dependent models: </b>These require information from other models.  If you delete information in linked model then the information in the dependent model will also be deleted.  For instance Commodity Codes depends on Commodity Types.  If you delete Construction from Commodity Types then all the codes linked to Construction will also be deleted.</p>
+        <details>
+            <summary>
+                <b>Dependent Models</b>
+            </summary>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            Value Thresholds - Depends on Commodity Type
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Commodity Codes - Depends on Commodity Type
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Commodity Code - Entities - Exclusions - Depends on Commodity Codes and Entities
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Entities - Commodity Type - Rules - Depends on Entities and Commodity Type
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </details>
     </details>
     <br>
     {% for app in app_list %}

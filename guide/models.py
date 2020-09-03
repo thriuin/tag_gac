@@ -177,7 +177,7 @@ class ConstructionCoverage(BooleanTradeAgreement):
         Organization,
         to_field = 'name',
         related_name = '+',
-        verbose_name = _('Org fk en ca'),
+        verbose_name = _('Org fk'),
         on_delete = models.CASCADE
     )
 
@@ -192,7 +192,7 @@ class GoodsCoverage(BooleanTradeAgreement):
         Organization,
         to_field = 'name',
         related_name = '+',
-        verbose_name = _('Org fk en ca'),
+        verbose_name = _('Org fk'),
         on_delete = models.CASCADE
     )
 

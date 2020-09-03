@@ -100,7 +100,7 @@ class CodeOrganizationExclusionAdmin(ImportExportModelAdmin):
     list_display = lst
     list_editable = AGREEMENTS_FIELDS
     list_display_links = ['__str__']
-
+    search_fields = ['code']
 
 @admin.register(models.CommodityType)
 class CommodityTypeAdmin(ImportExportModelAdmin, TranslationAdmin):

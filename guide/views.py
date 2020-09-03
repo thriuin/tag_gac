@@ -22,10 +22,6 @@ TEMPLATES = {"0": "mandatory_elements.html",
              "2": "cfta_exceptions.html",
              "3": "limited_tendering.html"}
 
-TYPE_CHOICES = [('1', 'GOODS'), 
-                ('2', 'SERVICES'), 
-                ('3', 'CONSTRUCTION')]
-
 url_name='guide:form_step'
 done_step_name='guide:done_step'
 
@@ -432,7 +428,7 @@ class CodeAutocomplete(autocomplete.Select2QuerySetView):
             if self.q:
                 qs = Code.objects.filter(type=value).filter(code__icontains=self.q)
         return qs
-        
+    
 class EntitiesAutocomplete(autocomplete.Select2QuerySetView):
     """[summary]
 
