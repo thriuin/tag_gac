@@ -1,9 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.conf.urls import url
-from guide.views import TradeForm, lt_condition, EntitiesAutocomplete, TypeAutocomplete, CodeAutocomplete, OpenPDF
+from guide.views import FORMS, url_name, done_step_name, TradeForm, lt_condition, EntitiesAutocomplete, TypeAutocomplete, CodeAutocomplete, OpenPDF
 from django.shortcuts import redirect
-from guide.logic import FORMS, url_name, done_step_name
 from django.views.generic.base import RedirectView
 
 trade_wizard = TradeForm.as_view(

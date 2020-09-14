@@ -135,7 +135,6 @@ tag_gac/settings.py
 themes-dist-GCWeb/
 wet-boew-dist-4.0.32/
 themes-dist-6.0-gcweb/
-guide/fixtures/db.json
 guide/migrations/0001_initial.py
 coverage
 db.sqlite3

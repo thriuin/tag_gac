@@ -1,0 +1,134 @@
+{% load i18n static %}
+
+{% if cl.search_fields %}
+<details>
+    <summary>
+        <b>Instructions</b>
+    </summary>
+    <p>There is a row for each organization.  You can edit the models here or by clicking the row ID.</p>
+    <p>Use the search field to search by entity name.  Or you can filter entities by trade agreement coverage.</p>
+    <p>There are checkboxes on the far left.  If you want to delete a row, click the checkbox then under Action select the dropdown option and click Go.</p>
+    <p>ID:  Click on the row ID to edit the information in a row.</p>
+    <p>ENTITIES [EN]: The name of the entity in english.</p>
+    <p>ENTITIES [FR]: The name of the entity in french.</p>
+    <p>The rest of the columns are for Canada's trade agreements.</p>
+    <p>A checkmark indicates that the entity is covered by the trade agreement. No checkmark means the entity is not covered by the trade agreement.</p>
+    <br>
+    <table>
+        <p>The data used to populate the database can be found in the following documents:</p>
+        <thead>
+            <tr class="active"> 
+                <th scope="col">
+                    Agreement
+                </th>
+                <th scope="col">
+                    Document
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    CCFTA
+                </td>
+                <td>
+                    <a href="https://www.international.gc.ca/trade-commerce/trade-agreements-accords-commerciaux/agr-acc/chile-chili/fta-ale/03kbis_annex-annexe.aspx?lang=en#01">Annex K bis-01.1-1 Central Level Entities</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    CCoFTA
+                </td>
+                <td>
+                    <a href="https://www.international.gc.ca/trade-commerce/trade-agreements-accords-commerciaux/agr-acc/colombia-colombie/fta-ale/14_1.aspx?lang=eng">Annex 1401-1 Central Level Entities</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    CHFTA
+                </td>
+                <td>
+                    <a href="https://www.international.gc.ca/trade-commerce/trade-agreements-accords-commerciaux/agr-acc/honduras/fta-ale/17_1.aspx?lang=eng">Annex 17.1: Central Level Entities</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    CPAFTA
+                </td>
+                <td>
+                    <a href="https://www.international.gc.ca/trade-commerce/trade-agreements-accords-commerciaux/agr-acc/panama/fta-ale/16_1.aspx?lang=eng#a1">Annex 1: Central Level Entities</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    CPFTA
+                </td>
+                <td>
+                    <a href="https://www.international.gc.ca/trade-commerce/trade-agreements-accords-commerciaux/agr-acc/peru-perou/fta-ale/annex-1401-annexe.aspx?lang=eng">Annex 1401.1-1 Central Level Entities</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    CKFTA
+                </td>
+                <td>
+                    <a href="https://www.international.gc.ca/trade-commerce/trade-agreements-accords-commerciaux/agr-acc/korea-coree/fta-ale/14.aspx?lang=eng">Annex 14-A Schedule of Canada – Federal Government Entities</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    CUFTA
+                </td>
+                <td>
+                    <a href="https://www.international.gc.ca/trade-commerce/trade-agreements-accords-commerciaux/agr-acc/ukraine/text-texte/101.aspx?lang=eng#a101">Annex 10-1: Central Government Entities</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    WTO-AGP
+                </td>
+                <td>
+                    <a href="https://e-gpa.wto.org/en/Annex/Details?Agreement=GPA113&Party=Canada&AnnexNo=1&ContentCulture=en">Canada - Central Government Entities - Annex 1</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    CETA
+                </td>
+                <td>
+                    <a href="https://www.international.gc.ca/trade-commerce/trade-agreements-accords-commerciaux/agr-acc/ceta-aecg/text-texte/19-A.aspx?lang=eng#a1">Annex 19-1 – Central government entities</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    CPTPP
+                </td>
+                <td>
+                    <a href="https://www.international.gc.ca/trade-commerce/trade-agreements-accords-commerciaux/agr-acc/tpp-ptp/text-texte/15-a3.aspx?lang=eng">Annex 15-A – Schedule of Canada</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    CFTA
+                </td>
+                <td>
+                    <a href="https://www.cfta-alec.ca/wp-content/uploads/2020/08/CFTA-Consolidated-Text-Final-English_August-5-2020.pdf">Annex 519.1: Schedule of Canada A: Excluded Entities (PDF)</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</details>
+<div id="toolbar"><form id="changelist-search" method="get">
+<div><!-- DIV needed for valid HTML -->
+<label for="searchbar"><img src="{% static "admin/img/search.svg" %}" alt="Search"></label>
+<input type="text" size="40" name="{{ search_var }}" value="{{ cl.query }}" id="searchbar" autofocus>
+<input type="submit" value="{% trans 'Search' %}">
+{% if show_result_count %}
+    <span class="small quiet">{% blocktrans count counter=cl.result_count %}{{ counter }} result{% plural %}{{ counter }} results{% endblocktrans %} (<a href="?{% if cl.is_popup %}_popup=1{% endif %}">{% if cl.show_full_result_count %}{% blocktrans with full_result_count=cl.full_result_count %}{{ full_result_count }} total{% endblocktrans %}{% else %}{% trans "Show all" %}{% endif %}</a>)</span>
+{% endif %}
+{% for pair in cl.params.items %}
+    {% if pair.0 != search_var %}<input type="hidden" name="{{ pair.0 }}" value="{{ pair.1 }}">{% endif %}
+{% endfor %}
+</div>
+</form></div>
+{% endif %}
