@@ -12,12 +12,29 @@ general_exceptions_label = _("Exceptions")
 limited_tendering_label = _("Limited Tendering Reasons")
 cfta_exceptions_label = _("CFTA Exceptions")
 
+estimated_value_error = 'Please enter a valid number greater than zero.'
+generic_error = 'Select a valid choice. That choice is not one of the available choices.'
+
 
 class RequiredFieldsForm(forms.Form):
+    """[summary]
 
+    Args:
+        forms ([type]): [description]
+
+    Raises:
+        ValidationError: [description]
+        ValidationError: [description]
+        ValidationError: [description]
+        ValidationError: [description]
+        ValidationError: [description]
+
+    Returns:
+        [type]: [description]
+    """
     estimated_value = forms.IntegerField(
         label = estimated_value_label,
-        required = False,
+        required = True,
         min_value = 0
     )
     estimated_value.widget.attrs['class'] = 'form-control'
@@ -25,57 +42,58 @@ class RequiredFieldsForm(forms.Form):
     entities = forms.ModelChoiceField(
         Organization.objects.all(),
         label = entities_label,
-        required = False,
+        required = True,
         widget=autocomplete.ModelSelect2(url='guide:entities_autocomplete', attrs={'class':'form-control'})
     )
 
     type = forms.ModelChoiceField(
         CommodityType.objects.all(),
         label = type_label,
-        required = False,
+        required = True,
         widget = autocomplete.ModelSelect2(url='guide:type_autocomplete', attrs={'class':'form-control'})
     )
-    
+
     code = forms.ModelChoiceField(
-        Code.objects.only('code'),
+        Code.objects.only('code').all(),
         label = code_label,
         required = False,
         widget = autocomplete.ModelSelect2(url = 'guide:code_autocomplete', forward=['type'], attrs={'class':'form-control', 'size': '1'})
     )
 
-    def clean_estimated_value(self):
-        val = self.cleaned_data.get('estimated_value')
-        if val is None:
-            raise ValidationError('Please enter a valid number greater than zero.')
+    # def clean_estimated_value(self):
+    #     val = self.cleaned_data.get('estimated_value')
+    #     if val is None:
+    #         raise ValidationError(estimated_value_error)
+    #     else:
+    #         return int(val)
 
-        if int(val) <= 0:
-            raise ValidationError('Please enter a valid number greater than zero.')
-        else:
-            return int(val)
+    # def clean_entities(self):
+    #     clean_org = self.cleaned_data.get('entities')
+    #     if Organization.objects.filter(name = clean_org).exists():
+    #         return clean_org
+    #     else:
+    #         raise ValidationError(generic_error)
 
-    def clean_entities(self):
-        clean_org = self.cleaned_data.get('entities')
-        if Organization.objects.filter(name = clean_org).exists():
-            return clean_org
-        else:
-            raise ValidationError('Select a valid choice. That choice is not one of the available choices.')
+    # def clean_type(self):
+    #     clean_type = self.cleaned_data.get('type')
+    #     if CommodityType.objects.filter(commodity_type = clean_type).exists():
+    #         return clean_type
+    #     else:
+    #         raise ValidationError(generic_error)
 
-    def clean_type(self):
-        clean_type = self.cleaned_data.get('type')
-        if CommodityType.objects.filter(commodity_type = clean_type).exists():
-            return clean_type
-        else:
-            raise ValidationError('Select a valid choice. That choice is not one of the available choices.')
-
-    def clean_code(self):
-        code = self.cleaned_data.get('code')
-        if Code.objects.filter(code = code).exists():
-            return code
-        else:
-            raise ValidationError('Select a valid choice. That choice is not one of the available choices.')
+    # def clean_code(self):
+    #     code = self.cleaned_data.get('code')
+    #     if Code.objects.filter(code = code).exists():
+    #         return code
+    #     else:
+    #         raise ValidationError(generic_error)
 
 class GeneralExceptionForm(forms.Form):
+    """[summary]
 
+    Args:
+        forms ([type]): [description]
+    """
     exceptions = forms.ModelMultipleChoiceField(
         GeneralException.objects.only('name'),
         to_field_name = 'id',
@@ -87,7 +105,11 @@ class GeneralExceptionForm(forms.Form):
 
 
 class LimitedTenderingForm(forms.Form):
+    """[summary]
 
+    Args:
+        forms ([type]): [description]
+    """
     limited_tendering = forms.ModelMultipleChoiceField(
         LimitedTenderingReason.objects.only('name'),
         to_field_name = 'id',
@@ -99,11 +121,16 @@ class LimitedTenderingForm(forms.Form):
 
 
 class CftaExceptionForm(forms.Form):
+    """[summary]
 
+    Args:
+        forms ([type]): [description]
+    """
     cfta_exceptions = forms.ModelMultipleChoiceField(
         CftaException.objects.only('name'),
         to_field_name = 'id',
         widget = forms.CheckboxSelectMultiple,
+        label = cfta_exceptions_label,
         required = False
     )
 

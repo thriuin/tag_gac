@@ -81,8 +81,6 @@ def get_coverage(data_dict):
                 threshold = model.objects.filter(type=type).values_list(k).get()[0]
                 if value < threshold:
                     agreement[k]['estimated_value'] = False
-                else:
-                    agreement[k]['estimated_value'] = True
         except:
             pass
         return agreement
@@ -101,7 +99,10 @@ def get_coverage(data_dict):
 
         for k in agreement.keys():
             check = Organization.objects.filter(name=org).values_list(k).get()[0]
-            agreement[k]['entities'] = check
+            if check:
+                pass
+            else:
+                agreement[k]['entities'] = False
 
         return agreement
 
@@ -420,7 +421,7 @@ class CodeAutocomplete(autocomplete.Select2QuerySetView):
             [type]: [description]
         """
         forward_type = self.forwarded.get('type', None)
-        qs = Code.objects.none()
+        qs = Code.objects.all()
         if forward_type:
             value = CommodityType.objects.filter(id=forward_type).values_list('commodity_type_en').get()[0]
 
@@ -583,11 +584,12 @@ class TradeForm(NamedUrlCookieWizardView):
 
         exception_dict = {
             'exceptions': GeneralException,
-            'cfta_exceptions': CftaException,
-            'limited_tendering': LimitedTenderingReason
+            'cfta_exceptions': CftaException
         }
         for k, v in exception_dict.items():
             add_session_list(k, v)
+        if 'limited_tendering' in data_dict.keys():
+            add_session_list('limited_tendering', LimitedTenderingReason)
 
         data_fields = ['entities', 'estimated_value', 'type', 'code']
         for field in data_fields:

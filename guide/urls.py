@@ -22,5 +22,6 @@ urlpatterns = [
     path('form/done/', trade_wizard, name='done_step'),
     re_path('form/', RedirectView.as_view(url='0/'), name='form_start'),
     re_path('', RedirectView.as_view(url='form/0/')),
-    re_path(r'^.*$', RedirectView.as_view(url='form/0/'))
+    re_path(r'^.*$', RedirectView.as_view(url='form/0/')),
+    re_path(r'^.*/$', RedirectView.as_view(url='form/0/'))
 ]

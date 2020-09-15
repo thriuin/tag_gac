@@ -22,15 +22,10 @@ AGREEMENTS = (
 AGREEMENTS_FIELDS = [field.replace('-', '_').lower() for field in AGREEMENTS]
 
 class BooleanTradeAgreement(models.Model):
-    """
-    This model has a True/False for each trade agreement.
-    This model inherits from :model:'guide.Language'
-    This model is inherited by the following models:
-    :model:`guide.Entities`
-    :model:`guide.Code`
-    :model:`guide.TenderingReason`
-    :model:`guide.TAException`
-    :model:`guide.CftaException`
+    """[summary]
+
+    Args:
+        models ([type]): [description]
     """
 
     id = models.AutoField(primary_key=True)
@@ -96,9 +91,13 @@ class BooleanTradeAgreement(models.Model):
 
 
 class Organization(BooleanTradeAgreement):
-    """
-    Subclass of :model:`guide.BooleanTradeAgreement`
-    This class has federal departments, agencies, ect...
+    """[summary]
+
+    Args:
+        BooleanTradeAgreement ([type]): [description]
+
+    Returns:
+        [type]: [description]
     """
     name = models.CharField(
         max_length = 250,
@@ -117,10 +116,14 @@ class Organization(BooleanTradeAgreement):
 
 
 class CommodityType(models.Model):
-    '''
-    Inherits from :model:`guide.Language`
-    This is for Goods, Services, Construction
-    '''
+    """[summary]
+
+    Args:
+        models ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
     c_type = models.CharField(
         choices=TYPE_CHOICES,
         max_length = 128,
@@ -145,11 +148,14 @@ class CommodityType(models.Model):
 
 
 class Code(BooleanTradeAgreement):
-    '''
-    Inherits from :model:`guide.BooleanTradeAgreement`
-    Foreign key from :model:`guide.CommodityType`
-    This combines commodity types with specific commodity codes.
-    '''
+    """[summary]
+
+    Args:
+        BooleanTradeAgreement ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
     id = models.AutoField(primary_key=True)
     type = models.ForeignKey(
         CommodityType,
@@ -172,7 +178,14 @@ class Code(BooleanTradeAgreement):
 
 
 class ConstructionCoverage(BooleanTradeAgreement):
+    """[summary]
 
+    Args:
+        BooleanTradeAgreement ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
     org_fk = models.ForeignKey(
         Organization,
         to_field = 'name',
@@ -185,9 +198,18 @@ class ConstructionCoverage(BooleanTradeAgreement):
     class Meta:
         verbose_name_plural = "Construction Coverage" # 0 space
 
+    def __str__(self):
+        return str(self.org_fk)
 
 class GoodsCoverage(BooleanTradeAgreement):
-    
+    """[summary]
+
+    Args:
+        BooleanTradeAgreement ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
     org_fk = models.ForeignKey(
         Organization,
         to_field = 'name',
@@ -203,6 +225,14 @@ class GoodsCoverage(BooleanTradeAgreement):
         verbose_name_plural = "Goods Coverage" # 0 space
 
 class CodeOrganizationExclusion(BooleanTradeAgreement):
+    """[summary]
+
+    Args:
+        BooleanTradeAgreement ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
     code_fk = models.ForeignKey(
         Code,
         to_field = 'code',
@@ -226,9 +256,13 @@ class CodeOrganizationExclusion(BooleanTradeAgreement):
 
 
 class ValueThreshold(models.Model):
-    """
-    Subclass of :model:`guide.NumericTradeAgreement`
-    This class is for the dollar value thresholds in the trade agreements
+    """[summary]
+
+    Args:
+        models ([type]): [description]
+
+    Returns:
+        [type]: [description]
     """
     id = models.AutoField(primary_key = True)
     ccfta = models.PositiveIntegerField(
@@ -304,9 +338,13 @@ class ValueThreshold(models.Model):
 
 
 class LimitedTenderingReason(BooleanTradeAgreement):
-    """
-    Subclass of :model:`guide.BooleanTradeAgreement`
-    This class has limited tendering reasons
+    """[summary]
+
+    Args:
+        BooleanTradeAgreement ([type]): [description]
+
+    Returns:
+        [type]: [description]
     """
     name = models.TextField(
         default = '',
@@ -323,9 +361,13 @@ class LimitedTenderingReason(BooleanTradeAgreement):
 
 
 class GeneralException(BooleanTradeAgreement):
-    """
-    Subclass of :model:`guide.BooleanTradeAgreement`
-    This class has trade agreement exceptions
+    """[summary]
+
+    Args:
+        BooleanTradeAgreement ([type]): [description]
+
+    Returns:
+        [type]: [description]
     """
     name = models.TextField(
         default = '',
@@ -340,9 +382,13 @@ class GeneralException(BooleanTradeAgreement):
 
 
 class CftaException(BooleanTradeAgreement):
-    """
-    Subclass of :model:`guide.BooleanTradeAgreement`
-    This class has Canada Free Trade Agreement exceptions
+    """[summary]
+
+    Args:
+        BooleanTradeAgreement ([type]): [description]
+
+    Returns:
+        [type]: [description]
     """
     name = models.TextField(
         default = '',
