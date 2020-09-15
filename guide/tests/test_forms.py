@@ -1,30 +1,22 @@
 from django.test import TestCase
-from guide.models import Organization, CommodityType, Code, ValueThreshold, LimitedTenderingReason, GeneralException, CftaException, BooleanTradeAgreement, NumericTradeAgreement, Language
-from guide.logic import FORMS, TEMPLATES, AGREEMENTS, url_name, done_step_name, determine_final_coverage, organization_rule, value_threshold_rule, code_rule, exceptions_rule, build_context_dict, process_form
-import unittest
-from guide.forms import RequiredFieldsForm, GeneralExceptionForm, CftaExceptionForm, LimitedTenderingForm, estimated_value_label, entities_label, type_label, code_label, general_exceptions_label, cfta_exceptions_label, limited_tendering_label
-from django import forms, http
-from django.core.exceptions import ValidationError
-from django.conf import settings
-from django.template.response import TemplateResponse
-from guide.views import TradeForm
-from importlib import import_module
-from guide.logic import FORMS, TEMPLATES, url_name, done_step_name
-from guide.urls import trade_wizard
-from formtools.wizard.views import NamedUrlSessionWizardView, WizardView
+from guide.models import Code, GeneralException, CftaException, LimitedTenderingReason, Organization, CommodityType, ValueThreshold, GoodsCoverage, ConstructionCoverage, CodeOrganizationExclusion
+from guide.forms import RequiredFieldsForm, GeneralExceptionForm, CftaExceptionForm, LimitedTenderingForm, estimated_value_label, entities_label, type_label, code_label, general_exceptions_label, cfta_exceptions_label, limited_tendering_label, estimated_value_error, generic_error
 
 
 class FormsTest(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        Organization.objects.create(name='Model Ministry', lang='EN')
-        CommodityType.objects.create(commodity_type='Model Commodity Type', lang='EN')
-        Code.objects.create(code='ZZZ Model Commodity Code', type=CommodityType.objects.get(id=1), lang='EN')
-        ValueThreshold.objects.create(type_value=CommodityType.objects.get(id=1))
-        LimitedTenderingReason.objects.create(name='Model Limited Tendering Reason', lang='EN')
-        GeneralException.objects.create(name='Model General Exception', lang='EN')
-        CftaException.objects.create(name='Model CFTA Exception', lang='EN')
+        Organization.objects.create(name='Model Ministry')
+        CommodityType.objects.create(commodity_type='Model Commodity Type')
+        Code.objects.create(code='ZZZ Model Commodity Code', type=CommodityType.objects.get(id=1))
+        ValueThreshold.objects.create(type=CommodityType.objects.get(id=1))
+        LimitedTenderingReason.objects.create(name='Model Limited Tendering Reason')
+        GeneralException.objects.create(name='Model General Exception')
+        CftaException.objects.create(name='Model CFTA Exception')
+        GoodsCoverage.objects.create(org_fk=Organization.objects.get(id=1))
+        ConstructionCoverage.objects.create(org_fk=Organization.objects.get(id=1))
+        CodeOrganizationExclusion.objects.create(code_fk=Code.objects.get(id=1), org_fk=Organization.objects.get(id=1))
 
     def test_required_fields_labels(self):
         form = RequiredFieldsForm()
@@ -45,30 +37,37 @@ class FormsTest(TestCase):
         form = LimitedTenderingForm()
         self.assertIn(str(limited_tendering_label), form.as_p())
 
-    def test_required_fields_blank(self):
-        form = RequiredFieldsForm(data={'estimated_value': None, 'entities': '', 'type': '', 'code': ''})
-        self.assertFalse(form.is_valid())
+    def test_required_fields_valid(self):
+        data = {'estimated_value': 1000, 'entities': 'Model Ministry', 'type': CommodityType.objects.get(id=1), 'code': Code.objects.get(id=1)}
+        form = RequiredFieldsForm(data)
+        form.is_valid()
+        self.assertEqual(1000, form.cleaned_data['estimated_value'])
+        print(form.__dict__)
+        self.assertEqual('Model Ministry', form.data['entities'])
 
+    def test_required_fields_blank(self):
+        form = RequiredFieldsForm(data={'estimated_value': None, 'entities': None, 'type': None, 'code': None})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['estimated_value'], [estimated_value_error])
+        self.assertEqual(form.errors['entities'], [generic_error])
+        self.assertEqual(form.errors['type'], [generic_error])
+        self.assertEqual(form.errors['code'], [generic_error])
 
     def test_required_fields_wrong_data_one(self):
-        form = RequiredFieldsForm(data={'estimated_value': -1, 'entities': 'Missing dept', 'type': 'missing type', 'code': 'missing code'})
+        form = RequiredFieldsForm(data={'estimated_value': -1676, 'entities': 'Missing dept', 'type': 'missing type', 'code': 'missing code'})
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['estimated_value'], ['Ensure this value is greater than or equal to 0.'])
-        self.assertEqual(form.errors['entities'], ['Select a valid choice. That choice is not one of the available choices.'])
-        self.assertEqual(form.errors['type'], ['Select a valid choice. That choice is not one of the available choices.'])
-        self.assertEqual(form.errors['code'], ['Select a valid choice. That choice is not one of the available choices.'])
+        self.assertEqual(form.errors['entities'], [generic_error])
+        self.assertEqual(form.errors['type'], [generic_error])
+        self.assertEqual(form.errors['code'], [generic_error])
 
     def test_required_fields_wrong_data_two(self):
         form = RequiredFieldsForm(data={'estimated_value': 'dsfdsf', 'entities': 'Missing dept', 'type': 'missing type', 'code': 'missing code'})
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['estimated_value'], ['Enter a whole number.'])
-        self.assertEqual(form.errors['entities'], ['Select a valid choice. That choice is not one of the available choices.'])
-        self.assertEqual(form.errors['type'], ['Select a valid choice. That choice is not one of the available choices.'])
-        self.assertEqual(form.errors['code'], ['Select a valid choice. That choice is not one of the available choices.'])
-
-    def test_required_fields_valid_data(self):
-        form = RequiredFieldsForm(data={'estimated_value': 1000, 'entities': Organization.objects.get(id=1).pk, 'type': CommodityType.objects.get(id=1), 'code': Code.objects.get(id=1)})
-        self.assertTrue(form.is_valid())
+        self.assertEqual(form.errors['entities'], [generic_error])
+        self.assertEqual(form.errors['type'], [generic_error])
+        self.assertEqual(form.errors['code'], [generic_error])
 
     def test_general_exceptions_blank(self):
         form = GeneralExceptionForm(data={'exceptions': ''})
@@ -99,7 +98,7 @@ class FormsTest(TestCase):
         self.assertTrue(form.is_valid())
     
     def test_limited_tendering_wrong(self):
-        form = LimitedTenderingForm(data={'limited_tendering': 'wrong reason'})
+        form = LimitedTenderingForm(data={'limited_tendering': 'missing reason'})
         self.assertFalse(form.is_valid())
     
     def test_limited_tendering_valid(self):

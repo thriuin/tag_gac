@@ -1,6 +1,5 @@
 from django.test import TestCase
-from guide.models import Organization, CommodityType, Code, ValueThreshold, LimitedTenderingReason, GeneralException, CftaException, BooleanTradeAgreement, NumericTradeAgreement, Language
-from guide.logic import FORMS, TEMPLATES, AGREEMENTS, url_name, done_step_name, determine_final_coverage, organization_rule, value_threshold_rule, code_rule, exceptions_rule, build_context_dict, process_form
+from guide.models import Code, GeneralException, CftaException, LimitedTenderingReason, Organization, CommodityType, ValueThreshold, GoodsCoverage, ConstructionCoverage, CodeOrganizationExclusion
 import unittest
 
 # models tests
@@ -12,11 +11,14 @@ class ModelTest(TestCase):
         Organization.objects.create(name='Model Ministry')
         CommodityType.objects.create(commodity_type='Model Commodity Type')
         Code.objects.create(code='ZZZ Model Commodity Code', type=CommodityType.objects.get(id=1))
-        ValueThreshold.objects.create(type_value=CommodityType.objects.get(id=1))
+        ValueThreshold.objects.create(type=CommodityType.objects.get(id=1))
         LimitedTenderingReason.objects.create(name='Model Limited Tendering Reason')
         GeneralException.objects.create(name='Model General Exception')
         CftaException.objects.create(name='Model CFTA Exception')
-    
+        GoodsCoverage.objects.create(org_fk=Organization.objects.get(id=1))
+        ConstructionCoverage.objects.create(org_fk=Organization.objects.get(id=1))
+        CodeOrganizationExclusion.objects.create(code_fk=Code.objects.get(id=1), org_fk=Organization.objects.get(id=1))
+
     def test_organization(self):
         model_string = Organization.objects.get(id=1)
         self.assertEqual(str(model_string), model_string.__str__())
@@ -40,14 +42,30 @@ class ModelTest(TestCase):
     def test_tendering_reason(self):
         model_string = LimitedTenderingReason.objects.get(id=1)
         self.assertEqual(str(model_string), model_string.__str__())
-        self.assertTrue(model_string, LimitedTenderingReason)
+        self.assertTrue(isinstance(model_string, LimitedTenderingReason))
     
     def test_general_exception(self):
         model_string = GeneralException.objects.get(id=1)
         self.assertEqual(str(model_string), model_string.__str__())
-        self.assertTrue(model_string, GeneralException)
+        self.assertTrue(isinstance(model_string, GeneralException))
     
     def test_cfta_exception(self):
         model_string = CftaException.objects.get(id=1)
         self.assertEqual(str(model_string), model_string.__str__())    
-        self.assertTrue(model_string, CftaException)
+        self.assertTrue(isinstance(model_string, CftaException))
+
+    def test_goods_coverage(self):
+        model_string = GoodsCoverage.objects.get(id=1)
+        self.assertEqual(str(model_string),  model_string.__str__())
+        self.assertTrue(isinstance(model_string, GoodsCoverage))
+
+    def test_construction_coverage(self):
+        model_string = ConstructionCoverage.objects.get(id=1)
+        self.assertEqual(str(model_string), model_string.__str__())
+        self.assertTrue(isinstance(model_string, ConstructionCoverage))
+
+    def test_code_organization_exclusion(self):
+        model_string = CodeOrganizationExclusion.objects.get(id=1)
+        self.assertEqual(str(model_string), model_string.__str__())
+        self.assertTrue(isinstance(model_string, CodeOrganizationExclusion))
+
