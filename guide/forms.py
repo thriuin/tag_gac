@@ -60,33 +60,13 @@ class RequiredFieldsForm(forms.Form):
         widget = autocomplete.ModelSelect2(url = 'guide:code_autocomplete', forward=['type'], attrs={'class':'form-control', 'size': '1'})
     )
 
-    # def clean_estimated_value(self):
-    #     val = self.cleaned_data.get('estimated_value')
-    #     if val is None:
-    #         raise ValidationError(estimated_value_error)
-    #     else:
-    #         return int(val)
 
-    # def clean_entities(self):
-    #     clean_org = self.cleaned_data.get('entities')
-    #     if Organization.objects.filter(name = clean_org).exists():
-    #         return clean_org
-    #     else:
-    #         raise ValidationError(generic_error)
-
-    # def clean_type(self):
-    #     clean_type = self.cleaned_data.get('type')
-    #     if CommodityType.objects.filter(commodity_type = clean_type).exists():
-    #         return clean_type
-    #     else:
-    #         raise ValidationError(generic_error)
-
-    # def clean_code(self):
-    #     code = self.cleaned_data.get('code')
-    #     if Code.objects.filter(code = code).exists():
-    #         return code
-    #     else:
-    #         raise ValidationError(generic_error)
+    def clean_code(self):
+        code = self.cleaned_data.get('code')
+        if Code.objects.filter(code = code).exists():
+            return code
+        else:
+            raise ValidationError(generic_error)
 
 class GeneralExceptionForm(forms.Form):
     """[summary]
