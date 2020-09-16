@@ -62,7 +62,8 @@ class RequiredFieldsForm(forms.Form):
 
 
     def clean_code(self):
-        code = self.cleaned_data.get('code')
+        
+        code = self.cleaned_data['code']
         if Code.objects.filter(code = code).exists():
             return code
         else:
