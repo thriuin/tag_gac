@@ -1,9 +1,11 @@
 from django.test import TestCase
 from guide.models import Code, GeneralException, CftaException, LimitedTenderingReason, Organization, CommodityType, ValueThreshold, GoodsCoverage, ConstructionCoverage, CodeOrganizationExclusion
 from guide.forms import RequiredFieldsForm, GeneralExceptionForm, CftaExceptionForm, LimitedTenderingForm, estimated_value_label, entities_label, type_label, code_label, general_exceptions_label, cfta_exceptions_label, limited_tendering_label, estimated_value_error, generic_error
-
+from django.urls import reverse
 
 class FormsTest(TestCase):
+    urls = 'django.contrib.formtools.tests.wizard.wizardtests.urls'
+
 
     @classmethod
     def setUpTestData(cls):
@@ -37,20 +39,29 @@ class FormsTest(TestCase):
         form = LimitedTenderingForm()
         self.assertIn(str(limited_tendering_label), form.as_p())
 
-    def test_required_fields_valid(self):
-        data = {'estimated_value': 1000, 'entities': 'Model Ministry', 'type': CommodityType.objects.get(id=1), 'code': Code.objects.get(id=1)}
-        form = RequiredFieldsForm(data)
+    def test_required_fields_estimated_value_valid(self):
+        form = RequiredFieldsForm({'estimated_value': 1000, 'entities': Organization.objects.get(id=1), 'type': CommodityType.objects.get(id=1), 'code': Code.objects.get(id=1)})
         form.is_valid()
         self.assertEqual(1000, form.cleaned_data['estimated_value'])
-        print(form.__dict__)
-        self.assertEqual('Model Ministry', form.data['entities'])
+
+    def test_required_fields_entities_valid(self):
+        form = RequiredFieldsForm({'estimated_value': 1000, 'entities': Organization.objects.get(id=1), 'type': CommodityType.objects.get(id=1), 'code': Code.objects.get(id=1)})
+        form.is_valid()
+        self.assertEqual(Organization.objects.get(id=1), form.data['entities'])
+
+    def test_required_fields_type_valid(self):
+        form = RequiredFieldsForm({'estimated_value': 1000, 'entities': Organization.objects.get(id=1), 'type': CommodityType.objects.get(id=1), 'code': Code.objects.get(id=1)})
+        form.is_valid()
+        self.assertEqual(CommodityType.objects.get(id=1), form.data['type'])
+
+
 
     def test_required_fields_blank(self):
         form = RequiredFieldsForm(data={'estimated_value': None, 'entities': None, 'type': None, 'code': None})
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors['estimated_value'], [estimated_value_error])
-        self.assertEqual(form.errors['entities'], [generic_error])
-        self.assertEqual(form.errors['type'], [generic_error])
+        self.assertEqual(form.errors['estimated_value'], ['This field is required.'])
+        self.assertEqual(form.errors['entities'], ['This field is required.'])
+        self.assertEqual(form.errors['type'], ['This field is required.'])
         self.assertEqual(form.errors['code'], [generic_error])
 
     def test_required_fields_wrong_data_one(self):

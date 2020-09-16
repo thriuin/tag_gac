@@ -42,6 +42,221 @@ def create_data_dict(self, forms):
         pass
     return func_data_dict
 
+def create_agreement_dict():
+    """[summary]
+
+    Returns:
+        [type]: [description]
+    """
+    func_agreement_dict = {k:{} for k in AGREEMENTS_FIELDS}
+    return func_agreement_dict
+
+def value_threshold_rule(agreement, data):
+    """[summary]
+
+    Args:
+        agreement ([type]): [description]
+        data ([type]): [description]
+
+    Raises:
+        ValueError: [description]
+
+    Returns:
+        [type]: [description]
+    """
+    model = ValueThreshold
+    value = int(data['estimated_value'])
+    type = data['type']
+    try:
+        for k in agreement.keys():
+            threshold = model.objects.filter(type=type).values_list(k).get()[0]
+            if value < threshold:
+                agreement[k]['estimated_value'] = False
+    except:
+        pass
+    return agreement
+
+def organization_rule(agreement, data):
+    """[summary]
+
+    Args:
+        agreement ([type]): [description]
+        data ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    org = data['entities']
+
+    for k in agreement.keys():
+        check = Organization.objects.filter(name=org).values_list(k).get()[0]
+        if check:
+            pass
+        else:
+            agreement[k]['entities'] = False
+
+    return agreement
+
+def construction_coverage(_agreement, commodity, org, code):
+    """[summary]
+
+    Args:
+        _agreement ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    code_db = Code.objects.filter(code=code)
+    if ConstructionCoverage.objects.filter(org_fk=org).exists():
+        for k in _agreement.keys():
+            check = ConstructionCoverage.objects.filter(org_fk=org).values_list(k).get()[0]
+            if check:
+                _agreement[k]['code'] = False
+    else:
+        for k in _agreement.keys():
+            check = code_db.values_list(k).get()[0]
+            if not check:
+                _agreement[k]['code'] = False
+    return _agreement
+
+def goods_coverage(_agreement, commodity, org, code):
+    """[summary]
+
+    Args:
+        _agreement ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    code_db = Code.objects.filter(code=code)
+    if GoodsCoverage.objects.filter(org_fk=org).exists():
+        for k in _agreement.keys():
+            check = code_db.values_list(k).get()[0]
+            if not check:
+                _agreement[k]['code'] = False
+    return _agreement
+
+def services_coverage(_agreement, commodity, org, code):
+    """[summary]
+
+    Args:
+        _agreement ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    code_db = Code.objects.filter(code=code)
+    for k in _agreement.keys():
+        check = code_db.values_list(k).get()[0]
+        if not check:
+            _agreement[k]['code'] = False
+    return _agreement
+
+def code_org_exclusion(_agreement, commodity, org, code):
+    """[summary]
+
+    Args:
+        _agreement ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    if CodeOrganizationExclusion.objects.filter(org_fk=org).filter(code_fk=code).exists():
+
+        for k in _agreement.keys():
+            check = CodeOrganizationExclusion.objects.filter(org_fk=org).filter(code_fk=code).values_list(k).get()[0]
+            if check:
+                _agreement[k]['code'] = False
+    return _agreement
+
+def set_exception_false(_agreement, _exception, _model, _exception_name):
+    for k in _agreement.keys():
+        for ex in _exception:
+            check = _model.objects.filter(name=ex).values_list(k).get()[0]
+            if check:
+                _agreement[k][_exception_name] = False
+    return _agreement
+
+def set_code_false(_agreement, commodity, org, code):
+    """[summary]
+
+    Args:
+        _agreement ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    if str(commodity) == 'Goods':
+        _agreement = goods_coverage(_agreement, commodity, org, code)
+    elif str(commodity) == 'Services':
+        _agreement = services_coverage(_agreement, commodity, org, code)
+    else:
+        _agreement = construction_coverage(_agreement, commodity, org, code)
+    _agreement = code_org_exclusion(_agreement, commodity, org, code)
+    return _agreement
+
+def set_true(_agreement, field):
+    """[summary]
+
+    Args:
+        _agreement ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    for k in _agreement.keys():
+        try: 
+            _test = _agreement[k][field]
+        except:
+            _agreement[k][field] = True
+    return _agreement
+
+def exceptions_rule(agreement, data, exception):
+    """[summary]
+
+    Args:
+        agreement ([type]): [description]
+        data ([type]): [description]
+        exception ([type]): [description]
+    """
+    try:
+        for exception_name, model in exception.items():
+            exception = data[exception_name]
+            if exception:
+                agreement = set_exception_false(agreement, exception, model, exception_name)
+    except:
+        pass
+    return agreement
+
+def code_rule(agreement, data_dict):
+    """[summary]
+
+    Args:
+        agreement ([type]): [description]
+        data_dict ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    code = data_dict['code']
+    commodity = data_dict['type']
+    org = data_dict['entities']
+
+    agreement = set_code_false(agreement, commodity, org, code)
+    return agreement
+
+def determine_final_coverage(_agreement):
+    """[summary]
+
+    Args:
+        _agreement ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    cxt={k:True if all(_agreement[k].values()) else False for k in _agreement.keys()}
+    return cxt
+
 def get_coverage(data_dict):
     """[summary]
 
@@ -51,230 +266,7 @@ def get_coverage(data_dict):
     Returns:
         [type]: [description]
     """
-    def create_agreement_dict():
-        """[summary]
 
-        Returns:
-            [type]: [description]
-        """
-        func_agreement_dict = {k:{} for k in AGREEMENTS_FIELDS}
-        return func_agreement_dict
-    
-    def value_threshold_rule(agreement, data):
-        """[summary]
-
-        Args:
-            agreement ([type]): [description]
-            data ([type]): [description]
-
-        Raises:
-            ValueError: [description]
-
-        Returns:
-            [type]: [description]
-        """
-        model = ValueThreshold
-        value = int(data['estimated_value'])
-        type = data['type']
-        try:
-            for k in agreement.keys():
-                threshold = model.objects.filter(type=type).values_list(k).get()[0]
-                if value < threshold:
-                    agreement[k]['estimated_value'] = False
-        except:
-            pass
-        return agreement
-
-    def organization_rule(agreement, data):
-        """[summary]
-
-        Args:
-            agreement ([type]): [description]
-            data ([type]): [description]
-
-        Returns:
-            [type]: [description]
-        """
-        org = data['entities']
-
-        for k in agreement.keys():
-            check = Organization.objects.filter(name=org).values_list(k).get()[0]
-            if check:
-                pass
-            else:
-                agreement[k]['entities'] = False
-
-        return agreement
-
-    def code_rule(agreement, data_dict):
-        """[summary]
-
-        Args:
-            agreement ([type]): [description]
-            data_dict ([type]): [description]
-
-        Returns:
-            [type]: [description]
-        """
-        code = data_dict['code']
-        commodity = data_dict['type']
-        org = data_dict['entities']
-        code_db = Code.objects.filter(code=code)
-
-
-        def construction_coverage(_agreement):
-            """[summary]
-
-            Args:
-                _agreement ([type]): [description]
-
-            Returns:
-                [type]: [description]
-            """
-            if ConstructionCoverage.objects.filter(org_fk=org).exists():
-                for k in agreement.keys():
-                    check = ConstructionCoverage.objects.filter(org_fk=org).values_list(k).get()[0]
-                    if check:
-                        _agreement[k]['code'] = False
-            else:
-                for k in _agreement.keys():
-                    check = code_db.values_list(k).get()[0]
-                    if not check:
-                        _agreement[k]['code'] = False
-            return _agreement
-        
-        def goods_coverage(_agreement):
-            """[summary]
-
-            Args:
-                _agreement ([type]): [description]
-
-            Returns:
-                [type]: [description]
-            """
-            if GoodsCoverage.objects.filter(org_fk=org).exists():
-                for k in _agreement.keys():
-                    check = code_db.values_list(k).get()[0]
-                    if not check:
-                        _agreement[k]['code'] = False
-            return _agreement
-
-        def services_coverage(_agreement):
-            """[summary]
-
-            Args:
-                _agreement ([type]): [description]
-
-            Returns:
-                [type]: [description]
-            """
-            for k in _agreement.keys():
-                check = code_db.values_list(k).get()[0]
-                if not check:
-                    _agreement[k]['code'] = False
-            return _agreement
-        
-        def code_org_exclusion(_agreement):
-            """[summary]
-
-            Args:
-                _agreement ([type]): [description]
-
-            Returns:
-                [type]: [description]
-            """
-            if CodeOrganizationExclusion.objects.filter(org_fk=org).filter(code_fk=code).exists():
-                for k in _agreement.keys():
-                    check = code_db.values_list(k).get()[0]
-                    if not check:
-                        _agreement[k]['code'] = False
-            return _agreement
-
-        def set_false(_agreement):
-            """[summary]
-
-            Args:
-                _agreement ([type]): [description]
-
-            Returns:
-                [type]: [description]
-            """
-            print
-            if str(commodity) == 'Goods':
-                _agreement = goods_coverage(_agreement)
-            elif str(commodity) == 'Services':
-                _agreement = services_coverage(_agreement)
-            else:
-                _agreement = construction_coverage(_agreement)
-            _agreement = code_org_exclusion(_agreement)
-            return _agreement
-
-        def set_true(_agreement):
-            """[summary]
-
-            Args:
-                _agreement ([type]): [description]
-
-            Returns:
-                [type]: [description]
-            """
-            for k in _agreement.keys():
-                try: 
-                    _test = _agreement[k]['code']
-                except:
-                    _agreement[k]['code'] = True
-            return _agreement
-
-        agreement = set_false(agreement)
-        agreement = set_true(agreement)
-        return agreement
-
-    def exceptions_rule(agreement, data, exception):
-        """[summary]
-
-        Args:
-            agreement ([type]): [description]
-            data ([type]): [description]
-            exception ([type]): [description]
-        """
-        def set_false(_agreement, _exception, _model, _exception_name):
-            for k in _agreement.keys():
-                for ex in _exception:
-                    check = _model.objects.filter(name=ex).values_list(k).get()[0]
-                    if check:
-                        _agreement[k][_exception_name] = False
-            return _agreement
-
-        def set_true(_agreement, _exception_name):
-            for k in _agreement.keys():
-                try: 
-                    _test = _agreement[k][_exception_name]
-                except:
-                    _agreement[k][_exception_name] = True
-            return _agreement
-
-        try:
-            for exception_name, model in exception.items():
-                exception = data[exception_name]
-                if exception:
-                    agreement = set_false(agreement, exception, model, exception_name)
-                agreement = set_true(agreement, exception_name)
-        except:
-            pass
-
-        return agreement
-
-    def determine_final_coverage(_agreement):
-        """[summary]
-
-        Args:
-            _agreement ([type]): [description]
-
-        Returns:
-            [type]: [description]
-        """
-        cxt={k:True if all(_agreement[k].values()) else False for k in _agreement.keys()}
-        return cxt
 
     agreement_dict = create_agreement_dict()
 
@@ -287,7 +279,10 @@ def get_coverage(data_dict):
         'cfta_exceptions': CftaException,
     }
     agreement_dict = exceptions_rule(agreement_dict, data_dict, exception_dict)
-    
+    fields = ['code', 'entities', 'estimated_value', 'exceptions', 'cfta_exceptions']
+    for f in fields:
+        agreement_dict = set_true(agreement_dict, f)
+
     data_dict['ta'] = agreement_dict
     data_dict['bool'] = determine_final_coverage(agreement_dict)
     return data_dict
@@ -344,6 +339,8 @@ def get_output_text(_output_text):
         """
         _table_text['tables'] = {}
         for k1, v1 in _table_text['ta'].items():
+            print(k1)
+            print(v1)
             k1 = k1.upper()
             _table_text['tables'][k1] = {}
             for k2, v2 in v1.items():
@@ -594,6 +591,6 @@ class TradeForm(NamedUrlCookieWizardView):
         data_fields = ['entities', 'estimated_value', 'type', 'code']
         for field in data_fields:
             self.request.session[field] = str(data_dict[field])
-
+        print(data_dict)
         data_dict = get_output_text(data_dict)
         return render(self.request, 'done.html', data_dict)
